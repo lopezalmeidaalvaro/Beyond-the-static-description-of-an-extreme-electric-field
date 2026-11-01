@@ -14,6 +14,7 @@ pip install -r requirements.txt
 | `04_nonperturbative_qed.py` | QED a un bucle (tiempo propio exacto), perfil interior vs cuártico / Born–Infeld |
 | `05_dynamical_backreaction.py` | Descarga de Schwinger con retroacción (LCFA, válida hasta el primer cero del campo) |
 | `06_phase_diagram.py` | Penrose cargada, leyes de escala y diagrama de fases (`phase_diagram.png`) |
+| `08_novelty_checks.py`, `09_make_audit.py` | Comprobaciones numéricas de la auditoría y generación de `NOVELTY_AUDIT.md` / `novelty_audit.json` |
 | `07_make_report.py` | Compuerta global (50 gates, 10 controles negativos) y genera `DISCOVERY_REPORT.md` |
 
 Ver `DISCOVERY_REPORT.md` (resultados y límites), `SYSTEM_PROMPT.md` (reglas del agente) y `discovery_results.json` (todas las métricas).

@@ -200,8 +200,26 @@ rho_q = rho_m('qed', Eg); L_q = Lag('qed', Eg); D_q = Dfun('qed', Eg)
 cond = dict(WEC_rho_min=float(np.min(rho_q/Eg**2)), NEC_ED_min=float(np.min(Eg*D_q/Eg**2)),
             DEC_margin_min=float(np.min((rho_q - np.abs(L_q))/rho_q)), SEC_L_min=float(np.min(L_q/Eg**2)))
 cond['DEC_violated_at_eps'] = [float(xg[i]) for i in np.where((rho_q - np.abs(L_q)) < 0)[0][:1]]
+# --- DEC: umbral EXACTO y ley asintotica (corrige el valor dependiente de rejilla/rango) ---
+xs_, F_ = sp.symbols('x', positive=True), sp.Function('F')
+Lg = F_(xs_)
+ident = sp.simplify(xs_*sp.diff(Lg, xs_) - 2*Lg - xs_**3*sp.diff(Lg/xs_**2, xs_))
+gate("S10 identidad DEC", ident == 0, "E·D − 2L = x L1' − 2 L1 = x³ d(L1/x²)/dx  (ρ−|L| ≥ 0  ⇔  L1/x² creciente): la DEC se viola donde L1/x² decrece")
+x_dec_fast = brentq(lambda x: float(x*Q.dL1_fast(x) - 2*Q.L1_fast(x)), 1.0, 5.0, xtol=1e-13)
+x_dec = brentq(lambda x: float(x*Q.dL1_exact(x) - 2*Q.L1_exact(x)[0]), 1.0, 5.0, xtol=1e-12)     # integral exacta, sin spline
+def _marg(xv):
+    xv = np.asarray(xv, float); Ev = xv/E_CHARGE
+    rv = rho_m('qed', Ev); Lv = Lag('qed', Ev); return (rv - np.abs(Lv))/rv
+cond['DEC_onset_eps_exact'] = float(x_dec)
+cond['DEC_margin_at'] = {f"{v:g}": float(_marg(v)) for v in (3, 10, 1e3, 1e10, 1e30, 1e40)}
+cond['DEC_margin_asymptote_alpha_over_3pi'] = float(-ALPHA/(3*np.pi))
+cond['DEC_margin_at_range_edge_1e40'] = cond.pop('DEC_margin_min')            # NO es una cota: crece con ln(eps) hasta el polo
+cond.pop('DEC_violated_at_eps', None)
+m10 = cond['DEC_margin_at']['1e+10']
+gate("N9 DEC: umbral y asintota", abs(x_dec - x_dec_fast) < 1e-4 and abs(m10/cond['DEC_margin_asymptote_alpha_over_3pi'] - 1) < 0.05,
+     f"inicio exacto ε={x_dec:.5f} (integral exacta; interpolación {x_dec_fast:.5f}; máx. de L1/x²); margen(1e10)={m10:.3e} vs −α/3π={cond['DEC_margin_asymptote_alpha_over_3pi']:.3e}: anomalía de traza a un bucle; NO acotada (crece con ln ε)")
 R['energy_conditions_qed'] = cond
-print("\nCondiciones de energía QED 1 bucle (ε∈[1e-3,1e40]):", {k: (f"{v:.3e}" if isinstance(v, float) else v) for k, v in cond.items()})
+print("\nCondiciones de energía QED 1 bucle (ε∈[1e-3,1e40]):", {k: (f"{v:.3e}" if isinstance(v, float) else v) for k, v in cond.items() if not isinstance(v, dict)})
 R['Landau'] = dict(ln_eps_L=lnx_L, log10_eps_L=lnx_L/np.log(10), ln_eps_Planck=float(np.log(E_CHARGE*np.sqrt(2)*MPL**2)),
                    log10_eps_Planck=float(np.log10(E_CHARGE*np.sqrt(2)*MPL**2)), K_asym=float(Q.K_ASYM))
 print("Polo de Landau: log10(ε_L) = %.1f ; Planck: log10(ε_Pl) = %.1f ; razón ln = %.1f" % (R['Landau']['log10_eps_L'], R['Landau']['log10_eps_Planck'], lnx_L/R['Landau']['ln_eps_Planck']))
@@ -209,10 +227,7 @@ gate("N7 WEC/NEC cumplidas hasta Planck", cond['WEC_rho_min'] > 0 and cond['NEC_
 gate("N8 SEC (L>0) válida hasta Landau", cond['SEC_L_min'] > 0 and lnx_L > R['Landau']['ln_eps_Planck'],
      f"L/E² ≥ {cond['SEC_L_min']:.3f} hasta ε=1e40; SEC se rompe en ε_L=10^{R['Landau']['log10_eps_L']:.0f}, {lnx_L/R['Landau']['ln_eps_Planck']:.1f}× más allá (en ln) de Planck")
 # DEC: reporte cuantitativo
-if cond['DEC_violated_at_eps']:
-    print("  DEC violada localmente desde ε =", cond['DEC_violated_at_eps'], "magnitud mínima (ρ-|L|)/ρ =", cond['DEC_margin_min'])
-else:
-    print("  DEC se cumple en todo el rango; margen mínimo (ρ-|L|)/ρ = %.3e" % cond['DEC_margin_min'])
+print('  DEC: inicio exacto en ε =', cond['DEC_onset_eps_exact'], '; margen relativo a ε=1e10:', cond['DEC_margin_at']['1e+10'], ' (asíntota −α/3π =', cond['DEC_margin_asymptote_alpha_over_3pi'], ')')
 
 # ---- controles negativos numéricos ---------------------------------------------------------------
 Lbad = lambda E: E**2/2 - Q.L1_fast(E_CHARGE*E)

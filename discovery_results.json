@@ -17,6 +17,8 @@
    "N5 RN recuperado (Maxwell)": true,
    "N6 horizonte QED = RN con carga corrida": true,
    "S9 exponente cuartico E~r^-2/3": true,
+   "S10 identidad DEC": true,
+   "N9 DEC: umbral y asintota": true,
    "N7 WEC/NEC cumplidas hasta Planck": true,
    "N8 SEC (L>0) v\u00e1lida hasta Landau": true,
    "C2 control: signo de L1 invertido detectado": true,
@@ -219,11 +221,18 @@
   "energy_conditions_qed": {
    "WEC_rho_min": 0.46484354777398257,
    "NEC_ED_min": 0.9300742321255941,
-   "DEC_margin_min": -0.0008328319915008242,
    "SEC_L_min": 0.4652306843516115,
-   "DEC_violated_at_eps": [
-    1.9205596896079482
-   ]
+   "DEC_onset_eps_exact": 1.8821832224914248,
+   "DEC_margin_at": {
+    "3": -0.00013244281415025766,
+    "10": -0.0004892341714789833,
+    "1000": -0.0007740086685163393,
+    "1e+10": -0.0007875256440667092,
+    "1e+30": -0.0008171615578214935,
+    "1e+40": -0.0008328319915008242
+   },
+   "DEC_margin_asymptote_alpha_over_3pi": -0.0007742731552572398,
+   "DEC_margin_at_range_edge_1e40": -0.0008328319915008242
   },
   "Landau": {
    "ln_eps_L": 1293.825770542737,
@@ -603,8 +612,48 @@
   }
  },
  "meta": {
-  "n_gates": 50,
+  "n_gates": 52,
   "n_negative_controls": 10,
   "all_pass": true
+ },
+ "audit_checks": {
+  "landau_scale_GeV_log10": 277.6591163532146,
+  "landau_literature_GeV_log10": 277.0,
+  "ritus_narozhny_chi_threshold": 1604.1759669993608,
+  "ritus_narozhny_eps_at_rest": 1604.1759669993608,
+  "eps_sweep_max_in_05": 10000000000.0,
+  "orders_above_RN_threshold_in_05": 6.794747994340376,
+  "eps_planck_over_RN": 1.5239251854727444e+41,
+  "ell_over_lambdaC_at_rQ_N1e+06": 1.7877061751918918e-18,
+  "ell_over_lambdaC_at_rQ_N1e+20": 0.00017877061751918916,
+  "ell_criterion_violated_in_04_profiles": true,
+  "ruffini_crosscheck": {
+   "ours": {
+    "10": {
+     "tau0_first_zero": [
+      17.0752363701589,
+      17.07525703442186
+     ],
+     "rel_change_with_Nt": 1.2101889841353852e-06
+    },
+    "0.15": {
+     "tau0_first_zero": [
+      8762475.839500487,
+      8780660.828484343
+     ],
+     "rel_change_with_Nt": 0.0020753254350649453
+    }
+   },
+   "literature_extract": {
+    "10": 10.0,
+    "0.15": 10000000.0
+   },
+   "caveat": "Definicion de \"longitud de oscilacion\" no verificada (solo extracto); es consistencia de orden de magnitud, NO validacion"
+  },
+  "ruffini_ratio_ours": 514233.0104187297,
+  "ruffini_ratio_literature": 1000000.0,
+  "dec_onset_exact": 1.8821832224914248,
+  "dec_margin_asymptote": -0.0007742731552572398,
+  "trace_anomaly_relation": "\u03c1\u2212|L| = x\u00b3 d(L1/x\u00b2)/dx / (...) ; asintota \u2212\u03b1/(3\u03c0) = coeficiente \u03b2 de un bucle"
  }
 }

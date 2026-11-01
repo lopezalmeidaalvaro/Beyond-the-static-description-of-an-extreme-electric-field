@@ -1,0 +1,1 @@
+OK: NOVELTY_AUDIT.md (28450 car.) y novelty_audit.json; Cat1=6 Cat2=2 Cat3=3

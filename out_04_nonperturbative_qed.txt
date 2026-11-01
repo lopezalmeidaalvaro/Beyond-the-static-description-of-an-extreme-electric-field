@@ -36,12 +36,14 @@ N=1e+20: r_Q=0.0003575  RN r+=0.000936055 r-=0.000136569
 [PASS] N5 RN recuperado (Maxwell): r+ numerico/analitico - 1 = 2.5e-06
 [PASS] N6 horizonte QED = RN con carga corrida: δr+/r+ medido = -1.191e-02; predicho (Q²→λQ², λ=E/E_Coulomb(r+)=1.0710) = -1.230e-02
 [PASS] S9 exponente cuartico E~r^-2/3: E ~ (Q/4pi/16c)^(1/3) r^(-2/3) => rho ~ r^(-8/3) y masa interior FINITA: artefacto de la truncacion (QED da ρ~r^-4, masa ~1/r)
+[PASS] S10 identidad DEC: E·D − 2L = x L1' − 2 L1 = x³ d(L1/x²)/dx  (ρ−|L| ≥ 0  ⇔  L1/x² creciente): la DEC se viola donde L1/x² decrece
+[PASS] N9 DEC: umbral y asintota: inicio exacto ε=1.88218 (integral exacta; interpolación 1.88218; máx. de L1/x²); margen(1e10)=-7.875e-04 vs −α/3π=-7.743e-04: anomalía de traza a un bucle; NO acotada (crece con ln ε)
 
-Condiciones de energía QED 1 bucle (ε∈[1e-3,1e40]): {'WEC_rho_min': '4.648e-01', 'NEC_ED_min': '9.301e-01', 'DEC_margin_min': '-8.328e-04', 'SEC_L_min': '4.652e-01', 'DEC_violated_at_eps': [1.9205596896079482]}
+Condiciones de energía QED 1 bucle (ε∈[1e-3,1e40]): {'WEC_rho_min': '4.648e-01', 'NEC_ED_min': '9.301e-01', 'SEC_L_min': '4.652e-01', 'DEC_onset_eps_exact': '1.882e+00', 'DEC_margin_asymptote_alpha_over_3pi': '-7.743e-04', 'DEC_margin_at_range_edge_1e40': '-8.328e-04'}
 Polo de Landau: log10(ε_L) = 561.9 ; Planck: log10(ε_Pl) = 44.4 ; razón ln = 12.7
 [PASS] N7 WEC/NEC cumplidas hasta Planck: min ρ/E²=0.465, min ED/E²=0.930
 [PASS] N8 SEC (L>0) válida hasta Landau: L/E² ≥ 0.465 hasta ε=1e40; SEC se rompe en ε_L=10^562, 12.7× más allá (en ln) de Planck
-  DEC violada localmente desde ε = [1.9205596896079482] magnitud mínima (ρ-|L|)/ρ = -0.0008328319915008242
+  DEC: inicio exacto en ε = 1.8821832224914248 ; margen relativo a ε=1e10: -0.0007875256440667092  (asíntota −α/3π = -0.0007742731552572398 )
 [PASS] C2 control: signo de L1 invertido detectado: L1_bad/(4cE^4) = -1.000 ≠ 1 (viola la correspondencia con el baseline)
 [PASS] C3 control: c->-c viola NEC (baseline): E·D(E) = E²(1-16|c|E²) < 0 a campo alto
 
