@@ -1,0 +1,23 @@
+X = F_mn F^mn = -2*g(r)*Derivative(Phi(r), r)**2/f(r) 
+Y = F Ftilde = 0
+T^t_t = -(24*c*g(r)*Derivative(Phi(r), r)**2 + f(r))*g(r)*Derivative(Phi(r), r)**2/(2*f(r)**2) 
+T^r_r = -(24*c*g(r)*Derivative(Phi(r), r)**2 + f(r))*g(r)*Derivative(Phi(r), r)**2/(2*f(r)**2) 
+T^th_th = (8*c*g(r)*Derivative(Phi(r), r)**2 + f(r))*g(r)*Derivative(Phi(r), r)**2/(2*f(r)**2)
+
+[G^t_t - G^r_r] = Derivative(g(r), r)/r - g(r)*Derivative(f(r), r)/(r*f(r))    (T^t_t - T^r_r = 0 )
+
+=== Verificacion simbolica en-capa (debe dar 0) ===
+Einstein tt      -> 0   OK
+Einstein rr      -> 0   OK
+Einstein thth    -> 0   OK
+E-L delta f      -> 0   OK
+E-L delta g      -> 0   OK
+E-L delta Phi    -> 0   OK
+
+=== Sistema reducido deducido ===
+Maxwell (1a integral):  r^2 E (1 + 16 c E^2) = Q/(4 pi),   E = sqrt(g/f) Phi'
+f = g   (T^t_t = T^r_r  =>  (ln f/g)' = 0)
+y' = 8 pi G r^2 rho(E),  rho = E^2/2 + 12 c E^4,  g = 1 - y/r,  y = 2 G m(r)
+p_r = -rho,   p_perp = E^2/2 + 4 c E^4
+
+RESULTADO: todas las identidades se reducen a 0 simbolicamente.

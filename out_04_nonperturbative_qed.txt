@@ -1,0 +1,48 @@
+[PASS] S1 T^mu_nu generico L(E): T^t_t=T^r_r=-(E L'-L)=-rho, T^th_th=L (tensor completo con L(E) arbitrario)
+[PASS] S2 Einstein tt -> y': G^t_t(f=g=1-y/r) = -Derivative(y(r), r)/r**2
+[PASS] S3 Maxwell: r^2 L'(E)=cte: dL_red/dPhi' = r^2 dL/dE  (D(E) r^2 = Q/4pi para CUALQUIER L(E))
+[PASS] S4 conservacion generica: rho' + (2/r)(rho+p_perp) = 0 para L(E) arbitrario (p_perp=L)
+[PASS] C1 control: p_perp=L/2 detectado: residuo = -L/r (distinto de 0)
+[PASS] S5 BI -> cuartico (b^2=1/32c): b^2 = 1/(32 c) hace coincidir el termino E^4 de Born-Infeld con Euler-Heisenberg
+[PASS] S6 tiempo propio -> cuartico: Int ds/s^3 -> x^4/(360 pi^2) = 4 c E^4 con c=alpha^2/90, e^2=4 pi alpha  [x**4/(360*pi**2)]
+[PASS] S7 coeficiente del running: L1 -> -(x^2/24pi^2) ln x  =>  L=(E^2/2)[1-(alpha/3pi) ln eps]
+[PASS] S8 polo de Landau (simbolico): ln eps_L = -3*K + 3*pi/alpha
+[PASS] N1 Im L1 = serie de Schwinger: max |Im(rayo)/serie - 1| = 8.5e-15
+[PASS] N2 correspondencia ε≪1 -> EH cuartico (baseline): L1/(4cE^4)-1 ~ ε^2.00 (esperado 2); a ε=0.01: 5.7e-05
+[PASS] N3 pendiente logaritmica: d(L1/x^2)/d ln x = -4.22171597e-03 vs -1/(24 pi^2) = -4.22171599e-03; deriva de K: 1.6e-10
+[PASS] N4 hiperbolicidad D'(E)>0 (QED 1-bucle): min dD/dE = 0.9962 en E in [1e-3,1e3] m^2 (sin perdida de hiperbolicidad)
+
+L/(E^2/2) vs ε:  (cuartico crece como ε^2, QED solo ~ -(α/3π) ln ε)
+  ε=    0.1: quart=1  QED=1.00000  BI=1.000000516200776
+  ε=      1: quart=1  QED=1.00006  BI=1.0000516235397585
+  ε=     10: quart=1.005  QED=0.99967  BI=1.0052158075912625
+  ε=    100: quart=1.516  QED=0.99817  BI=None
+  ε=   1000: quart=52.62  QED=0.99642  BI=None
+  ε=  1e+06: quart=5.162e+07  QED=0.99108  BI=None
+  ε=  1e+12: quart=5.162e+19  QED=0.98038  BI=None
+  ε=  1e+30: quart=5.162e+55  QED=0.94829  BI=None
+
+N=1e+06: r_Q=3.575e-18  RN r+=9.36055e-18 r-=1.36569e-18
+  maxwell  horizontes=['1.36569e-18', '9.36057e-18']  eps(r_Q)=5.7e+38  E/Coulomb(r_Q)=1  g(0.5 rQ)=-1
+  quartic  horizontes=['1.07263e-17']  eps(r_Q)=1.77e+14  E/Coulomb(r_Q)=3.101e-25  g(0.5 rQ)=-5
+  qed      horizontes=['1.48259e-18', '9.24904e-18']  eps(r_Q)=6.11e+38  E/Coulomb(r_Q)=1.073  g(0.5 rQ)=-0.7132
+  bi       horizontes=['1.07263e-17']  eps(r_Q)=69.6  E/Coulomb(r_Q)=1.221e-37  g(0.5 rQ)=-5
+
+N=1e+20: r_Q=0.0003575  RN r+=0.000936055 r-=0.000136569
+  maxwell  horizontes=['0.000136569', '0.000936056']  eps(r_Q)=5.71e+24  E/Coulomb(r_Q)=1  g(0.5 rQ)=-1
+  quartic  horizontes=['0.00107262']  eps(r_Q)=3.81e+09  E/Coulomb(r_Q)=6.676e-16  g(0.5 rQ)=-5
+  qed      horizontes=['0.000143688', '0.000929448']  eps(r_Q)=5.96e+24  E/Coulomb(r_Q)=1.045  g(0.5 rQ)=-0.825
+  bi       horizontes=['0.00107262']  eps(r_Q)=69.6  E/Coulomb(r_Q)=1.22e-23  g(0.5 rQ)=-5
+[PASS] N5 RN recuperado (Maxwell): r+ numerico/analitico - 1 = 2.5e-06
+[PASS] N6 horizonte QED = RN con carga corrida: δr+/r+ medido = -1.191e-02; predicho (Q²→λQ², λ=E/E_Coulomb(r+)=1.0710) = -1.230e-02
+[PASS] S9 exponente cuartico E~r^-2/3: E ~ (Q/4pi/16c)^(1/3) r^(-2/3) => rho ~ r^(-8/3) y masa interior FINITA: artefacto de la truncacion (QED da ρ~r^-4, masa ~1/r)
+
+Condiciones de energía QED 1 bucle (ε∈[1e-3,1e40]): {'WEC_rho_min': '4.648e-01', 'NEC_ED_min': '9.301e-01', 'DEC_margin_min': '-8.328e-04', 'SEC_L_min': '4.652e-01', 'DEC_violated_at_eps': [1.9205596896079482]}
+Polo de Landau: log10(ε_L) = 561.9 ; Planck: log10(ε_Pl) = 44.4 ; razón ln = 12.7
+[PASS] N7 WEC/NEC cumplidas hasta Planck: min ρ/E²=0.465, min ED/E²=0.930
+[PASS] N8 SEC (L>0) válida hasta Landau: L/E² ≥ 0.465 hasta ε=1e40; SEC se rompe en ε_L=10^562, 12.7× más allá (en ln) de Planck
+  DEC violada localmente desde ε = [1.9205596896079482] magnitud mínima (ρ-|L|)/ρ = -0.0008328319915008242
+[PASS] C2 control: signo de L1 invertido detectado: L1_bad/(4cE^4) = -1.000 ≠ 1 (viola la correspondencia con el baseline)
+[PASS] C3 control: c->-c viola NEC (baseline): E·D(E) = E²(1-16|c|E²) < 0 a campo alto
+
+RESUMEN 04: TODAS PASAN

@@ -1,0 +1,32 @@
+[PASS] P1 RN satura Penrose cargada: G M = (r_+ + r_Q^2/r_+)/2 para el horizonte de Reissner-Nordström (identidad exacta)
+[PASS] P2 cancelacion Coulomb (cascaron): G·U_C(R) = r_Q²/(2R): la energia electrostatica cancela EXACTAMENTE en la desigualdad => criterio: G M_noEM >= R/2
+[PASS] P3 criterio reducido: G(M_n+U_C) - (R+r_Q²/R)/2 = G M_n - R/2
+[PASS] P4 radio de atrapamiento r_s(N): r_s = (Nn + sqrt(3*2**(1/3)*3**(2/3)*pi**(1/3)*M_Pl**2*Nn**(4/3) + 4*Nn**2)/2)/M_Pl**2  [r0 = 2G(N m + E_Fermi), E_F=(3/4)(9π/4)^(1/3)N^(4/3)/r0]
+[PASS] P5 N_crit = M_Pl^2: r_Q = r_ε  <=>  N = M_Pl²/m_e²  (el horizonte RN entra en el dominio ε<1)
+[PASS] P6 densidad en r_Q: ρ(r_Q)/M_Pl⁴ = 1/(8π α N²): sub-planckiana para N ≥ N_P=(8πα)^(-1/2)
+[PASS] P7 N* (τ_dis = r0): τ_dis = κ r0/(α√(4πN)) = r0  =>  N* = κ²/(4π α²)
+[PASS] P8 caida libre OS: τ_ff = (π/2)√(R0³/2GM) = sqrt(2)*pi*R0**(3/2)/(4*sqrt(GM))
+[PASS] C1 control: R=0.75 GM_ext viola Penrose cargada: G M_ext - (R + r_Q²/R)/2 = -1/(48*sqrt(pi)) < 0 en R=3/4·G M_ext (R<r_- no atrapada)
+[PASS] P9 ley de la carrera: τ_dis/τ_ff = √(r0*/r0),  r0* = 2*kappa**2/(pi**3*M_Pl**2*alpha**2) (independiente de N)
+[PASS] N1 N_crit numerico: r_ε(M_Pl²)/r_Q = 1.000000000000
+[PASS] N2 r_s con N electrones: r_s(N=1e6) = 7.101e-19 λ_C = 1.697e+04 l_P
+[PASS] N3 BH por encima de la region trans-planckiana: r_s(N) > max(r_P, 10 l_P) para N ≥ 20; N minimo con atrapamiento sub-planckiano ≈ 15; para N ≲ 14 el atrapamiento seria trans-planckiano
+[PASS] N4 N_P: N_P = (8πα)^(-1/2) = 2.335: r_Q > r_P(densidad) para N ≥ 3
+
+  N          r_eps        r_Q          r_P          r_s        eps(r_s)    tau_dis/r0
+          1 8.542e-02 3.575e-24 5.464e-24 7.101e-23 1.45e+42  5.234e+02
+      1e+03 2.701e+00 3.575e-21 1.728e-22 7.101e-21 1.45e+41  1.655e+01
+      1e+06 8.542e+01 3.575e-18 5.464e-21 7.101e-19 1.45e+40  5.234e-01
+      1e+12 8.542e+04 3.575e-12 5.464e-18 7.101e-15 1.45e+38  5.234e-04
+      1e+20 8.542e+08 3.575e-04 5.464e-14 1.530e-09 3.12e+35  5.234e-08
+      1e+30 8.542e+13 3.575e+06 5.464e-09 7.101e-03 1.45e+32  5.234e-13
+   5.71e+44 2.041e+21 2.041e+21 1.305e-01 4.887e+07 1.74e+27  2.191e-20
+      1e+48 8.542e+22 3.575e+24 5.464e+00 7.101e+09 1.45e+26  5.234e-22
+      1e+60 8.542e+28 3.575e+36 5.464e+06 7.119e+17 1.44e+22  5.234e-28
+
+Fracciones del plano (N∈[1,1e50], r0∈[1e-30,1e30] λ_C): {'EFT_estatica': 0.31, 'descarga_Schwinger': 0.281, 'BH_atrapada': 0.087, 'transplanckiana': 0.322}
+[PASS] N5 BH clasico dentro de la EFT estatica: en N≤1e+50 NO hay r_s > r_ε; umbral analitico N = α M_Pl⁴/4 = 5.94e+86 (masa en reposo)
+[PASS] C2 control: sumar U_C (error) agranda la region BH: fraccion BH erronea 0.205 > correcta 0.087
+[PASS] C3 control: invertir ρ>M_Pl^4 elimina la fase (iii): sin el criterio de Planck no hay region trans-planckiana (la clasificacion lo detecta)
+
+RESUMEN 06: TODAS PASAN

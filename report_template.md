@@ -1,0 +1,94 @@
+# Destino del campo eléctrico extremo más allá de la ruptura de la EFT estática
+### Descarga de Schwinger, QED no perturbativa y atrapamiento gravitatorio en el sistema Einstein–Maxwell–Euler–Heisenberg
+
+> Informe generado por `07_make_report.py`. **Todo número procede de `discovery_results.json` / `results.json`** (si una clave falta, la generación falla). Cada tesis cita el *gate* que la verifica (`04_*`, `05_*`, `06_*`); el total es ⟦meta.n_gates⟧ gates, todos PASS, de los cuales ⟦meta.n_negative_controls⟧ son controles negativos que **deben** detectar un modelo alterado. Unidades: ħ=c=ε₀=m_e=1, longitudes en λ_C, ε ≡ eE/m_e², G=1/M_Pl².
+
+## Abstract
+
+La línea base (`03_integrate.py`) mostró que la EFT de Euler–Heisenberg truncada falla en ε=1 con ρ ≈ ⟦base.rho_over_Pl|.2e⟧ M_Pl⁴, muy por debajo de Planck. Aquí se estudia qué ocurre más allá de ese punto con tres herramientas: (A) el Lagrangiano de Euler–Heisenberg a un bucle con **tiempo propio exacto** (parte real e imaginaria), (B) una cinética de pares con retroacción en el régimen de campo localmente constante, y (C) el criterio de atrapamiento de la desigualdad de Penrose cargada. Resultados: (1) la QED a un bucle **no satura** el campo: crece logarítmicamente, `L = (E²/2)[1 − (α/3π) ln ε + …]`, y el polo de Landau está en log₁₀ ε_L = ⟦branch_A.Landau.log10_eps_L|.0f⟧, frente a log₁₀ ε_Planck = ⟦branch_A.Landau.log10_eps_Planck|.1f⟧: es inaccesible. El perfil interior es Reissner–Nordström con carga corrida (δr₊/r₊ = ⟦branch_A.QED_horizon_shift.measured|.3e⟧ medido vs ⟦branch_A.QED_horizon_shift.predicted_running_charge|.3e⟧ predicho), no el horizonte único tipo Schwarzschild que producen la extrapolación cuártica y Born–Infeld. (2) La descarga neutraliza el campo en **τ_discharge = κ/(e√(eE₀))**, κ = ⟦branch_B.scaling.kappa_inf|.4f⟧, exponente medido ⟦branch_B.scaling.tau0_exponent|.5f⟧. (3) En el criterio de Penrose cargada la energía electrostática de un cascarón **se cancela exactamente**: atrapar exige masa no electromagnética, G·M_n ≥ R/2. De ahí se sigue que **la QED no es un censor universal del colapso**: no puede deshacer una superficie atrapada ni crearla desde energía de campo puro; lo que sí hace es destruir la carga neta en τ_dis, siempre más rápido que la caída libre de N masas en reposo para r₀ ≫ r₀* = ⟦branch_C.race_law.r0_star_over_lPlanck|.2e⟧ l_P. Se dan el diagrama de fases en (N, r₀) y las leyes de escala. Lo que **no** se resuelve (dinámica tras la inversión del campo, transporte espacial) se declara en §6.
+
+## 1. Línea base y qué pregunta queda abierta
+
+`03_integrate.py` integró el sistema cuártico hacia el centro y se detuvo por ε≥1 (o por escala de variación del campo < λ_C) sin llegar a Planck. Dos hechos se heredan: N_crit = M_Pl²/m_e² = ⟦branch_C.critical.N_crit|.3g⟧ (gate **P5**, simbólico: r_Q = r_ε) y ningún horizonte RN cae dentro de la EFT estática si N < N_crit. La pregunta es qué hay en r < r_stop.
+
+*Corrección de rotulado heredado:* `eeh.py:schwinger_rate` es Γ_vac = 2 Im L₁ (decaimiento del vacío, todos los términos de la serie positivos para espinores), **no** el número medio de pares, que es sólo el término n=1 (`qed1loop.pair_rate`). Los criterios de parada del baseline no cambian (usan ε), pero el modelo dinámico usa la tasa correcta. Verificado: gate **N1** (04): |Im L₁(rayo)/serie de Schwinger − 1| < 10⁻⁸.
+
+## 2. Formulación Lagrangiana y cinética
+
+### 2.1 Electrodinámica no lineal estática acoplada (Rama A)
+Para **cualquier** L(E) (E=√(g/f)Φ′; X=−2E²), el CAS deriva (`04`, gates **S1–S4**): `T^t_t = T^r_r = −ρ`, `ρ = E L′ − L`, `p_⊥ = T^θ_θ = L`; la primera integral de Maxwell `r² L′(E) = Q/4π`; `y′ = 8πG r² ρ` con f=g=1−y/r (**S2**); y la conservación `ρ′ + (2/r)(ρ+p_⊥) = 0` (**S4**). El control **C1** confirma que un tensor erróneo (p_⊥=L/2) deja residuo −L/r ≠ 0.
+
+Modelos comparados: Maxwell (RN); Euler–Heisenberg cuártico; **QED a un bucle exacto**
+`L₁(x) = −(1/8π²) ∫₀^∞ ds/s³ e^{−s}[ x s cot(x s) − 1 + (x s)²/3 ]`, x=eE=ε, evaluado sobre el rayo s=ρe^{−iπ/4} (los polos de cot están en el eje real); y Born–Infeld calibrado `b² = 1/(32c)` (**S5**). Verificaciones: el desarrollo en x reproduce `4cE⁴` con c=α²/90 (**S6**, simbólico) y la correspondencia ε≪1 con el baseline es L₁/(4cE⁴)−1 ∝ ε^2.00 (**N2**); Im L₁ coincide con la serie de Schwinger a ~10⁻¹⁴ (**N1**); la pendiente de campo fuerte es −1/(24π²) con deriva de la constante K=⟦branch_A.Landau.K_asym|.6f⟧ < 10⁻⁹ (**N3**).
+
+### 2.2 Cinética de pares con retroacción (Rama B)
+Campo homogéneo, x=eE(t), aproximación de campo localmente constante:
+
+`ẋ = −2e² [ ∫₀ᵗ dt′ Γ(x′)⟨v⟩ + Γ(x)⟨m_⊥⟩/x ]`, `p(t,t′)=∫_{t′}ᵗ x dt″`, `v=p/√(p²+m_⊥²)`, `m_⊥²=1+x s/π` (s~Exp(1), 8 nodos Gauss–Laguerre, **N0**), `Γ(x)=x²/(4π³)e^{−π/x}`.
+
+El primer término es la corriente de conducción y el segundo la de polarización (energía 2m_⊥ de cada par). El CAS verifica: (**D1**) `∇_μT^{μν}_EM = F^ν{}_λ J^λ` en Minkowski esférico con A_t(t,r), A_r(t,r) arbitrarios, de donde `∇_μT^{μν}_matter = −F^ν{}_λ J^λ` si el total se conserva; (**D2**) `d/dt(E²/2 + ρ_pl) = 0` como identidad exacta (Leibniz sobre cohortes). Los controles **C1/C2** (sin j_pol; j_cond con signo invertido) rompen la identidad; **C3/C4** lo detectan en el integrador (|ΔE|/E₀ = 2.9·10⁻² y 1.7·10³³ frente a ~10⁻⁵).
+
+**Validez declarada:** hasta el *primer cero* del campo (las cohortes no se recruzan: sin bloqueo de Pauli ni aniquilación estimulada); LCFA con t_form/τ₀ ≈ e/κ = ⟦branch_B.scaling.lcfa_e_over_kappa|.3f⟧ ≪ 1 (**N5**); región ≥ 3 longitudes de formación ⇒ N ≥ 9/α = ⟦branch_B.race.N_valid_homog|.0f⟧.
+
+### 2.3 Criterio de atrapamiento (Rama C)
+Para una superficie atrapada exterior de radio R con toda la carga en su interior, la desigualdad de Penrose cargada exige `G M_ADM ≥ (R + r_Q²/R)/2`, r_Q² = G Q²/4π (Malec–Ó Murchadha; Khuri–Weinstein–Yamada; *citada, no demostrada aquí*). El CAS verifica que RN la **satura** (**P1**) y que para un cascarón `G U_C(R) = r_Q²/(2R)` (**P2**), de modo que `G(M_n+U_C) − (R+r_Q²/R)/2 = G M_n − R/2` (**P3**). Con N electrones confinados (masa en reposo + energía de Fermi ultrarrelativista) el radio de atrapamiento es la raíz positiva `r_s(N)` de `r = 2G(N + (3/4)(9π/4)^{1/3}N^{4/3}/r)` (**P4**).
+
+## 3. Leyes de escala y resultados deducidos
+
+**L1 (Cancelación de Coulomb).** El atrapamiento de un cascarón cargado no depende de Q: exige G M_n ≥ R/2 (P2, P3). *Corolario:* una superficie atrapada formada sólo con energía de campo es imposible (`verdict.pure_field_trapped_possible = ⟦branch_C.verdict.pure_field_trapped_possible⟧`). La razón carga/masa de N electrones es z² = α M_Pl² = ⟦branch_C.critical.z2_coulomb_over_gravity|.3g⟧ veces la extremal, y una carga unitaria extremal pesaría ⟦branch_C.critical.M_ext_per_charge_me|.3g⟧ m_e.
+
+**L2 (Tiempo de descarga).** `τ_discharge = κ /(e√(eE₀))` con κ∞ = ⟦branch_B.scaling.kappa_inf|.4f⟧ (dispersión ⟦branch_B.scaling.kappa_spread|.1e⟧ en ε₀∈[10⁶,10¹⁰]); exponente ⟦branch_B.scaling.tau0_exponent|.5f⟧ (**N4**). Convergencia: orden observado ⟦branch_B.convergence.order|.2f⟧ con h, h/2, h/4 (**N1**); método independiente (trapecio implícito) τ₀ = ⟦branch_B.convergence.tau0_trap|.6f⟧ frente a ⟦branch_B.convergence.tau0.1|.6f⟧ (**N2**); la energía discreta se conserva a ⟦branch_B.convergence.resid.2|.1e⟧ (suelo ~10⁻⁵ en el cruce; **N3**). Con E₀ = Q/(4πr₀²) en la superficie, ε₀ = Nα/r₀² y `τ_discharge = κ r₀/(α√(4πN))`: la carrera con la luz es **independiente de r₀**; τ_dis = r₀ en N* = κ²/(4πα²) = ⟦branch_C.critical.N_star|.3g⟧ (**P7**).
+
+**L3 (Carrera con el colapso).** Para el colapso libre de N masas en reposo, τ_ff = (π/2)√(r₀³/2GM) (**P8**, integral simbólica), y
+`τ_discharge / τ_ff = √(r₀*/r₀)`, `r₀* = 2κ²/(π³α²M_Pl²) = ⟦branch_C.race_law.r0_star_lambdaC|.2e⟧ λ_C = ⟦branch_C.race_law.r0_star_over_lPlanck|.2e⟧ l_P`
+(**P9**; **la dependencia en N se cancela exactamente**). Como r₀* ≪ l_P, la descarga es más rápida que la caída libre para todo r₀ físico. En la frontera de atrapamiento r₀=r_s con energía de Fermi incluida, la descarga gana (τ_dis<τ_ff) sólo para N ≳ ⟦branch_C.critical.N_race_at_trap_boundary|.2e⟧; por debajo, el colapso es más rápido, **sin que esto cambie el veredicto** (L1: la carga no entra en el criterio).
+
+**L4 (Rama A: campo fuerte no perturbativo).** `L = (E²/2)[1 − (α/3π)(ln ε + 3K)]` (**S7**, simbólico), polo en `ln ε_L = 3π/α − 3K` (**S8**): log₁₀ε_L = ⟦branch_A.Landau.log10_eps_L|.1f⟧ vs log₁₀ε_Pl = ⟦branch_A.Landau.log10_eps_Planck|.1f⟧, es decir ln ε_L es 12.7 veces ln ε_Pl: **el polo de Landau es inaccesible**. WEC y NEC se cumplen hasta ε=10⁴⁰ (min ρ/E² = ⟦branch_A.energy_conditions_qed.WEC_rho_min|.3f⟧, min ED/E² = ⟦branch_A.energy_conditions_qed.NEC_ED_min|.3f⟧, **N7**); la SEC (L>0) vale hasta el polo (**N8**); la **DEC se viola localmente** desde ε = ⟦branch_A.energy_conditions_qed.DEC_violated_at_eps.0|.2f⟧ con margen relativo máximo ⟦branch_A.energy_conditions_qed.DEC_margin_min|.2e⟧ (acotada, ~10⁻³). D′(E) > 0 siempre: no hay pérdida de hiperbolicidad (**N4**).
+
+## 4. Resultados numéricos
+
+### 4.1 Perfil interior del campo y de la métrica (incógnita a)
+`L/(E²/2)`: en ε=10 cuártico ⟦branch_A.L_over_Maxwell.10.L_quart_over_Maxwell|.4f⟧ vs QED ⟦branch_A.L_over_Maxwell.10.L_qed_over_Maxwell|.5f⟧; en ε=10⁶, ⟦branch_A.L_over_Maxwell.1e+06.L_quart_over_Maxwell|.3e⟧ vs ⟦branch_A.L_over_Maxwell.1e+06.L_qed_over_Maxwell|.5f⟧; en ε=10³⁰ la QED sigue en ⟦branch_A.L_over_Maxwell.1e+30.L_qed_over_Maxwell|.4f⟧. La truncación α² **sobreestima catastróficamente** la no linealidad.
+
+Métrica con masa M=1.5·M_ext y N=10⁶ (r_Q=⟦branch_A.profiles.1e+06.RN_analitico.rQ|.4g⟧):
+
+| Modelo | horizontes (r₋, r₊) |
+|---|---|
+| RN (analítico) | ⟦branch_A.profiles.1e+06.RN_analitico.r_minus|.5e⟧, ⟦branch_A.profiles.1e+06.RN_analitico.r_plus|.5e⟧ |
+| QED a un bucle | ⟦branch_A.profiles.1e+06.qed.r_h.0|.5e⟧, ⟦branch_A.profiles.1e+06.qed.r_h.1|.5e⟧ |
+| EH cuártico extrapolado | único: ⟦branch_A.profiles.1e+06.quartic.r_h.0|.5e⟧ |
+| Born–Infeld calibrado | único: ⟦branch_A.profiles.1e+06.bi.r_h.0|.5e⟧ |
+
+El valor único del cuártico y de BI es 2GM (Schwarzschild): ambos eliminan la energía de campo interior. La QED reproduce RN con carga corrida: λ=E/E_Coulomb(r₊)=⟦branch_A.QED_horizon_shift.lam_E_over_Coulomb|.4f⟧ y δr₊/r₊ medido ⟦branch_A.QED_horizon_shift.measured|.3e⟧ vs predicho ⟦branch_A.QED_horizon_shift.predicted_running_charge|.3e⟧ (**N6**). Con N=10²⁰ el patrón se repite (`branch_A.profiles.1e+20`). Resultado: **la no linealidad QED estática no censura el horizonte** (lo desplaza ~1%); la respuesta no puede venir de la estática.
+
+### 4.2 Escalas por número de cargas
+@@TABLA_ESCALAS@@
+(`06`; r_s con N electrones degenerados; τ_dis/r₀ sólo es aplicable con N ≥ ⟦branch_B.race.N_valid_homog|.0f⟧.)
+
+### 4.3 Diagrama de fases (incógnita c)
+![Diagrama de fases](phase_diagram.png)
+
+Fases en el plano (N, r₀) (fracción del plano explorado entre paréntesis): (0) EFT estática, ε<1 (⟦branch_C.phase_fractions.EFT_estatica|.3f⟧); **(i) descarga de Schwinger** en espacio casi plano, r_P < r₀ < r_ε (⟦branch_C.phase_fractions.descarga_Schwinger|.3f⟧); **(ii) atrapamiento/horizonte**, r₀ ≤ r_s(N) (⟦branch_C.phase_fractions.BH_atrapada|.3f⟧); **(iii) trans-Planck**, ρ_Coul ≥ M_Pl⁴ o r₀<10 l_P (⟦branch_C.phase_fractions.transplanckiana|.3f⟧). Umbrales: N_P=(8πα)^{−1/2}=⟦branch_C.critical.N_P|.3f⟧ (**P6**: ρ(r_Q)/M_Pl⁴ = 1/(8παN²)); atrapamiento sub-planckiano desde N≈⟦branch_C.N_BH_min|.0f⟧ (**N3**); N_crit=⟦branch_C.critical.N_crit|.3g⟧; un BH clásico entra en la EFT estática (r_s>r_ε) sólo para N ≳ α M_Pl⁴/4 = ⟦branch_C.critical.N_classical_BH_in_EFT|.3g⟧ (**N5**). La fase (ii) está **siempre por debajo** de r_ε (ε≫1) y por encima de Planck: el atrapamiento ocurre con densidad sub-planckiana y campo eléctrico supercrítico.
+
+## 5. Rutas descartadas (con su evidencia)
+1. **Extrapolar el EH cuártico a ε≫1.** E∼r^{−2/3}, ρ∼r^{−8/3}, masa interior finita (**S9**): artefacto; la QED a un bucle da ρ∼r^{−4}.
+2. **Born–Infeld como completación de la QED.** Calibrado a b²=1/32c satura en ε=⟦branch_A.eps_BI_saturation|.1f⟧, pero ya a ε=10 el signo de la desviación respecto a Maxwell es opuesto al de la QED (BI ⟦branch_A.L_over_Maxwell.10.L_bi_over_Maxwell|.4f⟧ > 1; QED ⟦branch_A.L_over_Maxwell.10.L_qed_over_Maxwell|.5f⟧ < 1). No es la completación de la QED; se conserva sólo como contraste.
+3. **Censura por saturación estática.** Refutada por 4.1 (desplazamiento ~1%).
+4. **Densidad de energía de campo puro como fuente de horizonte.** Imposible por L1 (cancelación exacta).
+
+## 6. Límites UV, alcance y problemas abiertos (sin extrapolaciones silenciosas)
+- **Frontera de predicción:** el polo de Landau y la densidad de Planck no se cruzan en ningún cálculo; el criterio ρ ≥ M_Pl⁴ / r<10 l_P define la fase (iii) y ahí no se afirma nada.
+- **No resuelto:** (a) la dinámica **tras el primer cero** del campo (oscilaciones de plasma, bloqueo de Pauli con ocupación f→1 y aniquilación estimulada): requiere la ecuación cinética cuántica completa con renormalización; (b) transporte espacial (esfera con perfil, hidrodinámica o Vlasov 1+1) y choques/cruce de flujos; (c) el modelo es plano y homogéneo: la métrica dependiente del tiempo sólo entra por el criterio de atrapamiento y la contabilidad de energía; (d) la hipótesis «la descarga neutraliza completamente la carga neta por debajo de r_neutral ≈ ⟦branch_C.critical.r_neutral_lambdaC|.3f⟧ λ_C» es una **estimación no verificada**; (e) κ tiene incertidumbre sistemática O(1) por LCFA y por usar la tasa de pares de campo constante; los *exponentes* son robustos, los prefactores no.
+- **Hipótesis citadas, no demostradas en el repositorio:** desigualdad de Penrose cargada (requiere toda la carga dentro de la superficie atrapada) y persistencia de superficies atrapadas bajo NEC. Que un agujero negro cargado pierde carga por Schwinger es el resultado de Gibbons (1975); aquí sólo se comprobó la consistencia cualitativa (τ_dis ∼ r₀ para N≈10⁵–10⁶).
+- La fase (ii) usa un modelo de materia (electrones degenerados) que es un *parámetro*: otro M_n desplaza r_s, no la estructura lógica (columna `r_s_ext` en `branch_C.table`).
+
+## 7. Conclusión
+Más allá de r_stop no aparece ninguna singularidad ni saturación de origen QED en el régimen calculable: la no linealidad estática crece sólo como α ln ε y el polo de Landau queda 12.7 veces más lejos (en ln ε) que Planck. La pregunta «¿es la QED un censor cuántico universal del colapso?» tiene respuesta **negativa**, con matices precisos: (1) una superficie atrapada exige masa no electromagnética G M_n ≥ R/2; la energía electrostática no cuenta (cancelación exacta, L1); (2) la descarga de Schwinger convierte el campo en un plasma de pares en τ_dis = κ/(e√(eE₀)), conservando energía-impulso, y por tanto no puede reducir M_n ni deshacer una superficie atrapada; (3) lo que **sí** hace la QED es eliminar la carga neta que, por ser z² ≈ 4·10⁴² veces superextremal, impediría por repulsión el colapso de la materia cargada: actúa como *facilitador*, más rápido que la caída libre (L3). La condición real de formación de un horizonte a escalas sub-Compton es de masa, no de carga: N m_e ≳ r₀/2G, es decir N ≳ M_Pl²/2 para r₀=λ_C, que es el N_crit de la línea base reinterpretado.
+
+## Apéndice A. Trazabilidad (gate → script)
+@@TRAZABILIDAD@@
+## Apéndice B. Referencias (leídas como extractos de búsqueda; no verificadas en texto completo)
+- Cinética cuántica del mecanismo de Schwinger y límite de Markov: [Schmidt et al., hep-ph/9809227](https://arxiv.org/pdf/hep-ph/9809227); [hep-ph/9712377](https://arxiv.org/pdf/hep-ph/9712377); [Pair production in a strong electric field, hep-ph/0311293](https://arxiv.org/abs/hep-ph/0311293). Bloqueo de Pauli en campos sobrecríticos: [arXiv:2306.12956](https://arxiv.org/pdf/2306.12956).
+- Pérdida espontánea de carga de agujeros negros: Gibbons, Commun. Math. Phys. 44 (1975) 245; [Gabriel, gr-qc/0010103](https://arxiv.org/pdf/gr-qc/0010103).
+- Desigualdad de Penrose cargada y superficies atrapadas en simetría esférica: [Malec–Ó Murchadha, gr-qc/9401014](https://arxiv.org/pdf/gr-qc/9401014); [Khuri–Weinstein–Yamada](https://www.math.stonybrook.edu/~khuri/Khuri_Weinstein_Yamada_Cont_Math.pdf); [Kunduri, arXiv:2409.07639](https://arxiv.org/html/2409.07639v1).
+- Heisenberg–Euler, Schwinger (1951), Born–Infeld, Oppenheimer–Snyder: citados de memoria (no consultados en esta sesión).

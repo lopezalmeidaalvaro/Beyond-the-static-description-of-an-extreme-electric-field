@@ -1,0 +1,46 @@
+
+--- CONTROL c=0  (RN exacto)  (N=1e+48, Q=N e) ---
+  aviso eps>0.1 en r = 2.701e+23 lambda_C ;  radio RN r_Q = 3.58e+24 lambda_C ; eps=1 (Coulomb) en r = 8.542e+22 lambda_C
+  PARADA en r = 8.5425e+22 lambda_C   [eps=eE/m^2 >= 1 (serie EH / Schwinger no perturbativo)]
+  eps(r_stop)=1  rho/M_Pl^4=1.67e-89  correccion EH relativa 16cE^2=0.00e+00
+  horizontes (g=0) encontrados antes de la parada: [9.360551057101095e+24, 1.3656859940504216e+24]
+  g_EH(r_stop)=1627.24588342   g_RN(r_stop)=1627.24588342   |g_EH-g_RN|=6.82e-12
+  ODE vs cuadratura (y): 1.6e-13
+  DIAGNOSTICO: ruptura de la EFT en r=8.542e+22 lambda_C -> NO se extrapola mas adentro (no se afirma singularidad ni geometria interior)
+  RN analitico g=1627.24588342; |g_num-g_RN,exacto| = 6.59e-12
+
+--- A: electron (Q=e, M=m_e)  (N=1, Q=N e) ---
+  aviso eps>0.1 en r = None lambda_C ;  radio RN r_Q = 3.58e-24 lambda_C ; eps=1 (Coulomb) en r = 0.08542 lambda_C
+  PARADA en r = 2 lambda_C   [escala de variacion del campo < lambda_C (expansion derivativa)]
+  eps(r_stop)=0.00182  rho/M_Pl^4=5.57e-95  correccion EH relativa 16cE^2=3.44e-10
+  horizontes (g=0) encontrados antes de la parada: ninguno
+  g_EH(r_stop)=1   g_RN(r_stop)=1   |g_EH-g_RN|=0.00e+00
+  ODE vs cuadratura (y): 1.8e-16
+  DIAGNOSTICO: ruptura de la EFT en r=2 lambda_C -> NO se extrapola mas adentro (no se afirma singularidad ni geometria interior)
+
+--- B: cuerpo cargado N=1e6  (N=1e+06, Q=N e) ---
+  aviso eps>0.1 en r = 270.1 lambda_C ;  radio RN r_Q = 3.58e-18 lambda_C ; eps=1 (Coulomb) en r = 85.42 lambda_C
+  PARADA en r = 85.42 lambda_C   [eps=eE/m^2 >= 1 (serie EH / Schwinger no perturbativo)]
+  eps(r_stop)=1  rho/M_Pl^4=1.67e-89  correccion EH relativa 16cE^2=1.03e-04
+  horizontes (g=0) encontrados antes de la parada: ninguno
+  g_EH(r_stop)=1   g_RN(r_stop)=1   |g_EH-g_RN|=0.00e+00
+  ODE vs cuadratura (y): 5.4e-13
+  DIAGNOSTICO: ruptura de la EFT en r=85.42 lambda_C -> NO se extrapola mas adentro (no se afirma singularidad ni geometria interior)
+
+--- C: N=1e20  (N=1e+20, Q=N e) ---
+  aviso eps>0.1 en r = 2.701e+09 lambda_C ;  radio RN r_Q = 0.000358 lambda_C ; eps=1 (Coulomb) en r = 8.542e+08 lambda_C
+  PARADA en r = 8.542e+08 lambda_C   [eps=eE/m^2 >= 1 (serie EH / Schwinger no perturbativo)]
+  eps(r_stop)=1  rho/M_Pl^4=1.67e-89  correccion EH relativa 16cE^2=1.03e-04
+  horizontes (g=0) encontrados antes de la parada: ninguno
+  g_EH(r_stop)=1   g_RN(r_stop)=1   |g_EH-g_RN|=0.00e+00
+  ODE vs cuadratura (y): 1.5e-13
+  DIAGNOSTICO: ruptura de la EFT en r=8.542e+08 lambda_C -> NO se extrapola mas adentro (no se afirma singularidad ni geometria interior)
+
+--- D: RN macroscopico, N=1e48, GM=1.5 r_Q (horizontes en regimen valido)  (N=1e+48, Q=N e) ---
+  aviso eps>0.1 en r = 2.701e+23 lambda_C ;  radio RN r_Q = 3.58e+24 lambda_C ; eps=1 (Coulomb) en r = 8.542e+22 lambda_C
+  PARADA en r = 8.542e+22 lambda_C   [eps=eE/m^2 >= 1 (serie EH / Schwinger no perturbativo)]
+  eps(r_stop)=1  rho/M_Pl^4=1.67e-89  correccion EH relativa 16cE^2=1.03e-04
+  horizontes (g=0) encontrados antes de la parada: [9.360551057101228e+24, 1.3656859937977447e+24]
+  g_EH(r_stop)=1627.40216419   g_RN(r_stop)=1627.42025277   |g_EH-g_RN|=1.81e-02
+  ODE vs cuadratura (y): 1.3e-13
+  DIAGNOSTICO: ruptura de la EFT en r=8.542e+22 lambda_C -> NO se extrapola mas adentro (no se afirma singularidad ni geometria interior)

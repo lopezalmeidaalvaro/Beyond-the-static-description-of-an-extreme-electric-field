@@ -1,0 +1,88 @@
+[
+ {
+  "label": "CONTROL c=0  (RN exacto)",
+  "N": 1e+48,
+  "r_eps1": 8.542454313184122e+22,
+  "rQ": 3.5754123503837834e+24,
+  "r_stop": 8.542454313184137e+22,
+  "why": "eps=eE/m^2 >= 1 (serie EH / Schwinger no perturbativo)",
+  "eps_stop": 0.9999999999999964,
+  "rho_over_Pl": 1.6732802904376605e-89,
+  "horizons": [
+   9.360551057101095e+24,
+   1.3656859940504216e+24
+  ],
+  "r_warn": 2.7013612437591087e+23,
+  "dEH_E": 0.0,
+  "g_EH": 1627.2458834194827,
+  "g_RN": 1627.2458834194895,
+  "ode_vs_quad": 1.5782431159596065e-13
+ },
+ {
+  "label": "A: electron (Q=e, M=m_e)",
+  "N": 1,
+  "r_eps1": 0.08542454313184122,
+  "rQ": 3.575412350383784e-24,
+  "r_stop": 1.9999999986256303,
+  "why": "escala de variacion del campo < lambda_C (expansion derivativa)",
+  "eps_stop": 0.0018243381442014366,
+  "rho_over_Pl": 5.5690276367354064e-95,
+  "horizons": [],
+  "r_warn": null,
+  "dEH_E": 3.4359245309381344e-10,
+  "g_EH": 1.0,
+  "g_RN": 1.0,
+  "ode_vs_quad": 1.7794137933405712e-16
+ },
+ {
+  "label": "B: cuerpo cargado N=1e6",
+  "N": 1000000.0,
+  "r_eps1": 85.42454313184122,
+  "rQ": 3.5754123503837836e-18,
+  "r_stop": 85.4201340111882,
+  "why": "eps=eE/m^2 >= 1 (serie EH / Schwinger no perturbativo)",
+  "eps_stop": 0.9999999999999998,
+  "rho_over_Pl": 1.673539405639693e-89,
+  "horizons": [],
+  "r_warn": 270.13598493658645,
+  "dEH_E": 0.00010323642070096527,
+  "g_EH": 1.0,
+  "g_RN": 1.0,
+  "ode_vs_quad": 5.42061975741953e-13
+ },
+ {
+  "label": "C: N=1e20",
+  "N": 1e+20,
+  "r_eps1": 854245431.3184122,
+  "rQ": 0.0003575412350383783,
+  "r_stop": 854201340.1118817,
+  "why": "eps=eE/m^2 >= 1 (serie EH / Schwinger no perturbativo)",
+  "eps_stop": 1.0000000000000004,
+  "rho_over_Pl": 1.673539405639695e-89,
+  "horizons": [],
+  "r_warn": 2701359849.3658805,
+  "dEH_E": 0.00010323642070096538,
+  "g_EH": 1.0,
+  "g_RN": 1.0,
+  "ode_vs_quad": 1.461122190449994e-13
+ },
+ {
+  "label": "D: RN macroscopico, N=1e48, GM=1.5 r_Q (horizontes en regimen valido)",
+  "N": 1e+48,
+  "r_eps1": 8.542454313184122e+22,
+  "rQ": 3.5754123503837834e+24,
+  "r_stop": 8.542013401118797e+22,
+  "why": "eps=eE/m^2 >= 1 (serie EH / Schwinger no perturbativo)",
+  "eps_stop": 1.000000000000005,
+  "rho_over_Pl": 1.673539405639711e-89,
+  "horizons": [
+   9.360551057101228e+24,
+   1.3656859937977447e+24
+  ],
+  "r_warn": 2.7013598493658645e+23,
+  "dEH_E": 0.00010323642070096639,
+  "g_EH": 1627.4021641903191,
+  "g_RN": 1627.4202527737093,
+  "ode_vs_quad": 1.3435557861706588e-13
+ }
+]

@@ -1,0 +1,16 @@
+[PASS] 1 Limite asintotico: serie E=E0-16cE0^3+..: residuo simbolico 0 (True); c=0 -> Coulomb exacto (True); desviacion ~ r^-4.000 (esperado -4); (RN exacto con c=0 se prueba en 03)
+[PASS] 2 Conservacion T: div simbolica en-capa = 0 (fuera de capa != 0: True); max|rho'+2(rho+p_t)/r|/|.| = 5.14e-10
+      NEC: rho+p_r = 0 ;  rho+p_perp = E**2*(16*E**2*c + 1) ;  WEC: rho = E**2*(24*E**2*c + 1)/2
+[PASS] 3 NEC/WEC: T_munu k^mu k^nu/E^2 >= 5.142e-04 (20000 vectores nulos); NEC saturada en direccion radial (rho+p_r=0); rho>0. Para c>0 (signo EH) no hay violacion.
+      [R/(16 pi G)] = mass^4
+      [-F2/4] = mass^4
+      [c*(F2)^2 (EH)] = mass^4
+      [alpha^2/(90 m^4)*(F2)^2] = mass^4
+      [Maxwell: r^2 E (1+16cE^2)] = mass^0
+      [16 c E^2 (adimensional)] = mass^0
+      [dy/dr = 8 pi G r^2 rho] = mass^0
+[PASS] 4 Dimensional: todos los terminos del Lagrangiano tienen masa^4; ecuaciones radiales coherentes
+[PASS] 5 Unitariedad: P(par en volumen Compton x tiempo Compton)=Gamma lambda_C^4 <1 hasta eps=11.21; el cutoff EFT eps=1.0 actua antes -> la cota nunca se usa para 'predecir'
+[CONTROL] c -> -c: min(rho+p_perp) = -9.46e+10 < 0 -> NEC violada, la suite lo rechazaria: True
+
+RESUMEN: TODAS PASAN {'1 Limite asintotico': np.True_, '2 Conservacion T': np.True_, '3 NEC/WEC': True, '4 Dimensional': True, '5 Unitariedad': np.True_, 'control negativo': True}

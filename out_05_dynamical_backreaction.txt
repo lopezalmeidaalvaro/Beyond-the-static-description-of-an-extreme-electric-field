@@ -1,0 +1,27 @@
+[PASS] D1 ∇_μT^{μν}_EM = F^{ν}{}_λ J^λ (esferico, A_t(t,r),A_r(t,r)): identidad tensorial verificada simbolicamente (signo +); implica ∇T_matter = -F J si ∇T_total=0
+[PASS] D2 conservacion de energia campo+plasma: d/dt(E²/2 + ρ_pl) = 0  (identidad exacta; Leibniz + j_pol)
+[PASS] C1 control: sin j_pol se viola: residuo = 2*Gam(t)*M(t)
+[PASS] C2 control: signo de j_cond invertido se viola: residuo != 0
+[PASS] D3 Gamma ~ x^2/(4pi^3) (ε→∞): tasa de pares cuadratica en ε
+[PASS] N0 cuadratura Gauss-Laguerre: momentos <s>=1, <s^2>=2 de Exp(1)
+[PASS] N1 convergencia h,h/2,h/4 (Heun): τ0 = [np.float64(1.4165882373082819), np.float64(1.4165786712129314), np.float64(1.4165762506189847)]; orden observado = 1.98 (esperado ≈2)
+[PASS] N2 metodo independiente (trapezoide implicito): τ0(Heun,1600)=1.41658  τ0(trap-impl,1600)=1.41658
+[PASS] N3 conservacion de energia (discreta): |ΔE|/E0 = 1.67e-04, 9.94e-06, 1.29e-05 (cae ~100x y se satura ~1e-5 en el cruce; identidad exacta en D2)
+  ε0=       3: τ0=47.905  κ=τ0·e√ε0=25.1265  |ΔE|/E0=1.5e-05  pares/vol=0.4382
+  ε0=      10: τ0=17.075  κ=τ0·e√ε0=16.3514  |ΔE|/E0=1.4e-05  pares/vol=4.321
+  ε0=      30: τ0=8.6968  κ=τ0·e√ε0=14.4247  |ΔE|/E0=3.4e-06  pares/vol=26.02
+  ε0=     100: τ0=4.5571  κ=τ0·e√ε0=13.7999  |ΔE|/E0=5.1e-06  pares/vol=167.1
+  ε0=    1000: τ0=1.4166  κ=τ0·e√ε0=13.5653  |ΔE|/E0=9.9e-06  pares/vol=5397
+  ε0=   10000: τ0=0.44719  κ=τ0·e√ε0=13.5420  |ΔE|/E0=1.0e-05  pares/vol=1.71e+05
+  ε0=  100000: τ0=0.14139  κ=τ0·e√ε0=13.5397  |ΔE|/E0=1.1e-05  pares/vol=5.409e+06
+  ε0=   1e+06: τ0=0.044711  κ=τ0·e√ε0=13.5394  |ΔE|/E0=1.1e-05  pares/vol=1.711e+08
+  ε0=   1e+08: τ0=0.0044711  κ=τ0·e√ε0=13.5394  |ΔE|/E0=1.1e-05  pares/vol=1.711e+11
+  ε0=   1e+10: τ0=0.00044711  κ=τ0·e√ε0=13.5394  |ΔE|/E0=1.1e-05  pares/vol=1.711e+14
+[PASS] N4 ley de escala τ0 ∝ ε0^(-1/2): exponente = -0.5000 (−0.5); κ∞ = 13.5394 (dispersión 1.9e-06) => τ_discharge = κ/(e√(eE0))
+[PASS] N5 LCFA válida: t_form/τ0 ≈ e/κ = 0.02 (≪1: aproximación de campo localmente constante justificada; t_form = formacion del par ~1/√ε)
+[PASS] C3 control numerico: sin j_pol la energia no se conserva: |ΔE|/E0 = 2.94e-02 vs 9.94e-06
+[PASS] C4 control numerico: j_cond con signo erroneo se detecta: |ΔE|/E0 = 1.70e+33 (runaway no fisico: antiapantallamiento)
+
+Carrera: τ_dis/r0 = κ/(α√(4πN)) = 523.40/√N ; N* = 273942.6. Validez homogénea (r0 ≥ 3 ℓ_form): N ≥ 9/α = 1233
+
+RESUMEN 05: TODAS PASAN
