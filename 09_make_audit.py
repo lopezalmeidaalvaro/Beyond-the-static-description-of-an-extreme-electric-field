@@ -15,7 +15,11 @@ V = dict(
   rr_ours015=K['ruffini_crosscheck']['ours']['0.15']['tau0_first_zero'][1], rr_ratio=K['ruffini_ratio_ours'],
   nstar=C['critical']['N_star'], ncrit=C['critical']['N_crit'], z2=C['critical']['z2_coulomb_over_gravity'],
   shift_m=A['QED_horizon_shift']['measured'], shift_p=A['QED_horizon_shift']['predicted_running_charge'],
-  ngates=D['meta']['n_gates'], nneg=D['meta']['n_negative_controls'])
+  ngates=D['meta']['n_gates'], nneg=D['meta']['n_negative_controls'],
+  om_ratio=D['branch_B2']['scaling']['omega_over_esqrtx0'][-1], gam_ratio=D['branch_B2']['scaling']['gamma_over_omega'][-1],
+  emax=max(v['Emax_err'] for v in D['branch_B2']['sweep'].values()), tau_blk=D['branch_B2']['pauli_effect_x100']['tau0_block'],
+  tau_nob=D['branch_B2']['pauli_effect_x100']['tau0_noblock'], fmax_nob=D['branch_B2']['pauli_effect_x100']['f_max_noblock'],
+  dU=D['branch_C']['U_QED']['table']['1e+00']['delta_U'])
 
 # ----------------------------------------------------------------------------------------------------------------
 PAPERS = [
@@ -62,7 +66,7 @@ PAPERS = [
  dict(id='MOM1994', ref='Malec & Ó Murchadha, Phys. Rev. D 49 (1994) [M], gr-qc/9401014', lvl='E',
       know='Desigualdad de Penrose en simetría esférica aun con el horizonte dentro de la materia; condición necesaria para formación de superficies atrapadas; la versión cargada tipo Gibbons se demuestra si toda la carga está dentro de la superficie atrapada exterior y, según el resumen, puede romperse en etapas tempranas del colapso.', gates='06:P1–P3, criterio (ii); riesgo: hipótesis de carga contenida', cat=1),
  dict(id='KWY', ref='Khuri, Weinstein & Yamada: arXiv:1308.3771 (2013), arXiv:1409.3271 (2014/15), Contemp. Math. (2015)', lvl='E',
-      know='Desigualdad de Penrose riemanniana con carga (cota superior r ≤ m+√(m²−q²)) bajo DEC cargada y SIN materia cargada fuera del horizonte; m≥|q|. El año «2017» del encargo no coincide con lo visto (2013–2015): verificar.', gates='06:P1 (RN satura), criterio (ii)', cat=1),
+      know='Desigualdad de Penrose riemanniana con carga (cota superior r ≤ m+√(m²−q²)) bajo DEC cargada y SIN materia cargada fuera del horizonte; m≥|q|. El «2017» del encargo corresponde, de memoria (NO verificado), a la versión publicada de arXiv:1409.3271 en J. Differential Geom. 106 (2017); lo visto en extractos es 2013–2015 (preprints/Contemp. Math.).', gates='06:P1 (RN satura), criterio (ii)', cat=1),
  dict(id='MS1964', ref='Misner & Sharp, Phys. Rev. 136, B571 (1964) [M]; Hayward (1994) trapping horizons [E parcial]; Hod (masa M∞−Q²/2R) [E vía arXiv:2606.31116]', lvl='E',
       know='Un trabajo reciente indica que, en RN, la masa dentro de R, M(r≤R)=M∞−Q²/2R, coincide exactamente con la masa cuasilocal de Misner–Sharp M=(R/2)(1−g^{rr}); el horizonte de atrapamiento es el borde 2M(R)=R.', gates='06:P2, P3 = ESTA identidad. L1 es una reescritura.', cat=1),
  dict(id='RT2024', ref='Russo & Townsend, JHEP 06 (2024) 191, arXiv:2404.09994', lvl='E',
@@ -82,10 +86,10 @@ RESULTS = [
  dict(id='L1', name='Cancelación de Coulomb en el atrapamiento de un cascarón (P1–P3)', cat=1,
       evidence='Misner–Sharp en RN: M(R)=M∞−Q²/2R (Hod; Misner & Sharp 1964); ecuación de energía de capa fina (Israel; Boulware 1973); desigualdad de Penrose cargada saturada por RN (Gibbons 1972 [M]; Malec–Ó Murchadha 1994; Khuri–Weinstein–Yamada).',
       equivalent='G·(M−Q²/8πR)=R/2 ⇔ g^{rr}(R)=0 (definición del horizonte de RN).',
-      ours='Verificación simbólica independiente (SymPy) y su uso en el criterio de fase.',
+      ours='CIERRE (P10, P11): derivación interna con SymPy de θ₊=0 ⇔ 2GM_MS=R, M_ADM=M_MS+U_C y la igualdad de Penrose cargada para datos simétricos en el tiempo, sin teoremas externos; U_C exacta a un bucle (δU/U_C=%.3e en R=r_Q, N=1e6). Sigue siendo Cat.1: el contenido es conocido; lo que cambia es que ya no depende de una cita.' % V['dU'],
       forbidden='«Descubrimos que la energía electrostática no cuenta para atrapar».',
       wording='«Recordamos que, en términos de la masa de Misner–Sharp M(R)=M−Q²/(2R), el criterio de atrapamiento es 2GM(R)≥R, de modo que la energía electrostática exterior no contribuye [Misner–Sharp 1964; Hod; Boulware 1973].»',
-      caveat='KWY exige DEC cargada y ninguna materia cargada fuera del horizonte; Malec–Ó Murchadha indican que la versión cargada puede romperse en etapas tempranas del colapso.'),
+      caveat='Probado internamente sólo para datos esféricos simétricos en el tiempo, ρ≥0 y sin materia cargada exterior (las mismas hipótesis de KWY); el caso dinámico general (Misner–Sharp completo) NO. Malec–Ó Murchadha indican que la versión cargada puede romperse en etapas tempranas del colapso si hay carga exterior.'),
  dict(id='L2a', name='Escala τ_dis ∝ (eE₀)^{-1/2} (exponente −0.5000)', cat=1,
       evidence='Análisis dimensional con m→0 (única escala √(eE)); frecuencia de plasma ω_p∝e√(eE) en la retroacción de Schwinger (Kluger et al. 1991–1998; Ruffini–Vereshchagin–Xue 2010 §8) [fórmula exacta: verificar en texto completo].',
       equivalent='t·√(eE₀)=κ(e) por invariancia de escala.', ours='Medición numérica del exponente y verificación de convergencia.',
@@ -122,6 +126,13 @@ RESULTS = [
  dict(id='B1', name='Modelo cinético 05 (fuente, conducción + polarización, balance de energía)', cat=1,
       evidence='Kluger et al. 1991–98 (modelo y límite de Markov), Schmidt et al. 1998.', equivalent='Mismas ecuaciones esenciales.',
       ours='Verificación simbólica D1/D2, implementación Volterra con convergencia de orden 2 y controles negativos.', forbidden='«Nuevo modelo de retroacción».', wording='«Reimplementamos el modelo de Markov de Kluger–Mottola–Eisenberg con verificación simbólica del balance de energía.»', caveat='Sin (1−2f), sin QKE, sin transporte espacial; válido hasta el primer cero.'),
+ dict(id='K1', name=f"Cinética de Markov con bloqueo de Pauli a través de ≥5 oscilaciones (05b): ω_p={V['om_ratio']:.4f} e√ε₀, γ/ω_p={V['gam_ratio']:.4f}", cat=2,
+      evidence='El modelo Boltzmann–Vlasov con fuente de Schwinger y factor (1−2f) ya está en Kluger et al. (1991–98) y Prakapenia–Vereshchagin (2023); la frecuencia de plasma ∝ e√(eE) es la escala estándar.',
+      equivalent='Ecuación de Vlasov cuántica en el límite de Markov con bloqueo de Pauli.',
+      ours=f"Identidad simbólica de energía con (1−2f) en j_pol (K1) y solución exacta del bloqueo (K2); DOP853 con eventos; |ΔE|/E₀≤{V['emax']:.1e} tras ≥10 cruces; 0≤f≤½; constantes numéricas de ESTE modelo (ancho de fuente σ=0.25√ε₀; sensibilidad ≤0.1% en τ₀). Sin bloqueo f llega a {V['fmax_nob']:.2f}; el bloqueo alarga τ₀ de {V['tau_nob']:.4f} a {V['tau_blk']:.4f} (ε₀=100).",
+      forbidden='«Hemos calculado el amortiguamiento de las oscilaciones de plasma de Schwinger» como resultado de QED; las constantes ω_p/(e√ε₀) y γ/ω_p como universales.',
+      wording='«En un modelo de Vlasov de Markov con bloqueo de Pauli (Kluger et al.; Prakapenia–Vereshchagin) obtenemos ω_p≈0.19e√(eE₀) y γ/ω_p≈5·10⁻³ para una fuente gaussiana de ancho 0.25√ε₀.»',
+      caveat='El bloqueo de Markov acota f<½ desde el vacío, mientras que la ocupación exacta de campo constante e^{−πm_⊥²/ε} supera ½ para ε>4.5: el modelo subestima la ocupación a campo fuerte. Sin QKE no markoviana, sin transporte espacial, sin comparar con las curvas publicadas.'),
  dict(id='P1', name='Diagrama de fases (N, r₀)', cat=3,
       evidence='Cada frontera es estándar: r_s=2GM (Schwarzschild), gas de Fermi degenerado, ε=1 (Schwinger), densidad de Planck, N_crit=M_Pl²/m² (cota tipo Gibbons), Nα≳1 (supercritico, Zel\'dovich–Greiner).',
       equivalent='—', ours='Colocarlas en un solo plano con valores explícitos, tiempos y verificación simbólica de cada umbral (P1–P9).',
@@ -138,7 +149,8 @@ WEAK = [
  ('Expansión derivativa / Drummond–Hathrell', f"04 resuelve el perfil hasta r_Q≈10⁻¹⁸ λ_C (ℓ≈{V['ell']:.1e} λ_C), donde la LCFA y el acoplo mínimo no están controlados (términos RF² de orden α(λ_C/L)²). Son soluciones formales del modelo, no QED."),
  ('Parte imaginaria y estabilidad', 'Para ε>1 la tasa de decaimiento del vacío es O(1) en unidades Compton; la parte real aislada no define una acción efectiva estable. El perfil estático para ε≫1 es un ejercicio de modelo.'),
  ('Causalidad (Russo–Townsend)', 'Causalidad⇒DEC y SEC en clase Plebanski; nuestra DEC se viola para ε>1.88. Hay que calcular las condiciones de causalidad con L₁(S,P) y ver si el efecto es una propiedad real o del recorte P=0.'),
- ('Hipótesis de Penrose cargada', 'Requiere DEC cargada y carga dentro de la superficie atrapada (KWY); Malec–Ó Murchadha avisan de rupturas en colapso temprano. La dinámica (carga que sale) no cumple el supuesto sin más.'),
+ ('Hipótesis de Penrose cargada', 'Ahora DERIVADA internamente (P10), pero sólo para datos simétricos en el tiempo, ρ≥0 y sin materia cargada exterior (como KWY). Malec–Ó Murchadha avisan de rupturas en colapso temprano; la dinámica con carga que sale NO está cubierta.'),
+ ('Cinética con bloqueo de Pauli', 'La ecuación de Markov con (1−2f) acota f<½ desde el vacío, mientras que la QKE exacta de campo constante da f=e^{−πm⊥²/ε}>½ a ε>4.5; los resultados de 05b (ω_p, γ) son de modelo.'),
  ('Modelo de materia de la fase (ii)', f"El gas de electrones degenerados no está ligado (Coulomb {V['z2']:.1e}× gravedad); r_s es una condición de datos iniciales."),
  ('Constante κ', 'Dependiente del modelo (n=1, sin (1−2f), LCFA, primer cero). Sin comparación con las curvas de KME/Bloch/Ruffini en texto completo.'),
  ('Verificación bibliográfica', 'Ningún texto completo leído (arxiv.org y ar5iv no accesibles). Todos los niveles E son extractos; los M no se comprobaron.'),
@@ -158,9 +170,10 @@ HOOK = dict(
               'Leyes nuevas de plasma o de campo fuerte.', 'Predicciones físicas en r≪λ_C.'],
  before_submission=['Leer en texto completo: Kluger et al. (1991, 1992, 1998), Ruffini–Vereshchagin–Xue §8, Gelis–Tanji, Ruffini–Wu–Xue, Yajima–Tamaki, Boulware, Malec–Ó Murchadha, KWY, Russo–Townsend, Fedotov.',
                     'Comparar κ reproduciendo una curva publicada (misma definición de tiempo/longitud de oscilación).',
-                    'Añadir (1−2f) y/o la ecuación cinética cuántica; cuantificar el cambio en κ.',
+                    'HECHO en 05b: factor (1−2f) y oscilaciones multi-cruce. PENDIENTE: ecuación cinética cuántica no markoviana (f hasta 1) y comparación de ω_p, γ con Prakapenia–Vereshchagin (2023).',
                     'Calcular las condiciones de causalidad de Russo–Townsend con L₁(S,P).',
                     'Buscar sistemáticamente RN/EEH con carga corrida (Uehling) y logarítmico; no se hizo.',
+                    'Verificar contra la edición original los datos bibliográficos marcados VERIFY en references.bib (revista/volumen/páginas recordados de memoria) y completar autores/afiliación en paper.tex.',
                     'Incluir los términos de Drummond–Hathrell y restringir 04 a r≳λ_C o rotular como modelo.']
 )
 
@@ -175,7 +188,7 @@ json.dump(out, open('novelty_audit.json', 'w'), indent=1, ensure_ascii=False, de
 # ------------------------------- Markdown -------------------------------------------------------------------------
 catname = {1: 'Cat.1 Redescubrimiento', 2: 'Cat.2 Refinamiento', 3: 'Cat.3 Síntesis', None: 'Laguna / tensión'}
 md = f"""# NOVELTY_AUDIT — Estado del arte y novedad de `DISCOVERY_REPORT.md`
-*Generado por `09_make_audit.py` desde `discovery_results.json` (incl. `08_novelty_checks.py`). {out['meta']['date']}.*
+*Generado por `09_make_audit.py` desde `discovery_results.json` (incl. `08_novelty_checks.py`). {out['meta']['date']}.*\n\n> **Actualización tras los cierres teóricos:** P10/P11 (Penrose cargada derivada internamente, con alcance acotado) y 05b (cinética con bloqueo de Pauli). L1 sigue siendo Cat.1; K1 se añade como Cat.2 dependiente de modelo.
 
 ## 0. Alcance y límites (léase primero)
 - **Ningún texto completo fue leído.** `arxiv.org` y `ar5iv.labs.arxiv.org` no resuelven desde esta sesión (red restringida): hay que permitir esos dominios en *Network access* del entorno para una auditoría de texto completo. Todo lo que sigue se apoya en **extractos de búsqueda** (nivel **E**) o en **memoria** (nivel **M**, no verificada). La *ausencia* de un resultado en una búsqueda superficial (nivel **N**) **no** prueba que no exista.

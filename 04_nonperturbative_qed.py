@@ -142,6 +142,7 @@ for k, v in tab.items(): print(f"  ε={k:>7}: quart={v['L_quart_over_Maxwell']:.
 R['eps_BI_saturation'] = float(E_CHARGE*bBI)
 
 # ---- perfil interior: métrica con M_ADM = κ M_ext ------------------------------------
+ARR = {}
 def profile(N, kappa=1.5, npts=9000):
     Qc = N*E_CHARGE; a = Qc/(4*np.pi)
     rQ = np.sqrt(G_NEWTON/(4*np.pi))*Qc; GM = kappa*rQ
@@ -157,6 +158,7 @@ def profile(N, kappa=1.5, npts=9000):
         # horizontes: cambios de signo de g
         s = np.sign(gg); idx = np.where(s[:-1]*s[1:] < 0)[0]
         hz = [float(np.exp(brentq(lambda t: float(np.interp(t, lr, gg)), lr[i], lr[i+1]))) for i in idx]
+        ARR[(N, m)] = (rr.copy(), gg.copy(), Em.copy(), a, rQ)
         rp_rn = GM*(1 + np.sqrt(1 - kappa**-2)); ip = np.argmin(abs(rr - rp_rn))
         out[m] = dict(lam_at_rplus=float(Em[ip]/(a/rr[ip]**2)), r_h=hz, g_at=dict((f"{k}rQ", float(np.interp(np.log(k*rQ), lr, gg))) for k in (0.2, 0.5, 1, 2, 5)),
                       eps_at_rQ=float(E_CHARGE*Em[np.argmin(abs(rr-rQ))]), E_over_Coulomb_rQ=float(Em[np.argmin(abs(rr-rQ))]/(a/rr[np.argmin(abs(rr-rQ))]**2)))
@@ -236,6 +238,23 @@ gate("C2 control: signo de L1 invertido detectado", abs(ratio_bad - 1) > 0.5, f"
 gate("C3 control: c->-c viola NEC (baseline)", float(np.min(rho_m('quartic', np.logspace(0, 4, 40)) * 0 + (np.logspace(0,4,40)*(np.logspace(0,4,40)*(1 - 16*c_eh*np.logspace(0,4,40)**2))))) < 0,
      "E·D(E) = E²(1-16|c|E²) < 0 a campo alto")
 
+
+# ---- figura vectorial: perfiles metricos y de campo (N=1e6, M=1.5 M_ext) ----
+try:
+    import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
+    fig, ax = plt.subplots(1, 2, figsize=(10.5, 3.9)); sty = {'maxwell': ('k', '-', 'Maxwell (RN)'), 'qed': ('C3', '-', 'one-loop QED (exact)'),
+                                                        'quartic': ('C0', '--', 'quartic EH, extrapolated'), 'bi': ('C2', ':', 'Born–Infeld, matched')}
+    for mname, (c_, ls_, lab_) in sty.items():
+        rr_, gg_, Em_, a_, rQ_ = ARR[(1e6, mname)]
+        ax[0].plot(rr_/rQ_, gg_, color=c_, ls=ls_, lw=1.4, label=lab_); ax[1].plot(rr_/rQ_, np.log10(np.maximum(Em_/(a_/rr_**2), 1e-300)), color=c_, ls=ls_, lw=1.4, label=lab_)
+    ax[0].set_xscale('log'); ax[0].set_xlim(0.05, 50); ax[0].set_ylim(-6, 1.2); ax[0].axhline(0, color='gray', lw=0.5)
+    ax[0].set_xlabel(r'$r/r_Q$'); ax[0].set_ylabel(r'$g(r)=1-2Gm(r)/r$'); ax[0].legend(fontsize=8, loc='lower right'); ax[0].set_title(r'Metric function, $N=10^6$, $M=1.5M_{\rm ext}$')
+    ax[1].set_xscale('log'); ax[1].set_xlim(0.05, 50); ax[1].set_ylim(-40, 1.0); ax[1].set_xlabel(r'$r/r_Q$'); ax[1].set_ylabel(r'$\log_{10}(E/E_{\rm Coulomb})$'); ax[1].set_title('Electric field relative to Coulomb')
+    fig.tight_layout(); fig.savefig('fig_metric_profiles.pdf'); fig.savefig('fig_metric_profiles.png', dpi=160); R['figure'] = 'fig_metric_profiles.pdf'
+except Exception as ex:
+    R['figure'] = f'no generada: {ex}'
+
+R['numerics'] = dict(im_series_max_relerr=float(max(errs)), small_eps_slope=float(slope), log_slope_fit=float(fit[0]), log_slope_expected=float(-1/(24*np.pi**2)), K_drift=float(Q.K_DRIFT))
 R['note'] = 'eeh.py:schwinger_rate era Gamma_vac=2ImL1 (decaimiento del vacio), no el numero medio de pares; aqui pair_rate usa solo n=1.'
 save_section('branch_A', R)
 print("\nRESUMEN 04:", "TODAS PASAN" if ok_all else "HAY FALLOS")

@@ -1,10 +1,12 @@
 # NOVELTY_AUDIT — Estado del arte y novedad de `DISCOVERY_REPORT.md`
 *Generado por `09_make_audit.py` desde `discovery_results.json` (incl. `08_novelty_checks.py`). 2026-11-01.*
 
+> **Actualización tras los cierres teóricos:** P10/P11 (Penrose cargada derivada internamente, con alcance acotado) y 05b (cinética con bloqueo de Pauli). L1 sigue siendo Cat.1; K1 se añade como Cat.2 dependiente de modelo.
+
 ## 0. Alcance y límites (léase primero)
 - **Ningún texto completo fue leído.** `arxiv.org` y `ar5iv.labs.arxiv.org` no resuelven desde esta sesión (red restringida): hay que permitir esos dominios en *Network access* del entorno para una auditoría de texto completo. Todo lo que sigue se apoya en **extractos de búsqueda** (nivel **E**) o en **memoria** (nivel **M**, no verificada). La *ausencia* de un resultado en una búsqueda superficial (nivel **N**) **no** prueba que no exista.
 - Esta auditoría **no** puede dar «rigor absoluto» sobre la novedad: da una clasificación conservadora y una lista de verificaciones pendientes (§7).
-- **Corrección de resultados propios** hallada durante la auditoría (ya aplicada en 04, informe y JSON): el margen DEC «−8.33e-4, acotado» era el borde del rango (ε=10⁴⁰); el umbral «1.92» era artefacto de rejilla (exacto **1.88218**). Ahora hay 52 gates.
+- **Corrección de resultados propios** hallada durante la auditoría (ya aplicada en 04, informe y JSON): el margen DEC «−8.33e-4, acotado» era el borde del rango (ε=10⁴⁰); el umbral «1.92» era artefacto de rejilla (exacto **1.88218**). Ahora hay 67 gates.
 
 ## 1. Veredicto en una tabla
 | Resultado | Categoría | En una línea |
@@ -17,11 +19,12 @@
 | **L4b** Violación de DEC desde ε=1.88218; margen -7.743e-04 (asintótico) | Cat.1 Redescubrimiento | margen→−α/(3π)=-7.743e-04; a ε=10¹⁰: -7.875e-04. |
 | **A1** Perfil interior estático: EH cuártico vs un bucle exacto vs Born–Infeld (04) | Cat.2 Refinamiento | E∼r^{-2/3} y masa finita del cuártico como artefacto (S9); un bucle exacto = RN con carga corrida (δr₊/r₊ medido -1.191e-02 vs predicho -1.230e-02); BI/cuártico → horizonte único tipo Schwarzschild. |
 | **B1** Modelo cinético 05 (fuente, conducción + polarización, balance de energía) | Cat.1 Redescubrimiento | Mismas ecuaciones esenciales. |
+| **K1** Cinética de Markov con bloqueo de Pauli a través de ≥5 oscilaciones (05b): ω_p=0.1865 e√ε₀, γ/ω_p=0.0052 | Cat.2 Refinamiento | Ecuación de Vlasov cuántica en el límite de Markov con bloqueo de Pauli. |
 | **P1** Diagrama de fases (N, r₀) | Cat.3 Síntesis | Colocarlas en un solo plano con valores explícitos, tiempos y verificación simbólica de cada umbral (P1–P9). |
 | **T1** Umbrales N*=2.74e+05, N_crit=5.71e+44, N_valid=9/α | Cat.1 Redescubrimiento | N* como cantidad de modelo (Cat.3 menor). |
-| **M1** Metodología: pipeline «LLM propone, CAS ejecuta», gates simbólicos, controles negativos, informe autogenerado | Cat.3 Síntesis | 52 gates (10 controles negativos), trazabilidad número→clave JSON. |
+| **M1** Metodología: pipeline «LLM propone, CAS ejecuta», gates simbólicos, controles negativos, informe autogenerado | Cat.3 Síntesis | 67 gates (15 controles negativos), trazabilidad número→clave JSON. |
 
-Recuento: Cat.1 = 6, Cat.2 = 2, Cat.3 = 3. **Ningún resultado es, hoy, un descubrimiento físico nuevo defendible**; el valor está en la síntesis cuantitativa, la corrección explícita de la truncación y la verificación formal.
+Recuento: Cat.1 = 6, Cat.2 = 3, Cat.3 = 3. **Ningún resultado es, hoy, un descubrimiento físico nuevo defendible**; el valor está en la síntesis cuantitativa, la corrección explícita de la truncación y la verificación formal.
 
 ## 2. Comparación artículo por artículo (nivel de verificación entre paréntesis)
 | Trabajo | Nivel | Qué se sabe (según lo visto) | Gate(s) del repositorio | Relación |
@@ -43,7 +46,7 @@ Recuento: Cat.1 = 6, Cat.2 = 2, Cat.3 = 3. **Ningún resultado es, hoy, un descu
 | Boulware, Phys. Rev. D 8, 2363 (1973) | E | Fuente secundaria: capa fina cargada con uniones de Israel y extensión máxima de RN; ecuación de energía que relaciona masa total, masa propia, carga y radio; singularidad desnuda solo con masa propia negativa. | 06:P1–P3 (L1), §7 | Cat.1 Redescubrimiento |
 | Bekenstein, Phys. Rev. D 4, 2185 (1971) | E | Equilibrio hidrostático y colapso de bolas de fluido cargado; se cita como origen del «doble papel» de la carga y del teorema de Birkhoff cargado. Contenido detallado NO accedido. | 06 (L1, z²), §7 | Cat.1 Redescubrimiento |
 | Malec & Ó Murchadha, Phys. Rev. D 49 (1994) [M], gr-qc/9401014 | E | Desigualdad de Penrose en simetría esférica aun con el horizonte dentro de la materia; condición necesaria para formación de superficies atrapadas; la versión cargada tipo Gibbons se demuestra si toda la carga está dentro de la superficie atrapada exterior y, según el resumen, puede romperse en etapas tempranas del colapso. | 06:P1–P3, criterio (ii); riesgo: hipótesis de carga contenida | Cat.1 Redescubrimiento |
-| Khuri, Weinstein & Yamada: arXiv:1308.3771 (2013), arXiv:1409.3271 (2014/15), Contemp. Math. (2015) | E | Desigualdad de Penrose riemanniana con carga (cota superior r ≤ m+√(m²−q²)) bajo DEC cargada y SIN materia cargada fuera del horizonte; m≥|q|. El año «2017» del encargo no coincide con lo visto (2013–2015): verificar. | 06:P1 (RN satura), criterio (ii) | Cat.1 Redescubrimiento |
+| Khuri, Weinstein & Yamada: arXiv:1308.3771 (2013), arXiv:1409.3271 (2014/15), Contemp. Math. (2015) | E | Desigualdad de Penrose riemanniana con carga (cota superior r ≤ m+√(m²−q²)) bajo DEC cargada y SIN materia cargada fuera del horizonte; m≥|q|. El «2017» del encargo corresponde, de memoria (NO verificado), a la versión publicada de arXiv:1409.3271 en J. Differential Geom. 106 (2017); lo visto en extractos es 2013–2015 (preprints/Contemp. Math.). | 06:P1 (RN satura), criterio (ii) | Cat.1 Redescubrimiento |
 | Misner & Sharp, Phys. Rev. 136, B571 (1964) [M]; Hayward (1994) trapping horizons [E parcial]; Hod (masa M∞−Q²/2R) [E vía arXiv:2606.31116] | E | Un trabajo reciente indica que, en RN, la masa dentro de R, M(r≤R)=M∞−Q²/2R, coincide exactamente con la masa cuasilocal de Misner–Sharp M=(R/2)(1−g^{rr}); el horizonte de atrapamiento es el borde 2M(R)=R. | 06:P2, P3 = ESTA identidad. L1 es una reescritura. | Cat.1 Redescubrimiento |
 | Russo & Townsend, JHEP 06 (2024) 191, arXiv:2404.09994 | E | En NLED de clase Plebanski, causalidad implica DEC y SEC; toda violación implica acausalidad. Tomizawa & Suzuki (arXiv:2309.10535): violación de DEC ↔ fotones superlumínicos en la geometría efectiva. | 04:N8, N9, S10 (nuestra DEC solo en configuración eléctrica pura, P=0): TENSIÓN a comprobar | Laguna / tensión |
 | Fedotov et al., arXiv:1608.02261; Mironov, Meuren & Fedotov (2020) [identificador arXiv:2003.06909 NO confirmado]; Heinzl, Ilderton & King (unitariedad) | E | Conjetura de Ritus–Narozhny: cada lazo aporta αχ^{2/3}, no α; la teoría perturbativa fallaría para αχ^{2/3}≳1 (χ≳α^(-3/2)≈1604) en campo cruzado constante. La resumación indica ruptura ya en g≳1; Heinzl–Ilderton–King discuten que la unitariedad elimina diagramas supuestamente responsables. Abierta; se enuncia para campo cruzado constante (aplicabilidad a E puro: NO verificada). | 04:N7,N8; 05 barrido hasta ε=10¹⁰; DISCOVERY_REPORT §4/§6. LAGUNA importante | Laguna / tensión |
@@ -55,10 +58,10 @@ Recuento: Cat.1 = 6, Cat.2 = 2, Cat.3 = 3. **Ningún resultado es, hoy, un descu
 ### L1 — Cancelación de Coulomb en el atrapamiento de un cascarón (P1–P3)  →  **Cat.1 Redescubrimiento**
 - **Estructura ya publicada:** Misner–Sharp en RN: M(R)=M∞−Q²/2R (Hod; Misner & Sharp 1964); ecuación de energía de capa fina (Israel; Boulware 1973); desigualdad de Penrose cargada saturada por RN (Gibbons 1972 [M]; Malec–Ó Murchadha 1994; Khuri–Weinstein–Yamada).
 - **Ecuación equivalente:** G·(M−Q²/8πR)=R/2 ⇔ g^{rr}(R)=0 (definición del horizonte de RN).
-- **Aporte del repositorio:** Verificación simbólica independiente (SymPy) y su uso en el criterio de fase.
+- **Aporte del repositorio:** CIERRE (P10, P11): derivación interna con SymPy de θ₊=0 ⇔ 2GM_MS=R, M_ADM=M_MS+U_C y la igualdad de Penrose cargada para datos simétricos en el tiempo, sin teoremas externos; U_C exacta a un bucle (δU/U_C=7.047e-02 en R=r_Q, N=1e6). Sigue siendo Cat.1: el contenido es conocido; lo que cambia es que ya no depende de una cita.
 - **No presentar como:** «Descubrimos que la energía electrostática no cuenta para atrapar».
 - **Cómo citar:** «Recordamos que, en términos de la masa de Misner–Sharp M(R)=M−Q²/(2R), el criterio de atrapamiento es 2GM(R)≥R, de modo que la energía electrostática exterior no contribuye [Misner–Sharp 1964; Hod; Boulware 1973].»
-- **Salvedades:** KWY exige DEC cargada y ninguna materia cargada fuera del horizonte; Malec–Ó Murchadha indican que la versión cargada puede romperse en etapas tempranas del colapso.
+- **Salvedades:** Probado internamente sólo para datos esféricos simétricos en el tiempo, ρ≥0 y sin materia cargada exterior (las mismas hipótesis de KWY); el caso dinámico general (Misner–Sharp completo) NO. Malec–Ó Murchadha indican que la versión cargada puede romperse en etapas tempranas del colapso si hay carga exterior.
 
 ### L2a — Escala τ_dis ∝ (eE₀)^{-1/2} (exponente −0.5000)  →  **Cat.1 Redescubrimiento**
 - **Estructura ya publicada:** Análisis dimensional con m→0 (única escala √(eE)); frecuencia de plasma ω_p∝e√(eE) en la retroacción de Schwinger (Kluger et al. 1991–1998; Ruffini–Vereshchagin–Xue 2010 §8) [fórmula exacta: verificar en texto completo].
@@ -116,6 +119,14 @@ Recuento: Cat.1 = 6, Cat.2 = 2, Cat.3 = 3. **Ningún resultado es, hoy, un descu
 - **Cómo citar:** «Reimplementamos el modelo de Markov de Kluger–Mottola–Eisenberg con verificación simbólica del balance de energía.»
 - **Salvedades:** Sin (1−2f), sin QKE, sin transporte espacial; válido hasta el primer cero.
 
+### K1 — Cinética de Markov con bloqueo de Pauli a través de ≥5 oscilaciones (05b): ω_p=0.1865 e√ε₀, γ/ω_p=0.0052  →  **Cat.2 Refinamiento**
+- **Estructura ya publicada:** El modelo Boltzmann–Vlasov con fuente de Schwinger y factor (1−2f) ya está en Kluger et al. (1991–98) y Prakapenia–Vereshchagin (2023); la frecuencia de plasma ∝ e√(eE) es la escala estándar.
+- **Ecuación equivalente:** Ecuación de Vlasov cuántica en el límite de Markov con bloqueo de Pauli.
+- **Aporte del repositorio:** Identidad simbólica de energía con (1−2f) en j_pol (K1) y solución exacta del bloqueo (K2); DOP853 con eventos; |ΔE|/E₀≤2.9e-06 tras ≥10 cruces; 0≤f≤½; constantes numéricas de ESTE modelo (ancho de fuente σ=0.25√ε₀; sensibilidad ≤0.1% en τ₀). Sin bloqueo f llega a 6.53; el bloqueo alarga τ₀ de 4.5576 a 5.5684 (ε₀=100).
+- **No presentar como:** «Hemos calculado el amortiguamiento de las oscilaciones de plasma de Schwinger» como resultado de QED; las constantes ω_p/(e√ε₀) y γ/ω_p como universales.
+- **Cómo citar:** «En un modelo de Vlasov de Markov con bloqueo de Pauli (Kluger et al.; Prakapenia–Vereshchagin) obtenemos ω_p≈0.19e√(eE₀) y γ/ω_p≈5·10⁻³ para una fuente gaussiana de ancho 0.25√ε₀.»
+- **Salvedades:** El bloqueo de Markov acota f<½ desde el vacío, mientras que la ocupación exacta de campo constante e^{−πm_⊥²/ε} supera ½ para ε>4.5: el modelo subestima la ocupación a campo fuerte. Sin QKE no markoviana, sin transporte espacial, sin comparar con las curvas publicadas.
+
 ### P1 — Diagrama de fases (N, r₀)  →  **Cat.3 Síntesis**
 - **Estructura ya publicada:** Cada frontera es estándar: r_s=2GM (Schwarzschild), gas de Fermi degenerado, ε=1 (Schwinger), densidad de Planck, N_crit=M_Pl²/m² (cota tipo Gibbons), Nα≳1 (supercritico, Zel'dovich–Greiner).
 - **Ecuación equivalente:** —
@@ -135,7 +146,7 @@ Recuento: Cat.1 = 6, Cat.2 = 2, Cat.3 = 3. **Ningún resultado es, hoy, un descu
 ### M1 — Metodología: pipeline «LLM propone, CAS ejecuta», gates simbólicos, controles negativos, informe autogenerado  →  **Cat.3 Síntesis**
 - **Estructura ya publicada:** No es un resultado de física; valor de reproducibilidad.
 - **Ecuación equivalente:** —
-- **Aporte del repositorio:** 52 gates (10 controles negativos), trazabilidad número→clave JSON.
+- **Aporte del repositorio:** 67 gates (15 controles negativos), trazabilidad número→clave JSON.
 - **No presentar como:** Presentarlo como evidencia de corrección física.
 - **Cómo citar:** «Software abierto de verificación».
 - **Salvedades:** Un gate PASS verifica coherencia interna, no validez física (p. ej. el error del «−8.33e-4» pasó los gates).
@@ -148,6 +159,7 @@ Recuento: Cat.1 = 6, Cat.2 = 2, Cat.3 = 3. **Ningún resultado es, hoy, un descu
 - ~~«Violación cuántica acotada de la DEC» como hallazgo; el valor −8.33e-4 como cota.~~ → «La parte real del Lagrangiano a un bucle viola la DEC en configuración eléctrica pura para ε>1.88; el margen relativo tiende a −α/3π, reflejo de la anomalía de traza.»
 - ~~«La QED no censura el horizonte» como predicción física en r_Q.~~ → «Mostramos que la extrapolación cuártica del EEH produce un perfil cualitativamente distinto del de la integral de tiempo propio exacta; comparamos ambos en el sistema acoplado.»
 - ~~«Nuevo modelo de retroacción».~~ → «Reimplementamos el modelo de Markov de Kluger–Mottola–Eisenberg con verificación simbólica del balance de energía.»
+- ~~«Hemos calculado el amortiguamiento de las oscilaciones de plasma de Schwinger» como resultado de QED; las constantes ω_p/(e√ε₀) y γ/ω_p como universales.~~ → «En un modelo de Vlasov de Markov con bloqueo de Pauli (Kluger et al.; Prakapenia–Vereshchagin) obtenemos ω_p≈0.19e√(eE₀) y γ/ω_p≈5·10⁻³ para una fuente gaussiana de ancho 0.25√ε₀.»
 - ~~«N* es un umbral físico universal».~~ → «Orden de magnitud dependiente de modelo.»
 
 ## 5. Debilidades que un árbitro señalaría (autocrítica)
@@ -155,11 +167,12 @@ Recuento: Cat.1 = 6, Cat.2 = 2, Cat.3 = 3. **Ningún resultado es, hoy, un descu
 2. **Expansión derivativa / Drummond–Hathrell.** 04 resuelve el perfil hasta r_Q≈10⁻¹⁸ λ_C (ℓ≈1.8e-18 λ_C), donde la LCFA y el acoplo mínimo no están controlados (términos RF² de orden α(λ_C/L)²). Son soluciones formales del modelo, no QED.
 3. **Parte imaginaria y estabilidad.** Para ε>1 la tasa de decaimiento del vacío es O(1) en unidades Compton; la parte real aislada no define una acción efectiva estable. El perfil estático para ε≫1 es un ejercicio de modelo.
 4. **Causalidad (Russo–Townsend).** Causalidad⇒DEC y SEC en clase Plebanski; nuestra DEC se viola para ε>1.88. Hay que calcular las condiciones de causalidad con L₁(S,P) y ver si el efecto es una propiedad real o del recorte P=0.
-5. **Hipótesis de Penrose cargada.** Requiere DEC cargada y carga dentro de la superficie atrapada (KWY); Malec–Ó Murchadha avisan de rupturas en colapso temprano. La dinámica (carga que sale) no cumple el supuesto sin más.
-6. **Modelo de materia de la fase (ii).** El gas de electrones degenerados no está ligado (Coulomb 4.2e+42× gravedad); r_s es una condición de datos iniciales.
-7. **Constante κ.** Dependiente del modelo (n=1, sin (1−2f), LCFA, primer cero). Sin comparación con las curvas de KME/Bloch/Ruffini en texto completo.
-8. **Verificación bibliográfica.** Ningún texto completo leído (arxiv.org y ar5iv no accesibles). Todos los niveles E son extractos; los M no se comprobaron.
-9. **Error propio detectado.** DEC: el «−8.33e-4 acotado» era artefacto del rango (ε=10⁴⁰); umbral 1.92 era artefacto de rejilla (exacto 1.88218). Corregido en 04, informe y JSON.
+5. **Hipótesis de Penrose cargada.** Ahora DERIVADA internamente (P10), pero sólo para datos simétricos en el tiempo, ρ≥0 y sin materia cargada exterior (como KWY). Malec–Ó Murchadha avisan de rupturas en colapso temprano; la dinámica con carga que sale NO está cubierta.
+6. **Cinética con bloqueo de Pauli.** La ecuación de Markov con (1−2f) acota f<½ desde el vacío, mientras que la QKE exacta de campo constante da f=e^{−πm⊥²/ε}>½ a ε>4.5; los resultados de 05b (ω_p, γ) son de modelo.
+7. **Modelo de materia de la fase (ii).** El gas de electrones degenerados no está ligado (Coulomb 4.2e+42× gravedad); r_s es una condición de datos iniciales.
+8. **Constante κ.** Dependiente del modelo (n=1, sin (1−2f), LCFA, primer cero). Sin comparación con las curvas de KME/Bloch/Ruffini en texto completo.
+9. **Verificación bibliográfica.** Ningún texto completo leído (arxiv.org y ar5iv no accesibles). Todos los niveles E son extractos; los M no se comprobaron.
+10. **Error propio detectado.** DEC: el «−8.33e-4 acotado» era artefacto del rango (ε=10⁴⁰); umbral 1.92 era artefacto de rejilla (exacto 1.88218). Corregido en 04, informe y JSON.
 
 ## 6. El «hook» honesto
 **Enunciado.** Un mapa de validez cuantitativo y verificable del sistema Einstein–Euler–Heisenberg: dónde la truncación cuártica es cualitativamente engañosa, dónde hace falta el Lagrangiano de un bucle exacto (tiempo propio), y dónde la EFT deja de existir (Schwinger ε~1, expansión derivativa/Compton, Ritus–Narozhny, Planck), junto con el contraste entre las escalas de descarga y de colapso.
@@ -179,7 +192,8 @@ Recuento: Cat.1 = 6, Cat.2 = 2, Cat.3 = 3. **Ningún resultado es, hoy, un descu
 ## 7. Verificaciones pendientes antes de cualquier envío
 - [ ] Leer en texto completo: Kluger et al. (1991, 1992, 1998), Ruffini–Vereshchagin–Xue §8, Gelis–Tanji, Ruffini–Wu–Xue, Yajima–Tamaki, Boulware, Malec–Ó Murchadha, KWY, Russo–Townsend, Fedotov.
 - [ ] Comparar κ reproduciendo una curva publicada (misma definición de tiempo/longitud de oscilación).
-- [ ] Añadir (1−2f) y/o la ecuación cinética cuántica; cuantificar el cambio en κ.
+- [ ] HECHO en 05b: factor (1−2f) y oscilaciones multi-cruce. PENDIENTE: ecuación cinética cuántica no markoviana (f hasta 1) y comparación de ω_p, γ con Prakapenia–Vereshchagin (2023).
 - [ ] Calcular las condiciones de causalidad de Russo–Townsend con L₁(S,P).
 - [ ] Buscar sistemáticamente RN/EEH con carga corrida (Uehling) y logarítmico; no se hizo.
+- [ ] Verificar contra la edición original los datos bibliográficos marcados VERIFY en references.bib (revista/volumen/páginas recordados de memoria) y completar autores/afiliación en paper.tex.
 - [ ] Incluir los términos de Drummond–Hathrell y restringir 04 a r≳λ_C o rotular como modelo.

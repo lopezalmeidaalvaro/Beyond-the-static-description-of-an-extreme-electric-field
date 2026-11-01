@@ -1,0 +1,204 @@
+%% Auto-generated from paper_template.tex by 10_build_paper.py; every number is read from discovery_results.json.
+\documentclass[aps,prd,twocolumn,superscriptaddress,nofootinbib,floatfix,10pt]{revtex4-2}
+\usepackage{amsmath,amssymb,graphicx,booktabs,array}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\lC}{\lambda_C}
+\newcommand{\MPl}{M_{\rm Pl}}
+\begin{document}
+
+\title{Beyond the static Einstein--Euler--Heisenberg description of an extreme electric field:\\ a formally verified validity map for discharge and trapping}
+
+\author{Author(s) to be completed}
+\affiliation{Affiliation to be completed}
+\date{\today}
+
+\begin{abstract}
+We ask what lies beyond the point where the static, quartic-truncated Einstein--Euler--Heisenberg (EEH) description of a point-like electric charge breaks down ($\eps\equiv eE/m_e^2\gtrsim 1$, $r\lesssim\lC$), and whether QED can act as a ``universal quantum censor'' that prevents the gravitational collapse of the field. Every equation used is derived or checked with a computer algebra system (67 gates, 15 of them negative controls that must fail on altered models). We find: (i) the exact one-loop (proper-time) real part does not saturate the field; it reproduces Reissner--Nordstr\"om with a running charge, whereas the quartic truncation and a matched Born--Infeld model yield a spurious single Schwarzschild-like horizon; the dominant-energy condition is violated for $\eps>$1.88218 with relative margin $\to-\alpha/3\pi$ (the one-loop trace anomaly). (ii) The condition $\theta_+=0\Leftrightarrow 2GM_{\rm MS}=R$, the decomposition $M_{\rm ADM}=M_{\rm MS}(R)+U_C(R)$ and the exact cancellation of the electrostatic energy are derived inside the pipeline for time-symmetric spherical data, together with the exact one-loop correction to $U_C$. (iii) A Pauli-blocked Markov kinetic model keeps $0\le f\le \tfrac12$, conserves energy to \ensuremath{2.9\times10^{-6}} over at least five plasma oscillations, and gives $\omega_p=$0.186$\,e\sqrt{eE_0}$ with weak damping $\gamma/\omega_p=$0.0052. (iv) The ratio of the discharge time to the free-fall time obeys $\tau_{\rm dis}/\tau_{\rm ff}=(r_0^*/r_0)^{1/2}$ with $r_0^*$ independent of the number of charges $N$, and a quantitative $(N,r_0)$ phase map is given. Several ingredients are known results that we re-derive and verify; Sec.~\ref{sec:attrib} separates them from what is specific to this work, and Sec.~\ref{sec:limits} states the regimes where the model is not controlled.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+The Euler--Heisenberg (EH) effective action \cite{heisenberg1936,weisskopf1936,schwinger1951} coupled to Einstein gravity has been used to study QED corrections to charged black holes in its quartic truncation \cite{yajima2001,ruffini2013}. Its validity requires $\eps\ll1$, and for a point charge $Q=Ne$ the static field reaches $\eps=1$ at $r_\eps=\sqrt{N\alpha}\,\lC$, long before any horizon unless $N\gtrsim N_{\rm crit}=\MPl^2/m_e^2\simeq$\ensuremath{5.71\times10^{44}}. Beyond that point two qualitatively different effects matter: nonperturbative vacuum pair creation, which discharges the field on plasma time scales \cite{kluger1991,kluger1992,kluger1998,ruffini2010,gelis2016}, and the gravitational response, which depends on whether a trapped surface can exist at all. The loss of charge by black holes through a Schwinger-type mechanism goes back to Gibbons \cite{gibbons1975}, and the structure of charged thin-shell collapse to Israel, Boulware and Bekenstein \cite{boulware1973,bekenstein1971}.
+
+\textbf{Aim and scope.} We do not claim a new law of nature. We build a reproducible, formally gated computation that (a) quantifies where the quartic EEH extrapolation is qualitatively wrong, (b) re-derives the trapping criterion without invoking external theorems, (c) extends the pair-plasma back-reaction through several field reversals with Pauli blocking, and (d) assembles the resulting scales in one phase map. The pipeline (Appendix~\ref{app:pipeline}) executes symbolic derivations (SymPy), adaptive numerical integrations with independent cross-checks, and negative controls; it fails if any gate fails. All numbers quoted below are read automatically from the pipeline output.
+
+\section{Static nonlinear electrodynamics coupled to gravity}\label{sec:static}
+\subsection{Reduction for an arbitrary $\mathcal L(E)$}
+For the static spherical ansatz $ds^2=-f\,dt^2+dr^2/g+r^2d\Omega^2$, $A=\Phi(r)\,dt$, a purely electric field $E=\sqrt{g/f}\,\Phi'$ and any Lagrangian $\mathcal L(X)$, $X=F_{\mu\nu}F^{\mu\nu}=-2E^2$, the stress tensor derived from the full tensor expression obeys
+\begin{align}
+T^t{}_t&=T^r{}_r=-\rho,\quad \rho=E\mathcal L'-\mathcal L,\quad T^\theta{}_\theta=\mathcal L,\label{eq:T}\\
+r^2\mathcal L'(E)&=Q/4\pi,\qquad f=g=1-\frac{2Gm(r)}{r},\quad m'=4\pi r^2\rho,\label{eq:red}
+\end{align}
+and $\rho'=-(2/r)(\rho+p_\perp)$ holds identically (gates S1--S4; the control C1 with $p_\perp=\mathcal L/2$ is detected). For Maxwell, $\rho=E^2/2$; for the quartic EH term, $\mathcal L=E^2/2+4cE^4$ with $c=\alpha^2/90\,m_e^4$.
+
+\subsection{One-loop proper-time Lagrangian and strong-field behaviour}
+For purely electric fields the spinor one-loop correction is
+\begin{equation}
+\mathcal L_1(x)=-\frac{1}{8\pi^2}\!\int_0^\infty\!\frac{ds}{s^3}e^{-s}\Big[xs\cot(xs)-1+\tfrac{(xs)^2}{3}\Big],\ \ x=e E,
+\end{equation}
+evaluated on the ray $s=\rho e^{-i\pi/4}$ because the poles of $\cot$ lie on the real axis. The real part is the effective Lagrangian; the imaginary part reproduces the Schwinger series $\mathrm{Im}\,\mathcal L_1=\frac{x^2}{8\pi^3}\sum_n n^{-2}e^{-n\pi/x}$ to a relative error of \ensuremath{8.5\times10^{-15}} (gate N1), and for $\eps\ll1$ it matches $4cE^4$ with $\mathcal L_1/(4cE^4)-1\propto\eps^{2.00}$ (N2; the Taylor coefficient is checked symbolically, S6).
+
+At strong field the expansion is logarithmic, in agreement with the known renormalization-group structure \cite{ritus1975,dunne2004}:
+\begin{equation}
+\mathcal L=\frac{E^2}{2}\Big[1-\frac{\alpha}{3\pi}\big(\ln\eps+3K\big)\Big],\quad K=\ensuremath{-0.7640},
+\label{eq:log}
+\end{equation}
+where the coefficient is verified symbolically (S7) and the slope $d(\mathcal L_1/x^2)/d\ln x=\ensuremath{-4.22171597\times10^{-3}}$ agrees with $-1/24\pi^2=\ensuremath{-4.22171599\times10^{-3}}$ (N3). The pole of Eq.~(\ref{eq:log}) sits at $\log_{10}\eps_L=561.9$, i.e.\ $\mu_L=\sqrt{eE}\approx10^{277.7}$~GeV, consistent with the usual Landau scale of QED, whereas the Planck density corresponds to $\log_{10}\eps_{\rm Pl}=44.4$. This holds \emph{at one loop}: the Ritus--Narozhny conjecture, that each loop in a strong field costs $\alpha\chi^{2/3}$ and perturbation theory fails for $\chi\gtrsim\alpha^{-3/2}\simeq1604$ \cite{fedotov2017,fedotov2023}, would invalidate all one-loop statements far below $\eps_L$; its applicability to a pure electric field is not established here.
+
+\subsection{Energy conditions and the trace anomaly}
+WEC and NEC hold for the one-loop Lagrangian up to $\eps=10^{40}$ (the minima of $\rho/E^2$ and $ED/E^2$ are 0.465 and 0.930, gate N7), and $\mathcal L>0$ (SEC) until the pole (N8). The dominant energy condition $\rho\ge|p_\perp|$ requires $ED-2\mathcal L\ge0$, and SymPy establishes the identity (gate S10)
+\begin{equation}
+ED-2\mathcal L=x\mathcal L_1'-2\mathcal L_1=x^3\frac{d}{dx}\Big(\frac{\mathcal L_1}{x^2}\Big).
+\end{equation}
+Hence the DEC is violated exactly where $\mathcal L_1/x^2$ decreases, i.e.\ for $\eps>$1.88218 (root found with the exact integral, not the interpolation). The relative margin $(\rho-|\mathcal L|)/\rho$ tends to $-\alpha/3\pi=\ensuremath{-7.743\times10^{-4}}$ and keeps growing slowly with $\ln\eps$ (\ensuremath{-7.875\times10^{-4}} at $\eps=10^{10}$) up to the pole: it is \emph{not} bounded. This is the one-loop trace anomaly $T^\mu{}_\mu\propto\beta F^2$ \cite{adler1977,collins1977} written in terms of $\rho$ and $p_\perp$, not a new quantum violation. For nonlinear electrodynamics of Pleba\'nski class, causality implies the DEC \cite{russo2024}; the corresponding causality conditions for the full $\mathcal L_1(S,P)$ have not been evaluated here, so we do not draw a conclusion on (a)causality.
+
+\subsection{Interior profiles}
+Figure~\ref{fig:profiles} compares the metric function and the field for $N=10^6$ and $M=1.5M_{\rm ext}$. The quartic extrapolation gives $E\propto r^{-2/3}$ and a finite interior mass (gate S9), and a Born--Infeld model matched to the quartic term ($b^2=1/32c$, S5; field bounded by $\eps=69.6$) yields the same single horizon at $r=2GM$, $r_h=\ensuremath{1.07263\times10^{-17}}\,\lC$. The exact one-loop result retains two horizons, $r_-=\ensuremath{1.48259\times10^{-18}}$ and $r_+=\ensuremath{9.24904\times10^{-18}}$ (Reissner--Nordstr\"om: \ensuremath{1.36569\times10^{-18}} and \ensuremath{9.36055\times10^{-18}}), consistent with an effective charge $Q^2\to\lambda Q^2$, $\lambda=E/E_{\rm Coul}(r_+)=1.0710$: the measured shift $\delta r_+/r_+=\ensuremath{-1.191\times10^{-2}}$ agrees with the running-charge prediction \ensuremath{-1.230\times10^{-2}} (N6). The static nonlinearity therefore does not censor the horizon. These profiles are \emph{formal solutions of the locally-constant-field model}: for $r\sim r_Q$ the field varies on a scale $\ell\simeq r_Q/2\sim\ensuremath{1.8\times10^{-18}}\,\lC\ll\lC$, outside the derivative expansion (Sec.~\ref{sec:limits}).
+
+\begin{figure*}[t]
+\includegraphics[width=0.92\textwidth]{fig_metric_profiles.pdf}
+\caption{Metric function $g(r)=1-2Gm(r)/r$ (left) and electric field relative to Coulomb (right) for $N=10^6$ charges and $M=1.5M_{\rm ext}$, in the exact one-loop model, Maxwell (Reissner--Nordstr\"om), the quartic Euler--Heisenberg truncation extrapolated beyond its validity, and a Born--Infeld model matched to the quartic term.}
+\label{fig:profiles}
+\end{figure*}
+
+\section{Trapping criterion derived inside the pipeline}\label{sec:trap}
+The statement that the electrostatic energy does not help to trap a charged shell is standard in terms of the Misner--Sharp mass \cite{misner1964,hayward1994,boulware1973}; the charged Penrose inequality is a known theorem under stated hypotheses \cite{malec1994,khuri2017}. To remove any dependence on citations we derive what we use (gate \texttt{P10\_misner\_sharp\_symbolic}, 16 sub-checks).
+
+\emph{(a) Geometry.} In double-null coordinates, $ds^2=-2e^{2\sigma}du\,dv+R^2d\Omega^2$, with $M_{\rm MS}=(R/2G)(1-g^{ab}\partial_aR\,\partial_bR)$ and expansions $\theta_\ell=2\partial_uR/R$, $\theta_n=2\partial_vR/R$, SymPy proves
+\begin{equation}
+1-\frac{2GM_{\rm MS}}{R}=-\frac{R^2e^{-2\sigma}}{2}\,\theta_\ell\theta_n .
+\end{equation}
+Hence $\theta_+=0\Leftrightarrow2GM_{\rm MS}=R$ (for $\theta_-\neq0$), and a trapped surface is $2GM_{\rm MS}>R$.
+
+\emph{(b) Constraint.} For time-symmetric data ($K_{ij}=0$) the Hamiltonian constraint follows from computing $G_{ab}n^an^b=2Gm'/r^2$ for a metric with arbitrary second time derivatives, which drop out; thus $m'=4\pi r^2\rho$. The radial Maxwell field obeys Gauss' law $r^2E_{\rm orth}=\mathrm{const}$ independently of the metric and $T_{ab}n^an^b=E_{\rm orth}^2/2$.
+
+\emph{(c) ADM decomposition.} Integrating from $R$ to infinity,
+\begin{equation}
+M_{\rm ADM}=M_{\rm MS}(R)+U_C(R),\quad U_C(R)=\frac{Q^2}{8\pi R},
+\end{equation}
+so the exterior metric \emph{is} Reissner--Nordstr\"om, $g=1-2GM_{\rm ADM}/r+GQ^2/4\pi r^2$ (derived, not assumed).
+
+\emph{(d) Cancellation.} At $\theta_+=0$, $GM_{\rm ADM}=(R+r_Q^2/R)/2$ with $r_Q^2=GQ^2/4\pi$ (the equality case of the charged Penrose inequality). With $M_{\rm MS}(R)=M_n$ the electrostatic term cancels identically: $G(M_n+U_C)-\tfrac12(R+r_Q^2/R)=GM_n-R/2$. Non-charged exterior matter with $\rho\ge0$ only adds mass, giving the inequality.
+
+\textbf{Scope.} Proven: spherical time-symmetric data, $\rho\ge0$, no charged matter outside the surface. Not proven here: the fully dynamical case (complete Misner--Sharp equations) and the persistence of trapped surfaces. The control C4 verifies that wrong factors in $M_{\rm MS}$, in the constraint ($m'=2\pi r^2\rho$) or in $U_C$ are detected.
+
+\emph{One-loop correction to $U_C$.} For a general $\mathcal L$ with $H(D)=ED-\mathcal L$ and $dH/dD=E$ (proved for arbitrary $\mathcal L$), $\rho=H(D)$, $D=a/r^2$, $a=Q/4\pi$, and
+\begin{equation}
+U(R)=2\pi a^{3/2}\!\int_0^{D_R}\!H(D)\,D^{-5/2}dD,\quad D_R=a/R^2 ,
+\end{equation}
+which gives $Q^2/8\pi R$ for Maxwell and $-16\pi c\,a^4/5R^5$ for the quartic term (symbolic). With the exact one-loop $H$ and $N=10^6$, $U_{\rm QED}/U_C-1=\ensuremath{7.047\times10^{-2}}$ at $R=r_Q$, in agreement with a direct radial quadrature to \ensuremath{8.9\times10^{-14}} (gate P11). The slope with respect to $\ln\eps$ is \ensuremath{7.8527\times10^{-4}} ($\ln\eps\in[9,23]$) and \ensuremath{8.1870\times10^{-4}} ($[18,60]$), approaching $\alpha/3\pi=\ensuremath{7.7427\times10^{-4}}$ with the $O(\alpha\ln\eps)$ sub-leading logarithm.
+
+\section{Pair-plasma back-reaction}\label{sec:kinetic}
+\subsection{Markov source up to the first zero}
+For a homogeneous field $x(t)=eE(t)$ with local pair-creation rate $\Gamma(x)=x^2e^{-\pi/x}/4\pi^3$ (the $n=1$ Schwinger term, which is the \emph{mean pair number}; the vacuum-decay rate $2\,\mathrm{Im}\mathcal L_1$ contains the full series), conduction and polarization currents give
+\begin{equation}
+\dot x=-2e^2\Big[\!\int_0^t\!dt'\,\Gamma(x')\langle v\rangle+\Gamma(x)\frac{\langle m_\perp\rangle}{x}\Big],
+\end{equation}
+with $p(t,t')=\int_{t'}^tx$, $v=p/\sqrt{p^2+m_\perp^2}$ and $m_\perp^2=1+xs/\pi$ averaged over $s\sim\mathrm{Exp}(1)$. This is the Markov limit of the quantum Vlasov equation \cite{kluger1998,schmidt1998}. The first zero of the field occurs at $\tau_{\rm dis}=\kappa/(e\sqrt{eE_0})$ with $\kappa=13.5394$ and exponent $\ensuremath{-0.50001}$ (the exponent follows from scale invariance for $m\to0$, so only $\kappa$ carries information; it is specific to this model). The scheme is second order (observed order 1.98) and an independent implicit-trapezoid solver agrees ($\tau_0=1.41658$ vs 1.41658). As an order-of-magnitude check against a secondary report of Ref.~\cite{ruffini2010}, our first zero is $17.1$ at $E_0=10E_c$ and $\ensuremath{8.8\times10^{6}}$ at $0.15E_c$ (in units of $\hbar/m_ec^2$), against $\sim10$ and $\sim10^7$ quoted there for an oscillation length; the definitions are not identical, so this is consistency, not validation.
+
+\subsection{Pauli-blocked kinetics through repeated field reversals}
+Removing the restriction to the first zero requires tracking occupation. We evolve $f(P,p_\perp,t)$ on a canonical-momentum grid with kinetic momentum $p=P+\Phi(t)$, $\dot\Phi=x$:
+\begin{align}
+\partial_tf&=(1-2f)\,S,\quad S=|x|e^{-\pi m_\perp^2/|x|}\,G_\sigma(p),\\
+\dot x&=-2e^2\Big[\sum Wf\frac{p}{\omega}+\sum W\omega\,\frac{(1-2f)S}{x}\Big],\label{eq:kin}
+\end{align}
+with $\rho_{\rm pl}=2\sum Wf\omega$ and a Gaussian of width $\sigma=0.25\sqrt{\eps_0}$. SymPy proves that
+\begin{equation}
+\frac{d}{dt}\Big(\frac{x^2}{2e^2}+\rho_{\rm pl}\Big)=0
+\end{equation}
+holds identically \emph{only if} the polarization current carries the factor $(1-2f)$ (K1; the control C5 yields the residual $-4\omega Sf\neq0$ otherwise), and that the blocked equation has the exact solution $f=\tfrac12(1-e^{-2\int S})\in[0,\tfrac12)$ (K2).
+
+\textbf{Results} (Fig.~\ref{fig:plasma}). Using an adaptive DOP853 integrator with zero-crossing detection over $\eps_0\in\{30,10^2,10^3,10^4\}$ we obtain at least $10$ zero crossings (five full oscillations) with $\max|\Delta E|/E_0=\ensuremath{2.9\times10^{-6}}<10^{-4}$ (K5); $0\le f\le0.500000$ everywhere (K4) whereas without blocking $f$ reaches $6.53>1$; without the blocking factor the model reproduces the cohort model of the previous subsection (K3, $\tau_0=4.55758$ vs $4.55709$), while blocking lengthens the first zero to 5.5684 at $\eps_0=100$. The plasma frequency scales as $\omega_p\propto\eps_0^{0.501}$ with $\omega_p=0.1865\,e\sqrt{eE_0}$ (K7), and the amplitude decays slowly, $\gamma/\omega_p=0.0052$ (the amplitude falls from 0.73 to 0.62 of $E_0$ in nine half-cycles). Changing the tolerance, grid and transverse quadrature alters $\tau_0$ by at most \ensuremath{1.5\times10^{-5}} (K6); varying the source width within $[0.15,0.40]\sqrt{\eps_0}$ changes it by $\ensuremath{5.0\times10^{-4}}$. The negative controls (no $(1-2f)$ in $j_{\rm pol}$: $|\Delta E|/E_0=\ensuremath{5.4\times10^{-2}}$ against \ensuremath{2.3\times10^{-8}} for the consistent model; $(1+2f)$: $f=135\gg\tfrac12$; wrong conduction sign) are all detected.
+
+\textbf{Limitation.} A Markov equation with $S\ge0$ cannot raise $f$ above $\tfrac12$ from the vacuum, whereas the exact constant-field occupation $e^{-\pi m_\perp^2/\eps}$ exceeds $\tfrac12$ for $\eps>4.5$ and small $p_\perp$; for a single crossing the blocked rule gives $f=\tfrac12(1-e^{-2f_0})$, which is only 0.46 of the exact value at $f_0=0.9$. The quantitative values of $\omega_p$ and $\gamma$ are therefore properties of this model and are not compared here with non-Markovian quantum-kinetic solutions \cite{schmidt1998,prakapenia2023}.
+
+\begin{figure*}[t]
+\includegraphics[width=0.92\textwidth]{fig_plasma_oscillations.pdf}
+\caption{Left: electric field $\eps(t)/\eps_0$ in units of $1/(e\sqrt{\eps_0})$ for the Pauli-blocked Markov kinetic equation (solid) and without blocking (dashed), exhibiting the collapse of different $\eps_0$ onto one curve (scale invariance). Right: $\omega_p/(e\sqrt{\eps_0})$ and $\gamma/\omega_p$ as functions of $\eps_0$.}
+\label{fig:plasma}
+\end{figure*}
+
+\section{Scales and phase map}\label{sec:phase}
+For $N$ electrons of charge $Ne$ confined in radius $r_0$ (lengths in $\lC$): the field reaches $\eps=1$ at $r_\eps=\sqrt{N\alpha}$; the Reissner--Nordstr\"om radius is $r_Q=N\sqrt\alpha/\MPl$; the Coulomb density equals $\MPl^4$ at $r_P$ (with a floor of $10\,l_P$); and the trapping radius $r_s(N)$ solves $r=2G\,[N+\tfrac34(9\pi/4)^{1/3}N^{4/3}/r]$ (rest mass plus ultra-relativistic Fermi energy, gate P4). Because of the cancellation of Sec.~\ref{sec:trap}, $r_s$ is independent of the charge. The ratio of the electromagnetic to the gravitational force of the electron is $z^2=\alpha\MPl^2=\ensuremath{4.17\times10^{42}}$.
+
+\textbf{Time scales.} With $E_0=Q/4\pi r_0^2$, $\eps_0=N\alpha/r_0^2$ and the result of Sec.~\ref{sec:kinetic}, $\tau_{\rm dis}=\kappa\,r_0/(\alpha\sqrt{4\pi N})$, equal to the light-crossing time at $N^*=\kappa^2/(4\pi\alpha^2)=\ensuremath{2.74\times10^{5}}$. For the free fall of a dust ball of mass $Nm_e$, $\tau_{\rm ff}=\tfrac\pi2\sqrt{r_0^3/2GM}$ (symbolic, P8). Both times scale as $N^{-1/2}$, so
+\begin{equation}
+\frac{\tau_{\rm dis}}{\tau_{\rm ff}}=\sqrt{\frac{r_0^*}{r_0}},\qquad r_0^*=\frac{2\kappa^2}{\pi^3\alpha^2\MPl^2}=\ensuremath{9.29\times10^{-18}}\,l_P ,
+\end{equation}
+independent of $N$ (gate P9). We stress that this closed form is the product of two power laws and of the electron's $z^2$; it only expresses that discharge is faster than free fall for every $r_0>l_P$ (since $r_0^*\ll l_P$ the value of $r_0^*$ itself lies outside the validity of either model). On the trapping boundary with the Fermi energy included, the discharge wins only for $N\gtrsim\ensuremath{1.11\times10^{5}}$.
+
+\textbf{Phase map} (Fig.~\ref{fig:phase}). Four regions: static EFT ($\eps<1$); Schwinger discharge ($r_P<r_0<r_\eps$ and untrapped); trapping ($r_0\le r_s$); and trans-Planckian. The trapped region always lies at $\eps\gg1$ and above the Planck floor for $N\gtrsim15$; a classical horizon enters the static-EFT region only for $N\gtrsim\alpha\MPl^4/4=\ensuremath{5.94\times10^{86}}$. The Coulomb density at $r_Q$ is $\rho/\MPl^4=1/(8\pi\alpha N^2)$ (P6), sub-Planckian for $N\ge$2.3. Table~\ref{tab:scales} lists the scales. The electrons in region (ii) are not bound (the Coulomb energy exceeds the Fermi energy for $N\gtrsim\ensuremath{6.0\times10^{3}}$); $r_s$ is a condition on initial data, not a formation scenario.
+
+\begin{figure*}[t]
+\includegraphics[width=0.78\textwidth]{phase_diagram.pdf}
+\caption{Phase map in the $(N,r_0)$ plane. Solid lines: $r_\eps=\sqrt{N\alpha}$ and $r_s(N)$; dashed: $r_Q$; dotted: Planck-density radius. Vertical lines mark $N_{\rm crit}=\MPl^2/m_e^2$ and $N^*$ ($\tau_{\rm dis}=r_0$).}
+\label{fig:phase}
+\end{figure*}
+
+\begin{table*}[t]
+\caption{Characteristic radii (in $\lC$) and ratios for selected $N$ (computed in \texttt{06\_phase\_diagram.py}).}
+\label{tab:scales}
+\begin{ruledtabular}
+\begin{tabular}{rccccc}
+$N$ & $r_\eps$ & $r_Q$ & $r_s$ & $\eps(r_s)$ & $\tau_{\rm dis}/r_0$\\\hline
+$1.00\times10^{0}$ & $8.54\times10^{-2}$ & $3.58\times10^{-24}$ & $7.10\times10^{-23}$ & $1.45\times10^{42}$ & $5.23\times10^{2}$\\
+$1.00\times10^{3}$ & $2.70\times10^{0}$ & $3.58\times10^{-21}$ & $7.10\times10^{-21}$ & $1.45\times10^{41}$ & $1.66\times10^{1}$\\
+$1.00\times10^{6}$ & $8.54\times10^{1}$ & $3.58\times10^{-18}$ & $7.10\times10^{-19}$ & $1.45\times10^{40}$ & $5.23\times10^{-1}$\\
+$1.00\times10^{12}$ & $8.54\times10^{4}$ & $3.58\times10^{-12}$ & $7.10\times10^{-15}$ & $1.45\times10^{38}$ & $5.23\times10^{-4}$\\
+$1.00\times10^{20}$ & $8.54\times10^{8}$ & $3.58\times10^{-4}$ & $1.53\times10^{-9}$ & $3.12\times10^{35}$ & $5.23\times10^{-8}$\\
+$1.00\times10^{30}$ & $8.54\times10^{13}$ & $3.58\times10^{6}$ & $7.10\times10^{-3}$ & $1.45\times10^{32}$ & $5.23\times10^{-13}$\\
+$5.71\times10^{44}$ & $2.04\times10^{21}$ & $2.04\times10^{21}$ & $4.89\times10^{7}$ & $1.74\times10^{27}$ & $2.19\times10^{-20}$\\
+$1.00\times10^{48}$ & $8.54\times10^{22}$ & $3.58\times10^{24}$ & $7.10\times10^{9}$ & $1.45\times10^{26}$ & $5.23\times10^{-22}$\\
+$1.00\times10^{60}$ & $8.54\times10^{28}$ & $3.58\times10^{36}$ & $7.12\times10^{17}$ & $1.44\times10^{22}$ & $5.23\times10^{-28}$\\
+\end{tabular}
+\end{ruledtabular}
+\end{table*}
+
+\section{What is known and what is specific to this work}\label{sec:attrib}
+\begin{table*}[t]
+\caption{Attribution of the results. ``Known'' means that the mathematical structure was published before; ``here'' lists what the pipeline adds.}
+\label{tab:attrib}
+\begin{tabular}{p{4.2cm}p{5.2cm}p{7.2cm}}\toprule
+Result & Prior work & Contribution of this work\\\midrule
+Coulomb energy cancels in trapping & Misner--Sharp mass with charge, thin-shell energy equation, charged Penrose inequality \cite{misner1964,hayward1994,boulware1973,malec1994,khuri2017} & Derivation inside a CAS under explicit hypotheses (time-symmetric data, $\rho\ge0$, no exterior charge); one-loop-exact $U_C(R)$\\
+Plasma oscillations, Markov source, $\omega_p\propto e\sqrt{eE}$ & \cite{kluger1991,kluger1992,kluger1998,schmidt1998,ruffini2010,gelis2016} & Exact energy identity with $(1-2f)$ in $j_{\rm pol}$, $f\le\tfrac12$, constants $\omega_p$, $\gamma$ for this source; convergence and negative controls\\
+Strong-field logarithm, Landau scale & \cite{ritus1975,dunne2004} & Exact evaluation of the electric proper-time integral and the constant $K$\\
+DEC violation & One-loop trace anomaly \cite{adler1977,collins1977} & Exact onset $\eps=$1.88218 and identity $x^3(\mathcal L_1/x^2)'$\\
+Discharge of charged black holes, $N_{\rm crit}$ & Gibbons \cite{gibbons1975} & Reformulation of the scale in the $(N,r_0)$ plane\\
+EH black holes (quartic) & \cite{yajima2001,ruffini2013} & Quantitative comparison with the exact one-loop interior in the coupled system, with explicit limits of validity\\
+$\tau_{\rm dis}/\tau_{\rm ff}=(r_0^*/r_0)^{1/2}$, phase map & Elementary combination of known scalings & Closed forms with $\kappa$, verified symbolically; organization in one plane\\\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Regimes where the model is not controlled}\label{sec:limits}
+(1) \emph{Higher loops.} All strong-field statements are one-loop; Ritus--Narozhny scaling may invalidate them for $\eps\gtrsim10^3$--$10^6$. The sweep of the kinetic model reaches $\eps_0=10^{10}$, 6.8 orders above that threshold. (2) \emph{Derivative expansion and curvature.} The profiles of Sec.~\ref{sec:static} descend to $r\sim10^{-18}\lC$; the curvature couplings of the one-loop action \cite{drummond1980} are of relative order $\alpha(\lC/L)^2$ and are neglected, and the local-field Lagrangian is not controlled there. (3) \emph{Imaginary part.} For $\eps>1$ the vacuum-decay rate is $O(1)$ and the real part alone is not a stable effective action. (4) \emph{Markov kinetics.} Homogeneous field, LCFA with $t_{\rm form}/\tau_0\simeq e/\kappa=0.022$, no spatial transport, $f<\tfrac12$. (5) \emph{Dynamics of trapping.} The criterion is proven for time-symmetric data; the dynamical race between discharge and collapse is not resolved spatially. (6) \emph{Landau and Planck.} The Landau pole and the Planck density are never crossed in any calculation; the Planck floor defines region (iii) and no statement is made there.
+
+\section{Conclusions}\label{sec:concl}
+Beyond the point where the quartic static EEH description fails, the exact one-loop static field does not saturate and does not censor the horizon; the electrostatic energy plays no role in trapping, which requires non-electromagnetic mass, $GM_n\ge R/2$; and pair discharge converts the field into plasma on the time $\tau_{\rm dis}=\kappa/(e\sqrt{eE_0})$ while conserving energy-momentum, so it cannot remove mass or undo a trapped surface. Within a Pauli-blocked Markov model the resulting plasma oscillates for many periods with $\omega_p\simeq0.186\,e\sqrt{eE_0}$ and weak damping. What discharge does remove is the net charge whose repulsion exceeds gravity by $z^2\sim10^{42}$, and it does so faster than free fall. These conclusions are consistent with the classical picture of Misner--Sharp, Boulware and Gibbons; the added value of this work is a verified quantitative map of where each description holds, together with an open, reproducible pipeline. Non-Markovian kinetics with occupations up to unity, spatial transport and the fully dynamical trapping problem remain open.
+
+\begin{acknowledgments}
+The symbolic derivations, code and first draft of the text were produced with an AI assistant (Claude, Anthropic) operating the open pipeline described in Appendix~\ref{app:pipeline}; the authors are responsible for the content. Bibliographic details marked in \texttt{references.bib} must be verified against the original publications before submission.
+\end{acknowledgments}
+
+\appendix
+\section{Verification pipeline and reproducibility}\label{app:pipeline}
+The repository (\url{https://github.com/lopezalmeidaalvaro/experimento}) contains numbered scripts executed by \texttt{run\_all.sh}, which stops at the first failing gate. Symbolic gates assert $\mathrm{simplify}(\mathrm{LHS}-\mathrm{RHS})=0$; numerical gates include convergence under refinement and an independent method; negative controls assert that altered signs, factors or conservation laws are detected. The totals are 67 gates, of which 15 are negative controls. Table~\ref{tab:gates} lists the gates by script.
+\begin{table}[h]
+\caption{Verification gates by script (symbolic, numerical and negative controls).}\label{tab:gates}
+\begin{ruledtabular}
+\begin{tabular}{p{3.0cm}rr}
+Script & gates & neg.\ controls\\\hline
+\texttt{04\_nonperturbative\_qed} & 22 & 3\\
+\texttt{05\_dynamical\_backreaction} & 13 & 4\\
+\texttt{05b\_plasma\_oscillations} & 12 & 4\\
+\texttt{06\_phase\_diagram} & 20 & 4\\
+01--03 (baseline) & \multicolumn{2}{r}{re-run at each build}\\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+
+\bibliography{references}
+\end{document}

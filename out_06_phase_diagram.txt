@@ -8,6 +8,8 @@
 [PASS] P8 caida libre OS: τ_ff = (π/2)√(R0³/2GM) = sqrt(2)*pi*R0**(3/2)/(4*sqrt(GM))
 [PASS] C1 control: R=0.75 GM_ext viola Penrose cargada: G M_ext - (R + r_Q²/R)/2 = -1/(48*sqrt(pi)) < 0 en R=3/4·G M_ext (R<r_- no atrapada)
 [PASS] P9 ley de la carrera: τ_dis/τ_ff = √(r0*/r0),  r0* = 2*kappa**2/(pi**3*M_Pl**2*alpha**2) (independiente de N)
+[PASS] P10_misner_sharp_symbolic: θ_+=0 ⇔ 2G M_MS=R (doble nulo, exacto); vínculo hamiltoniano G_nn=2Gm'/r² indep. de ∂ₜ²; Gauss ⇒ M_ADM=M_MS(R)+Q²/8πR; la métrica exterior sale RN; igualdad de Penrose cargada DERIVADA y energía electrostática cancelada. Subcomprobaciones: 16/16
+[PASS] C4_ms_control: M_MS con factor erróneo DETECTADO; vínculo m'=2πr²ρ DETECTADO; U_C=Q²/4πR DETECTADO
 [PASS] N1 N_crit numerico: r_ε(M_Pl²)/r_Q = 1.000000000000
 [PASS] N2 r_s con N electrones: r_s(N=1e6) = 7.101e-19 λ_C = 1.697e+04 l_P
 [PASS] N3 BH por encima de la region trans-planckiana: r_s(N) > max(r_P, 10 l_P) para N ≥ 20; N minimo con atrapamiento sub-planckiano ≈ 15; para N ≲ 14 el atrapamiento seria trans-planckiano
@@ -28,5 +30,6 @@ Fracciones del plano (N∈[1,1e50], r0∈[1e-30,1e30] λ_C): {'EFT_estatica': 0.
 [PASS] N5 BH clasico dentro de la EFT estatica: en N≤1e+50 NO hay r_s > r_ε; umbral analitico N = α M_Pl⁴/4 = 5.94e+86 (masa en reposo)
 [PASS] C2 control: sumar U_C (error) agranda la region BH: fraccion BH erronea 0.205 > correcta 0.087
 [PASS] C3 control: invertir ρ>M_Pl^4 elimina la fase (iii): sin el criterio de Planck no hay region trans-planckiana (la clasificacion lo detecta)
+[PASS] P11_U_QED_exacta: U_QED(R)=2πa^(3/2)∫₀^(D_R) H(D)D^(-5/2)dD (H=ED−L exacta a un bucle) vs integral directa en r: ≤1.4e-13; δU/U_C = 7.047e-02 en R=r_Q; pendiente d(δU/U)/d ln ε = 8.1870e-04 (ln ε∈[18,60]) y 7.8527e-04 (ln ε∈[9,23]) vs α/3π = 7.7427e-04: desviación 5.7% → 1.4%, consistente con la corrección O(α ln ε) del logaritmo subdominante (∫r⁻² ln(r/R)dr=1/R, simbólico)
 
 RESUMEN 06: TODAS PASAN

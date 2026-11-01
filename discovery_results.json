@@ -241,6 +241,14 @@
    "log10_eps_Planck": 44.38821565223414,
    "K_asym": -0.7639688479469182
   },
+  "figure": "fig_metric_profiles.pdf",
+  "numerics": {
+   "im_series_max_relerr": 8.548717289613705e-15,
+   "small_eps_slope": 2.0021761142021615,
+   "log_slope_fit": -0.004221715969681015,
+   "log_slope_expected": -0.004221715985097407,
+   "K_drift": 1.5550938314845553e-10
+  },
   "note": "eeh.py:schwinger_rate era Gamma_vac=2ImL1 (decaimiento del vacio), no el numero medio de pares; aqui pair_rate usa solo n=1."
  },
  "branch_B": {
@@ -379,6 +387,259 @@
   },
   "validity": "hasta el primer cero del campo; sin bloqueo de Pauli/aniquilacion estimulada; LCFA; geometria plana; sin hidrodinamica espacial"
  },
+ "branch_B2": {
+  "gates": {
+   "K1_energia_con_(1-2f)": true,
+   "C5_control_sin_(1-2f)_en_jpol": true,
+   "K2_bloqueo_exacto": true,
+   "K3_regresion_con_05": true,
+   "K4_0<=f<=1_Pauli": true,
+   "K5_energia_5_oscilaciones": true,
+   "K5b_cobertura_malla": true,
+   "K6_convergencia_numerica": true,
+   "K7_escala_omega_p": true,
+   "C6_control_jpol_sin_(1-2f)": true,
+   "C7_control_(1+2f)": true,
+   "C8_control_signo_conduccion": true
+  },
+  "single_crossing": {
+   "rule": "f_after=(1-exp(-2 f0))/2, f0=exp(-pi m_perp^2/eps)",
+   "ratio_at_f0_0p5": 0.6321205588285577,
+   "ratio_at_f0_0p9": 0.46372283987689633
+  },
+  "sweep": {
+   "30": {
+    "n_cross": 10,
+    "tau0": 10.476334222306232,
+    "half_periods": [
+     14.11615349307288,
+     12.214065603608251,
+     11.601167950158157,
+     11.158085796008429,
+     10.897510353563689,
+     10.671701750111993,
+     10.51535363003309,
+     10.371910927355515,
+     10.264765993518125
+    ],
+    "amps": [
+     0.7316131823518035,
+     0.6895038211239375,
+     0.6658184963255696,
+     0.6535522733486175,
+     0.6435852781512837,
+     0.6370025701619425,
+     0.6310684163613247,
+     0.6267491321719805,
+     0.6226423207168053
+    ],
+    "omega_early": 0.22255302445750855,
+    "omega_late": 0.3025708916948266,
+    "Emax_err": 7.450800764483705e-11,
+    "fmax": 0.49999998020689296,
+    "fmin": 0.0,
+    "edge_f": 0.0,
+    "Phimax_over_Pmax": 0.6225445765147496,
+    "npairs_end": 38.7360185771295,
+    "runtime": 9.354221105575562,
+    "gamma": 0.001618740518911404,
+    "omega_over_esqrtx0": 0.1824227175001027,
+    "gamma_over_omega": 0.005349954550631618,
+    "tau0_e_sqrtx0": 17.376310531797884
+   },
+   "100": {
+    "n_cross": 10,
+    "tau0": 5.568405961927601,
+    "half_periods": [
+     7.513103348640893,
+     6.543403786044694,
+     6.228476786523064,
+     6.000039061505351,
+     5.86503694371763,
+     5.748208036655782,
+     5.6673187384003185,
+     5.593289459367554,
+     5.538033288038385
+    ],
+    "amps": [
+     0.7285193228153599,
+     0.687296685283579,
+     0.6643354390735151,
+     0.6524408739766139,
+     0.6427304446451007,
+     0.6363590058232629,
+     0.6305663426358206,
+     0.6263909439551499,
+     0.622406405329981
+    ],
+    "omega_early": 0.41814846779102294,
+    "omega_late": 0.5610941770918437,
+    "Emax_err": 2.3366019242855614e-08,
+    "fmax": 0.49999999954858065,
+    "fmin": 0.0,
+    "edge_f": 0.0,
+    "Phimax_over_Pmax": 0.6125245109686609,
+    "npairs_end": 240.06409513829772,
+    "runtime": 8.490073919296265,
+    "gamma": 0.002932900300483499,
+    "omega_over_esqrtx0": 0.18528837175982635,
+    "gamma_over_omega": 0.0052271087817819615,
+    "tau0_e_sqrtx0": 16.86236503265828
+   },
+   "1000": {
+    "n_cross": 10,
+    "tau0": 1.7409844650470325,
+    "half_periods": [
+     2.350309899367318,
+     2.052040234430711,
+     1.954834909428243,
+     1.8842400591912547,
+     1.842452410532962,
+     1.8063185551957677,
+     1.7813054081533437,
+     1.7584344862642691,
+     1.7413657411900019
+    ],
+    "amps": [
+     0.7273708836596695,
+     0.6864945571927348,
+     0.6638137481077336,
+     0.6520769299626152,
+     0.6424552625097469,
+     0.6361569544952818,
+     0.6304165088155707,
+     0.6262775169085539,
+     0.6223565570224565
+    ],
+    "omega_early": 1.336671668036407,
+    "omega_late": 1.7847760776754618,
+    "Emax_err": 8.092358923446042e-07,
+    "fmax": 0.4999999998305405,
+    "fmin": 0.0,
+    "edge_f": 0.0,
+    "Phimax_over_Pmax": 0.608606381771841,
+    "npairs_end": 7650.412758813092,
+    "runtime": 8.723085641860962,
+    "gamma": 0.009244923168337959,
+    "omega_over_esqrtx0": 0.1863786404569273,
+    "gamma_over_omega": 0.005179878464293843,
+    "tau0_e_sqrtx0": 16.671800036757183
+   },
+   "10000": {
+    "n_cross": 10,
+    "tau0": 0.5499259054071474,
+    "half_periods": [
+     0.7424362580178104,
+     0.6483759120791248,
+     0.6177108297996057,
+     0.5954379638340539,
+     0.5822516530111428,
+     0.5708503915490373,
+     0.5629585035591829,
+     0.5557430196294328,
+     0.5503581878649797
+    ],
+    "amps": [
+     0.7272586617671754,
+     0.6864031309408161,
+     0.663763099880911,
+     0.6520388033492217,
+     0.6424236550588376,
+     0.6361447874739022,
+     0.6304056902287942,
+     0.6262837091386109,
+     0.622335308560573
+    ],
+    "omega_early": 4.231464478819175,
+    "omega_late": 5.647244412224073,
+    "Emax_err": 2.8636698621434124e-06,
+    "fmax": 0.4999999998457289,
+    "fmin": 0.0,
+    "edge_f": 0.0,
+    "Phimax_over_Pmax": 0.6082130236504469,
+    "npairs_end": 242115.53577070218,
+    "runtime": 8.925626516342163,
+    "gamma": 0.029224203835587652,
+    "omega_over_esqrtx0": 0.18648718250724233,
+    "gamma_over_omega": 0.0051749493562433194,
+    "tau0_e_sqrtx0": 16.652972899771118
+   }
+  },
+  "no_block_x100": {
+   "tau0": 4.557579236983411,
+   "fmax": 6.525630388600839,
+   "omega_early": 0.5429226817477064,
+   "amps": [
+    0.6875640585424996,
+    0.5976031684184246,
+    0.5449316122635309,
+    0.5099223019348332,
+    0.483364602692466
+   ]
+  },
+  "pauli_effect_x100": {
+   "tau0_block": 5.568405961927601,
+   "tau0_noblock": 4.557579236983411,
+   "f_max_noblock": 6.525630388600839,
+   "f_max_block": 0.49999999954858065
+  },
+  "convergence": {
+   "rtol1e-11": {
+    "tau0": 5.56840596203915,
+    "omega_early": 0.4181484678189239,
+    "Emax_err": 4.6033797639849814e-10
+   },
+   "dp/1.5": {
+    "tau0": 5.5684059604643,
+    "omega_early": 0.4181484680062694,
+    "Emax_err": 5.2603176419141247e-11
+   },
+   "J=14": {
+    "tau0": 5.5684916306642664,
+    "omega_early": 0.4181234867635579,
+    "Emax_err": 3.998505419538808e-09
+   },
+   "max_rel_change_tau0": 1.538478646345709e-05,
+   "max_rel_change_omega": 5.974200407099506e-05
+  },
+  "sigma_sensitivity": {
+   "sigma_0.15": {
+    "tau0": 5.570405388533541,
+    "omega_early": 0.41821503817368594
+   },
+   "sigma_0.4": {
+    "tau0": 5.5656165740096055,
+    "omega_early": 0.41800620282834094
+   },
+   "max_rel_change_tau0": 0.0005009311348825873
+  },
+  "scaling": {
+   "omega_exponent": 0.5014004113260533,
+   "omega_over_esqrtx0": [
+    0.18528837175982635,
+    0.1863786404569273,
+    0.18648718250724233
+   ],
+   "gamma_over_omega": [
+    0.0052271087817819615,
+    0.005179878464293843,
+    0.0051749493562433194
+   ],
+   "x0s": [
+    100.0,
+    1000.0,
+    10000.0
+   ]
+  },
+  "figure": "fig_plasma_oscillations.pdf",
+  "controls": {
+   "C6_energy_err": 0.05393650285790401,
+   "C7_fmax": 134.82452690488824,
+   "C8_energy_err": null,
+   "C8_n_cross": 0
+  },
+  "model": "Markov + LCFA + fuente gaussiana de ancho \u03c3=0.25\u221a\u03b50 + factor (1-2f); campo homogeneo; sin recoleccion no markoviana; f<1/2 desde el vacio"
+ },
  "branch_C": {
   "gates": {
    "P1 RN satura Penrose cargada": true,
@@ -391,14 +652,36 @@
    "P8 caida libre OS": true,
    "C1 control: R=0.75 GM_ext viola Penrose cargada": true,
    "P9 ley de la carrera": true,
+   "P10_misner_sharp_symbolic": true,
+   "C4_ms_control": true,
    "N1 N_crit numerico": true,
    "N2 r_s con N electrones": true,
    "N3 BH por encima de la region trans-planckiana": true,
    "N4 N_P": true,
    "N5 BH clasico dentro de la EFT estatica": true,
    "C2 control: sumar U_C (error) agranda la region BH": true,
-   "C3 control: invertir \u03c1>M_Pl^4 elimina la fase (iii)": true
+   "C3 control: invertir \u03c1>M_Pl^4 elimina la fase (iii)": true,
+   "P11_U_QED_exacta": true
   },
+  "P10_parts": {
+   "a0": true,
+   "a1": true,
+   "a2": true,
+   "a3": true,
+   "a4": true,
+   "b1": true,
+   "b2": true,
+   "b3": true,
+   "c1": true,
+   "c2": true,
+   "c3": true,
+   "c4": true,
+   "d1": true,
+   "d2": true,
+   "d3": true,
+   "d4": true
+  },
+  "P10_hypotheses": "datos esfericos simetricos en el tiempo (K_ij=0), rho>=0 (DEC), sin materia cargada exterior a la superficie; el caso dinamico general NO se demuestra aqui",
   "phase_fractions": {
    "EFT_estatica": 0.30963785384576653,
    "descarga_Schwinger": 0.28138636759888164,
@@ -411,7 +694,9 @@
    "r0_star_over_lPlanck": 9.29379949279856e-18,
    "statement": "tau_dis/tau_ff = sqrt(r0*/r0) para r0 >> r0*"
   },
+  "P10_n_parts": 16,
   "critical": {
+   "N_coulomb_over_fermi": 5960.507250161331,
    "N_crit": 5.7083823888497976e+44,
    "N_P": 2.335056564398122,
    "N_star": 273942.6078825478,
@@ -601,6 +886,34 @@
     "tau_dis_over_ff": 3.332037771738403e-23
    }
   ],
+  "U_QED": {
+   "table": {
+    "1e+00": {
+     "R": 3.5754123503837836e-18,
+     "x_R": 5.708382388849797e+38,
+     "delta_U": 0.07046737503605427,
+     "rel_diff_direct": 8.870681966755001e-14
+    },
+    "1e+06": {
+     "R": 3.5754123503837837e-12,
+     "x_R": 5.7083823888497964e+26,
+     "delta_U": 0.04648161674589102,
+     "rel_diff_direct": 8.948397578478762e-14
+    },
+    "1e+12": {
+     "R": 3.5754123503837837e-06,
+     "x_R": 570838238884979.6,
+     "delta_U": 0.02354760082151497,
+     "rel_diff_direct": 1.4499512701604544e-13
+    }
+   },
+   "slope_dU_dlnx": 0.0008186989210144469,
+   "slope_low": 0.0007852677776922269,
+   "dev_hi": 0.057377380909515496,
+   "dev_lo": 0.014199927196667739,
+   "slope_expected_alpha_over_3pi": 0.0007742731552572398,
+   "N": 1000000.0
+  },
   "figure": "phase_diagram.png",
   "verdict": {
    "coulomb_cancels_in_penrose": true,
@@ -612,8 +925,8 @@
   }
  },
  "meta": {
-  "n_gates": 52,
-  "n_negative_controls": 10,
+  "n_gates": 67,
+  "n_negative_controls": 15,
   "all_pass": true
  },
  "audit_checks": {

@@ -5,6 +5,8 @@ y los solvers numéricos se detienen donde la EFT deja de ser válida.
 
 ```bash
 pip install -r requirements.txt
+# para compilar paper.pdf (Debian/Ubuntu):
+apt-get install -y texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-publishers texlive-science texlive-fonts-recommended texlive-bibtex-extra
 ./run_all.sh        # ejecuta 01..07; falla si algún gate o control negativo falla
 ```
 
@@ -15,6 +17,8 @@ pip install -r requirements.txt
 | `05_dynamical_backreaction.py` | Descarga de Schwinger con retroacción (LCFA, válida hasta el primer cero del campo) |
 | `06_phase_diagram.py` | Penrose cargada, leyes de escala y diagrama de fases (`phase_diagram.png`) |
 | `08_novelty_checks.py`, `09_make_audit.py` | Comprobaciones numéricas de la auditoría y generación de `NOVELTY_AUDIT.md` / `novelty_audit.json` |
-| `07_make_report.py` | Compuerta global (50 gates, 10 controles negativos) y genera `DISCOVERY_REPORT.md` |
+| `05b_plasma_oscillations.py` | Cinética de Markov con bloqueo de Pauli a través de ≥5 oscilaciones de plasma (extiende 05) |
+| `10_build_paper.py` | Genera `paper.tex`/`references.bib` (REVTeX 4-2, PRD) con cifras leídas de `discovery_results.json` y compila `paper.pdf` |
+| `07_make_report.py` | Compuerta global (67 gates, 15 controles negativos) y genera `DISCOVERY_REPORT.md` |
 
 Ver `DISCOVERY_REPORT.md` (resultados y límites), `SYSTEM_PROMPT.md` (reglas del agente) y `discovery_results.json` (todas las métricas).

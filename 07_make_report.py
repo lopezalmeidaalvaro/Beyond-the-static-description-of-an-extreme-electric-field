@@ -4,12 +4,12 @@
 import json, re, sys
 D = json.load(open('discovery_results.json')); BASE = json.load(open('results.json'))
 allg = {}
-for br in ('branch_A', 'branch_B', 'branch_C'):
+for br in ('branch_A', 'branch_B', 'branch_B2', 'branch_C'):
     for k, v in D[br]['gates'].items(): allg[f"{br}:{k}"] = v
 bad = [k for k, v in allg.items() if not v]
-neg = [k for k in allg if re.match(r'branch_[ABC]:C\d', k)]
+neg = [k for k in allg if re.match(r'branch_(A|B|B2|C):C\d', k)]
 if bad: print("GATES FALLIDOS:", bad); sys.exit(1)
-if len(neg) < 8: print("faltan controles negativos"); sys.exit(1)
+if len(neg) < 14: print("faltan controles negativos"); sys.exit(1)
 D['meta'] = dict(n_gates=len(allg), n_negative_controls=len(neg), all_pass=True)
 json.dump(D, open('discovery_results.json', 'w'), indent=1)
 
@@ -32,7 +32,8 @@ json.dump(D, open('discovery_results.json', 'w'), indent=1)
 tab = "| N | r_ε=√(Nα) | r_Q (RN) | r_s (atrapamiento) | ε(r_s) | τ_dis/r0 |\n|---|---|---|---|---|---|\n"
 for k, v in C['table'].items():
     tab += f"| {k} | {v['r_eps']:.3g} | {v['r_Q']:.3g} | {v['r_s']:.3g} | {v['eps_at_rs']:.2g} | {v['tau_dis_over_r0']:.3g} |\n"
-trace = "| Gate | Script | Estado |\n|---|---|---|\n" + "".join(f"| {k.split(':')[1]} | {'0'+{'A':'4','B':'5','C':'6'}[k[7]]}_*.py | PASS |\n" for k in allg)
+SC = {'branch_A': '04_nonperturbative_qed.py', 'branch_B': '05_dynamical_backreaction.py', 'branch_B2': '05b_plasma_oscillations.py', 'branch_C': '06_phase_diagram.py'}
+trace = "| Gate | Script | Estado |\n|---|---|---|\n" + "".join(f"| {k.split(':')[1]} | {SC[k.split(':')[0]]} | PASS |\n" for k in allg)
 
 T = open('report_template.md').read()
 T = T.replace('@@TABLA_ESCALAS@@', tab).replace('@@TRAZABILIDAD@@', trace).replace('@@N_RACE@@', f"{N_race:.3g}")
