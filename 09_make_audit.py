@@ -173,7 +173,7 @@ HOOK = dict(
                     'HECHO en 05b: factor (1−2f) y oscilaciones multi-cruce. PENDIENTE: ecuación cinética cuántica no markoviana (f hasta 1) y comparación de ω_p, γ con Prakapenia–Vereshchagin (2023).',
                     'Calcular las condiciones de causalidad de Russo–Townsend con L₁(S,P).',
                     'Buscar sistemáticamente RN/EEH con carga corrida (Uehling) y logarítmico; no se hizo.',
-                    'Verificar contra la edición original los datos bibliográficos marcados VERIFY en references.bib (revista/volumen/páginas recordados de memoria) y completar autores/afiliación en paper.tex.',
+                    'Verificar contra la edición original los datos bibliográficos marcados VERIFY en references.bib (revista/volumen/páginas recordados de memoria) y añadir la afiliación en paper.tex (el autor ya figura: Álvaro López Almeida).',
                     'Incluir los términos de Drummond–Hathrell y restringir 04 a r≳λ_C o rotular como modelo.']
 )
 
