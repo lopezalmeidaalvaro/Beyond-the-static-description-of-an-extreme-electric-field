@@ -356,7 +356,7 @@
    "ours": "Ley analítica de la carrera s_c=2√I q²/(κC^{3/2}) con la curva exacta de descarga de 05c, verificada por simulación de la dinámica completa (error ~2%); evaluación en el q/C físico (≈1e21); la ganancia de masa de MS ΔE/E₀=(C/4)(s_c/s)²; controles negativos; integral primera conservada a 1e-12.",
    "forbidden": "«La QED/descarga de Schwinger impide (o permite) el colapso gravitatorio» como predicción física; N_race≈1e68 como resultado cuantitativo fiable (depende de un cierre local de la descarga y de la neutralización permanente).",
    "wording": "«En un modelo de cascarón fino con apantallamiento local de la descarga, el empuje de Coulomb desliga al cascarón salvo que el apantallamiento supere s_c=0.66 q²/C^{3/2}; con la relación carga-masa del electrón ese umbral excede con creces el disponible.»",
-   "caveat": "Cierre local de la descarga y neutralización permanente tras el primer cero (ansatz); plasma y cascarón no acoplados; interior plano; una sola capa; sin explosión coulombiana de muchos cuerpos ni estructura radial; sin comparación con literatura (texto completo no accesible)."
+   "caveat": "Cierre local de la descarga y neutralización permanente tras el primer cero (ansatz); la ley desacoplada es una cota superior (el sistema acoplado cascarón+plasma+campo, K1–K4, baja el umbral s_c en un factor 0.06–0.6 y elimina su dependencia en q²); error O(C) de autogravedad del cascarón suavizado; interior plano; una sola capa; sin explosión coulombiana de muchos cuerpos ni estructura radial; extrapolación de 20 décadas en C; sin comparación con literatura (texto completo no accesible)."
   },
   {
    "id": "P1",
@@ -386,7 +386,7 @@
    "cat": 3,
    "evidence": "No es un resultado de física; valor de reproducibilidad.",
    "equivalent": "—",
-   "ours": "118 gates (25 controles negativos), trazabilidad número→clave JSON.",
+   "ours": "122 gates (25 controles negativos), trazabilidad número→clave JSON.",
    "forbidden": "Presentarlo como evidencia de corrección física.",
    "wording": "«Software abierto de verificación».",
    "caveat": "Un gate PASS verifica coherencia interna, no validez física (p. ej. el error del «−8.33e-4» pasó los gates)."
@@ -482,7 +482,7 @@
   "z2": 4.165607889172748e+42,
   "shift_m": -0.01191312135692657,
   "shift_p": -0.012300539048379133,
-  "ngates": 118,
+  "ngates": 122,
   "nneg": 25,
   "om_ratio": 0.18648718250724233,
   "gam_ratio": 0.0051749493562433194,
@@ -491,12 +491,12 @@
   "tau_nob": 4.557579236983411,
   "fmax_nob": 6.525630388600839,
   "dU": 0.07046737503605427,
-  "b3_fmax": 0.9999996173311253,
-  "b3_om": 0.19442671625647912,
-  "b3_gam": 0.004796137815785625,
+  "b3_fmax": 0.9999996173311252,
+  "b3_om": 0.19442671625500854,
+  "b3_gam": 0.004796137815293234,
   "b3_tau100": 13.667297352777315,
   "mk_tau100": 16.86236503265828,
-  "b3_wpl": 0.9875541832835675,
+  "b3_wpl": 0.9875541832848572,
   "c2_loss": -0.0997450972493531,
   "c2_gain": 0.24812841286198659,
   "c2_net": 0.14934443752076149,

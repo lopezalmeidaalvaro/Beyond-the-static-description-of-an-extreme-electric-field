@@ -453,6 +453,82 @@ gate("S5_carrera_en_el_plano_NR", best_ratio > 1.0 and len(valid) > 20 and ratio
      f"mínimo es {best_ratio:.2f} (N={N_best:.1e}: régimen de Fermi) y crece como 10^{ratio_at(1e4):.1f}, 10^{ratio_at(1e10):.1f}, 10^{ratio_at(1e20):.1f}, 10^{ratio_at(1e40):.1f} en N=10⁴,10¹⁰,10²⁰,10⁴⁰: la descarga pierde la carrera contra el empuje de Coulomb en todo N; "
      f"ignorando ε0≥30 y con masa de reposo, N_race ≈ N*·s_c² ≈ {N_race_analytic:.1e} (q=1) frente a N_crit=M_Pl²={MPL**2:.1e}")
 
+# ============================================== 4. SISTEMA ACOPLADO COMPLETO (dynshell.py): cascaron dinamico + campo + plasma + descarga, en GR ==============================================
+from dynshell import run_shell
+def shell_exact_tau(C, Rt):
+    E0_ = C - C**2/4
+    return quad(lambda R_: 1/np.sqrt((C/(4*R_) + E0_/C)**2 - 1), Rt, 1.0, limit=400)[0]
+def tau_at(rec, Rt):
+    i_ = int(np.argmax(rec['R'] <= Rt)); return float(np.interp(Rt, rec['R'][:i_+1][::-1], rec['tau'][:i_+1][::-1]))
+val = []
+for Cv in (0.3, 0.1):
+    for Nr_ in (2000, 4000):
+        ov = run_shell(0.0, Cv, 1.0, curve, kappa, Nr=Nr_, Rmax=16.0, Tend=8.0/np.sqrt(Cv/0.3), plasma=False)
+        rv = ov['rec']; val.append(dict(C=Cv, Nr=Nr_, rel_err=float(tau_at(rv, 0.7)/shell_exact_tau(Cv, 0.7) - 1), Ed_drift=float((rv['Ed'][rv['R'] > 0.5].max() - rv['Ed'][rv['R'] > 0.5].min())/rv['Ed'][0]), status=ov['status']))
+ov_bad = run_shell(0.0, 0.3, 1.0, curve, kappa, Nr=2000, Rmax=16.0, Tend=8.0, plasma=False, eom_scale=2.0)
+err_bad = float(tau_at(ov_bad['rec'], 0.7)/shell_exact_tau(0.3, 0.7) - 1)
+R['coupled'] = dict(vacuum_validation=val, bad_eom_err=err_bad)
+e03 = [x for x in val if x['C'] == 0.3 and x['Nr'] == 4000][0]['rel_err']; e01 = [x for x in val if x['C'] == 0.1 and x['Nr'] == 4000][0]['rel_err']
+conv_nr = abs([x for x in val if x['C'] == 0.1 and x['Nr'] == 2000][0]['rel_err'] - e01)
+gate("K1_cascaron_dinamico_vs_Israel", abs(e03) < 0.05 and abs(e01) < 0.025 and abs(e01) < abs(e03) and conv_nr < 0.005 and max(x['Ed_drift'] for x in val) < 2e-3 and abs(err_bad) > 3*abs(e03),
+     f"cascarón como materia dinámica del solver (E_d, P_d y flujo en los vínculos; lapso con salto) en vacío: tiempo propio hasta R=0.7 frente a la cuadratura exacta de Israel: error {e03:+.1%} (C=0.3) y {e01:+.1%} (C=0.1), ∝C (autogravedad de orden C del cascarón suavizado), "
+     f"variación con Δr→Δr/2 {conv_nr:.1e}; energía del cascarón constante a {max(x['Ed_drift'] for x in val):.1e} (R>0.5); con la autogravedad mal normalizada (×2) el error sube a {err_bad:+.1%} (control detectado)")
+# balance global de energia del sistema acoplado y control sin descarga
+def run_c(q, C, s, **kw):
+    return run_shell(q, C, s, curve, kappa, Nr=2000, Rmax=16.0, Tend=kw.pop('Tend', 45.0*np.sqrt(0.1/C)), plasma=kw.pop('plasma', True), r_core=0.1, **kw)
+o_bal = run_c(1.0, 0.1, 21.0, Tend=20.0)
+rb = o_bal['rec']; dm_out = rb['mtot'][-1] - rb['mtot'][0]; fl_out = rb['E_in'][-1] - rb['E_out'][-1]
+o_nodis = run_c(1.0, 0.1, 21.0, plasma=False, Tend=20.0)
+o_nocoul = run_c(1.0, 0.1, 21.0, plasma=False, no_coulomb=True, Tend=8.0)
+rnc = o_nocoul['rec']; dm_nc = rnc['mtot'][-1] - rnc['mtot'][0]; fl_nc = rnc['E_in'][-1] - rnc['E_out'][-1]
+R['coupled'].update(energy_balance=dict(dm_outer=float(dm_out), net_boundary_flux=float(fl_out), abs_residual=float(abs(dm_out - fl_out)), m0=float(rb['mtot'][0])),
+                    no_discharge=o_nodis['status'], no_coulomb=o_nocoul['status'])
+gate("K2_balance_energia_acoplado", abs(dm_out - fl_out) < 2e-3*max(rb['mtot'][0], 1e-9) + 1e-5 and abs(dm_nc - fl_nc) > 20*abs(dm_out - fl_out) and o_nodis['status'] == 'escaped' and o_nocoul['status'] != 'escaped',
+     f"energía total del sistema acoplado (campo+plasma+cascarón): Δm(R_max) = {dm_out:+.3e} frente al flujo neto por la frontera exterior {fl_out:+.3e} (residuo {abs(dm_out-fl_out):.1e}, m₀={rb['mtot'][0]:.3f}); "
+     f"control sin descarga: el cascarón q=1≫C/2 explota ({o_nodis['status']}); control sin fuerza de Coulomb: no explota ({o_nocoul['status']}) y rompe el balance en {abs(dm_nc-fl_nc):.2e}")
+# umbrales de escape/ligadura del sistema acoplado frente a la ley desacoplada
+def coupled_sc(q, C, lo=0.3, hi=None):
+    f_ = lambda s_: run_c(q, C, s_, record=False)['status'] != 'escaped'
+    hi = hi or 3.0*A_pred*q**2/C**1.5
+    if not f_(hi): return None
+    if f_(lo): return lo
+    for _ in range(7):
+        mid = np.sqrt(lo*hi)
+        if f_(mid): hi = mid
+        else: lo = mid
+    return float(np.sqrt(lo*hi))
+t0 = time.time()
+cpts = [(1.0, 0.1), (0.5, 0.1), (1.5, 0.1), (1.0, 0.3)]
+ctab = []
+for (qv, Cv) in cpts:
+    scc = coupled_sc(qv, Cv); sdec = A_pred*qv**2/Cv**1.5
+    ctab.append(dict(q=qv, C=Cv, s_c_coupled=scc, s_c_decoupled_law=float(sdec), ratio=None if scc is None else float(scc/sdec)))
+print(f"  umbrales acoplados en {time.time()-t0:.0f}s", flush=True)
+R['coupled']['thresholds'] = ctab
+_scC = [x['s_c_coupled']*x['C'] for x in ctab if x['s_c_coupled']]
+R['coupled']['sC_product'] = dict(min=float(min(_scC)), max=float(max(_scC)), spread=float(max(_scC)/min(_scC)))
+_C_phys_q1 = 1.0/qc_phys                                   # C = q/(q/C) con q=1 y masa de reposo
+R['coupled']['N_race_extrapolated_q1'] = float(Nst_*(np.mean(_scC)/_C_phys_q1)**2)   # EXTRAPOLACION de ~20 decadas en C: s_c ~ (s_c C)/C
+R['coupled']['val'] = dict(err_C0p3=float(e03), err_C0p1=float(e01), conv_nr=float(conv_nr), Ed_drift=float(max(x['Ed_drift'] for x in val)))
+R['coupled']['control_no_coulomb_balance_break'] = float(abs(dm_nc - fl_nc))
+okc = all(x['s_c_coupled'] is not None for x in ctab)
+gate("K3_umbral_acoplado_vs_desacoplado", okc and all(x['ratio'] < 1.05 for x in ctab),
+     "umbral s_c de escape (R≥7r0) del sistema acoplado (cascarón dinámico + plasma gravitante + campo + descarga) frente a la ley desacoplada: "
+     + "; ".join(f"q={x['q']}, C={x['C']}: {x['s_c_coupled']:.2f} vs {x['s_c_decoupled_law']:.2f} (×{x['ratio']:.2f})" for x in ctab if x['s_c_coupled'])
+     + ". La gravedad del plasma que el propio campo genera liga al cascarón: el umbral baja")
+# trayectoria representativa: perdida/ganancia de masa de Misner-Sharp en la superficie y fuga por la frontera
+o_rep = run_c(1.0, 0.1, 21.0, Tend=45.0)
+rr_ = o_rep['rec']; Cp = rr_['Cplus']; iPk = int(np.argmax(Cp))
+U_field = 1.0                                              # energia del campo exterior inicial q^2/R0 (compacidad) con q=1
+R['coupled']['representative'] = dict(q=1.0, C=0.1, s=21.0, status=o_rep['status'], t_AH=o_rep.get('t_AH'), r_AH=o_rep.get('r_AH'), R_shell_at_AH=o_rep.get('R_shell'),
+                                      Cplus_initial=float(Cp[0]), Cplus_max=float(Cp.max()), t_Cplus_max=float(rr_['t'][iPk]), E_gain_max=float(rr_['Ed'].max()/rr_['Ed'][0] - 1),
+                                      energy_lost_to_boundary=float(o_rep['E_out_b']), energy_in_from_boundary=float(o_rep['E_in_b']), fraction_of_field_lost=float(o_rep['E_out_b']/U_field),
+                                      Rmax_shell=float(rr_['R'].max()))
+rep = R['coupled']['representative']
+gate("K4_ganancia_o_perdida_MS_acoplada", o_rep['status'] in ('AH', 'ok') and rep['Cplus_max'] > rep['Cplus_initial'] and rep['E_gain_max'] >= 0,
+     f"trayectoria (q=1, C=0.1, s=21): la compacidad de Misner–Sharp justo fuera del cascarón pasa de {rep['Cplus_initial']:.3f} a un máximo {rep['Cplus_max']:.3f} (t={rep['t_Cplus_max']:.1f}); el cascarón gana {rep['E_gain_max']:.1%} de energía por el empuje de Coulomb y llega a R_max={rep['Rmax_shell']:.2f}; "
+     f"fracción de la energía de campo inicial que sale por la frontera exterior (fuga radiativa): {rep['fraction_of_field_lost']:.3f}; resultado: {o_rep['status']} (r_AH={rep.get('r_AH')}, R_cascarón={rep.get('R_shell_at_AH')})")
+
 # --- N7: curvas en el plano (N, r0)
 MP = MPL; aF = 0.75*(9*np.pi/4)**(1/3)
 Nst = kappa**2/(4*np.pi*ALPHA**2)

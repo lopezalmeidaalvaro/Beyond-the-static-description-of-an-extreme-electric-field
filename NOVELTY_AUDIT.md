@@ -6,7 +6,7 @@
 ## 0. Alcance y límites (léase primero)
 - **Ningún texto completo fue leído.** `arxiv.org` y `ar5iv.labs.arxiv.org` no resuelven desde esta sesión (red restringida): hay que permitir esos dominios en *Network access* del entorno para una auditoría de texto completo. Todo lo que sigue se apoya en **extractos de búsqueda** (nivel **E**) o en **memoria** (nivel **M**, no verificada). La *ausencia* de un resultado en una búsqueda superficial (nivel **N**) **no** prueba que no exista.
 - Esta auditoría **no** puede dar «rigor absoluto» sobre la novedad: da una clasificación conservadora y una lista de verificaciones pendientes (§7).
-- **Corrección de resultados propios** hallada durante la auditoría (ya aplicada en 04, informe y JSON): el margen DEC «−8.33e-4, acotado» era el borde del rango (ε=10⁴⁰); el umbral «1.92» era artefacto de rejilla (exacto **1.88218**). Ahora hay 118 gates.
+- **Corrección de resultados propios** hallada durante la auditoría (ya aplicada en 04, informe y JSON): el margen DEC «−8.33e-4, acotado» era el borde del rango (ε=10⁴⁰); el umbral «1.92» era artefacto de rejilla (exacto **1.88218**). Ahora hay 122 gates.
 
 ## 1. Veredicto en una tabla
 | Resultado | Categoría | En una línea |
@@ -26,7 +26,7 @@
 | **DM3** Colapso de un cascarón cargado con descarga: ley s_c = A q²/C^{3/2} y carrera contra el empuje de Coulomb (06b: P13, S1–S5) | Cat.1 Redescubrimiento | Cascarón de Israel con carga: colapsa si Q<√(4πG)M. |
 | **P1** Diagrama de fases (N, r₀) | Cat.3 Síntesis | Colocarlas en un solo plano con valores explícitos, tiempos y verificación simbólica de cada umbral (P1–P9). |
 | **T1** Umbrales N*=2.74e+05, N_crit=5.71e+44, N_valid=9/α | Cat.1 Redescubrimiento | N* como cantidad de modelo (Cat.3 menor). |
-| **M1** Metodología: pipeline «LLM propone, CAS ejecuta», gates simbólicos, controles negativos, informe autogenerado | Cat.3 Síntesis | 118 gates (25 controles negativos), trazabilidad número→clave JSON. |
+| **M1** Metodología: pipeline «LLM propone, CAS ejecuta», gates simbólicos, controles negativos, informe autogenerado | Cat.3 Síntesis | 122 gates (25 controles negativos), trazabilidad número→clave JSON. |
 
 Recuento: Cat.1 = 9, Cat.2 = 3, Cat.3 = 4. **Ningún resultado es, hoy, un descubrimiento físico nuevo defendible**; el valor está en la síntesis cuantitativa, la corrección explícita de la truncación y la verificación formal.
 
@@ -161,7 +161,7 @@ Recuento: Cat.1 = 9, Cat.2 = 3, Cat.3 = 4. **Ningún resultado es, hoy, un descu
 - **Aporte del repositorio:** Ley analítica de la carrera s_c=2√I q²/(κC^{3/2}) con la curva exacta de descarga de 05c, verificada por simulación de la dinámica completa (error ~2%); evaluación en el q/C físico (≈1e21); la ganancia de masa de MS ΔE/E₀=(C/4)(s_c/s)²; controles negativos; integral primera conservada a 1e-12.
 - **No presentar como:** «La QED/descarga de Schwinger impide (o permite) el colapso gravitatorio» como predicción física; N_race≈1e68 como resultado cuantitativo fiable (depende de un cierre local de la descarga y de la neutralización permanente).
 - **Cómo citar:** «En un modelo de cascarón fino con apantallamiento local de la descarga, el empuje de Coulomb desliga al cascarón salvo que el apantallamiento supere s_c=0.66 q²/C^{3/2}; con la relación carga-masa del electrón ese umbral excede con creces el disponible.»
-- **Salvedades:** Cierre local de la descarga y neutralización permanente tras el primer cero (ansatz); plasma y cascarón no acoplados; interior plano; una sola capa; sin explosión coulombiana de muchos cuerpos ni estructura radial; sin comparación con literatura (texto completo no accesible).
+- **Salvedades:** Cierre local de la descarga y neutralización permanente tras el primer cero (ansatz); la ley desacoplada es una cota superior (el sistema acoplado cascarón+plasma+campo, K1–K4, baja el umbral s_c en un factor 0.06–0.6 y elimina su dependencia en q²); error O(C) de autogravedad del cascarón suavizado; interior plano; una sola capa; sin explosión coulombiana de muchos cuerpos ni estructura radial; extrapolación de 20 décadas en C; sin comparación con literatura (texto completo no accesible).
 
 ### P1 — Diagrama de fases (N, r₀)  →  **Cat.3 Síntesis**
 - **Estructura ya publicada:** Cada frontera es estándar: r_s=2GM (Schwarzschild), gas de Fermi degenerado, ε=1 (Schwinger), densidad de Planck, N_crit=M_Pl²/m² (cota tipo Gibbons), Nα≳1 (supercritico, Zel'dovich–Greiner).
@@ -182,7 +182,7 @@ Recuento: Cat.1 = 9, Cat.2 = 3, Cat.3 = 4. **Ningún resultado es, hoy, un descu
 ### M1 — Metodología: pipeline «LLM propone, CAS ejecuta», gates simbólicos, controles negativos, informe autogenerado  →  **Cat.3 Síntesis**
 - **Estructura ya publicada:** No es un resultado de física; valor de reproducibilidad.
 - **Ecuación equivalente:** —
-- **Aporte del repositorio:** 118 gates (25 controles negativos), trazabilidad número→clave JSON.
+- **Aporte del repositorio:** 122 gates (25 controles negativos), trazabilidad número→clave JSON.
 - **No presentar como:** Presentarlo como evidencia de corrección física.
 - **Cómo citar:** «Software abierto de verificación».
 - **Salvedades:** Un gate PASS verifica coherencia interna, no validez física (p. ej. el error del «−8.33e-4» pasó los gates).
