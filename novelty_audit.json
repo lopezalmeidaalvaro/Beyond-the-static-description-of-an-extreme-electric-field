@@ -1,6 +1,6 @@
 {
  "meta": {
-  "date": "2026-11-01",
+  "date": "2026-11-02",
   "access_limitations": "arxiv.org, ar5iv.labs.arxiv.org no resuelven en esta sesión: ningún texto completo leído; solo extractos de WebSearch.",
   "levels": {
    "E": "extracto de búsqueda esta sesión",
@@ -9,7 +9,7 @@
    "T": "texto completo (ninguno)"
   },
   "counts_by_category": {
-   "1": 6,
+   "1": 7,
    "2": 3,
    "3": 3
   }
@@ -315,6 +315,17 @@
    "caveat": "El bloqueo de Markov acota f<½ desde el vacío, mientras que la ocupación exacta de campo constante e^{−πm_⊥²/ε} supera ½ para ε>4.5: el modelo subestima la ocupación a campo fuerte. Sin QKE no markoviana, sin transporte espacial, sin comparar con las curvas publicadas."
   },
   {
+   "id": "E1",
+   "name": "Cinética cuántica exacta (Bloch/Bogoliubov acoplada a Maxwell, 05c): f_max→1.0000, ω_p=0.1944 e√ε₀, γ/ω_p=0.0048, ⟨w∥⟩_pl=0.988",
+   "cat": 1,
+   "evidence": "Las ecuaciones de Bloch/Bogoliubov de la QKE para Dirac en E(t) homogéneo y su acoplo de Maxwell son estándar (Kluger et al. 1991–98; Schmidt et al. 1998; Prakapenia–Vereshchagin 2023 las integran con retroacción y bloqueo de Pauli exacto).",
+   "equivalent": "QKE no markoviana en forma de Bloch con retroacción de Maxwell.",
+   "ours": "Derivación simbólica Dirac→Bloch (Q0), pureza exacta (Q1), energía exacta con corriente de polarización (Q2), traza (Q4), Landau–Zener numérico vs e^(−πm⊥²/eE) (Q3), núcleo C verificado; barrido ε₀∈[4,10³] con ≥5 oscilaciones (ε₀≥10), convergencia en P, p⊥, Δt, rango y estado inicial; comparación directa con Markov (τ₀·e√ε₀: 13.67 vs 16.86 a ε₀=100). Detectado un factor 2 en el acoplo del encargo (C11).",
+   "forbidden": "«Primera solución no markoviana de las oscilaciones de plasma de Schwinger»; «ley universal ω_p=0.19e√(eE₀)» (el valor exacto es otro y depende de la condición inicial y de la ausencia de colisiones).",
+   "wording": "«Integramos las ecuaciones de Bloch de la QKE con retroacción (como Kluger et al. y Prakapenia–Vereshchagin) y cuantificamos la diferencia con el límite de Markov con bloqueo de Pauli en el mismo sistema.»",
+   "caveat": "Modelo homogéneo, sin colisiones ni transporte (el plasma NO se isotropiza: w∥→≈1, no 1/3); estado inicial = vacío adiabático de orden cero (ambigüedad cuantificada, K8); no se ha reproducido ninguna curva publicada (texto completo no accesible)."
+  },
+  {
    "id": "P1",
    "name": "Diagrama de fases (N, r₀)",
    "cat": 3,
@@ -342,7 +353,7 @@
    "cat": 3,
    "evidence": "No es un resultado de física; valor de reproducibilidad.",
    "equivalent": "—",
-   "ours": "67 gates (15 controles negativos), trazabilidad número→clave JSON.",
+   "ours": "90 gates (21 controles negativos), trazabilidad número→clave JSON.",
    "forbidden": "Presentarlo como evidencia de corrección física.",
    "wording": "«Software abierto de verificación».",
    "caveat": "Un gate PASS verifica coherencia interna, no validez física (p. ej. el error del «−8.33e-4» pasó los gates)."
@@ -371,7 +382,7 @@
   },
   {
    "topic": "Cinética con bloqueo de Pauli",
-   "detail": "La ecuación de Markov con (1−2f) acota f<½ desde el vacío, mientras que la QKE exacta de campo constante da f=e^{−πm⊥²/ε}>½ a ε>4.5; los resultados de 05b (ω_p, γ) son de modelo."
+   "detail": "La ecuación de Markov con (1−2f) acota f<½ desde el vacío, mientras que la QKE exacta de campo constante da f=e^{−πm⊥²/ε}>½ a ε>4.5; los resultados de 05b (ω_p, γ) son de modelo. 05c resuelve esa limitación dentro del modelo homogéneo (QKE de Bloch exacta), cuantifica la diferencia, y NO incluye colisiones, transporte ni comparación con curvas publicadas."
   },
   {
    "topic": "Modelo de materia de la fase (ii)",
@@ -408,7 +419,7 @@
   "before_submission": [
    "Leer en texto completo: Kluger et al. (1991, 1992, 1998), Ruffini–Vereshchagin–Xue §8, Gelis–Tanji, Ruffini–Wu–Xue, Yajima–Tamaki, Boulware, Malec–Ó Murchadha, KWY, Russo–Townsend, Fedotov.",
    "Comparar κ reproduciendo una curva publicada (misma definición de tiempo/longitud de oscilación).",
-   "HECHO en 05b: factor (1−2f) y oscilaciones multi-cruce. PENDIENTE: ecuación cinética cuántica no markoviana (f hasta 1) y comparación de ω_p, γ con Prakapenia–Vereshchagin (2023).",
+   "HECHO en 05b/05c: factor (1−2f), oscilaciones multi-cruce y QKE de Bloch exacta (f hasta 1). PENDIENTE: comparar ω_p, γ y τ₀ con las curvas publicadas de Prakapenia–Vereshchagin (2023) y Kluger et al. (texto completo).",
    "Calcular las condiciones de causalidad de Russo–Townsend con L₁(S,P).",
    "Buscar sistemáticamente RN/EEH con carga corrida (Uehling) y logarítmico; no se hizo.",
    "Verificar contra la edición original los datos bibliográficos marcados VERIFY en references.bib (revista/volumen/páginas recordados de memoria) y añadir la afiliación en paper.tex (el autor ya figura: Álvaro López Almeida).",
@@ -434,14 +445,20 @@
   "z2": 4.165607889172748e+42,
   "shift_m": -0.01191312135692657,
   "shift_p": -0.012300539048379133,
-  "ngates": 67,
-  "nneg": 15,
+  "ngates": 90,
+  "nneg": 21,
   "om_ratio": 0.18648718250724233,
   "gam_ratio": 0.0051749493562433194,
   "emax": 2.8636698621434124e-06,
   "tau_blk": 5.568405961927601,
   "tau_nob": 4.557579236983411,
   "fmax_nob": 6.525630388600839,
-  "dU": 0.07046737503605427
+  "dU": 0.07046737503605427,
+  "b3_fmax": 0.9999996173311252,
+  "b3_om": 0.19442671625498953,
+  "b3_gam": 0.00479613781528609,
+  "b3_tau100": 13.667297352777315,
+  "mk_tau100": 16.86236503265828,
+  "b3_wpl": 0.9875541832849053
  }
 }

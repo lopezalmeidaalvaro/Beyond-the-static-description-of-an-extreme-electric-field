@@ -1,12 +1,12 @@
 # NOVELTY_AUDIT — Estado del arte y novedad de `DISCOVERY_REPORT.md`
-*Generado por `09_make_audit.py` desde `discovery_results.json` (incl. `08_novelty_checks.py`). 2026-11-01.*
+*Generado por `09_make_audit.py` desde `discovery_results.json` (incl. `08_novelty_checks.py`). 2026-11-02.*
 
 > **Actualización tras los cierres teóricos:** P10/P11 (Penrose cargada derivada internamente, con alcance acotado) y 05b (cinética con bloqueo de Pauli). L1 sigue siendo Cat.1; K1 se añade como Cat.2 dependiente de modelo.
 
 ## 0. Alcance y límites (léase primero)
 - **Ningún texto completo fue leído.** `arxiv.org` y `ar5iv.labs.arxiv.org` no resuelven desde esta sesión (red restringida): hay que permitir esos dominios en *Network access* del entorno para una auditoría de texto completo. Todo lo que sigue se apoya en **extractos de búsqueda** (nivel **E**) o en **memoria** (nivel **M**, no verificada). La *ausencia* de un resultado en una búsqueda superficial (nivel **N**) **no** prueba que no exista.
 - Esta auditoría **no** puede dar «rigor absoluto» sobre la novedad: da una clasificación conservadora y una lista de verificaciones pendientes (§7).
-- **Corrección de resultados propios** hallada durante la auditoría (ya aplicada en 04, informe y JSON): el margen DEC «−8.33e-4, acotado» era el borde del rango (ε=10⁴⁰); el umbral «1.92» era artefacto de rejilla (exacto **1.88218**). Ahora hay 67 gates.
+- **Corrección de resultados propios** hallada durante la auditoría (ya aplicada en 04, informe y JSON): el margen DEC «−8.33e-4, acotado» era el borde del rango (ε=10⁴⁰); el umbral «1.92» era artefacto de rejilla (exacto **1.88218**). Ahora hay 90 gates.
 
 ## 1. Veredicto en una tabla
 | Resultado | Categoría | En una línea |
@@ -20,11 +20,12 @@
 | **A1** Perfil interior estático: EH cuártico vs un bucle exacto vs Born–Infeld (04) | Cat.2 Refinamiento | E∼r^{-2/3} y masa finita del cuártico como artefacto (S9); un bucle exacto = RN con carga corrida (δr₊/r₊ medido -1.191e-02 vs predicho -1.230e-02); BI/cuártico → horizonte único tipo Schwarzschild. |
 | **B1** Modelo cinético 05 (fuente, conducción + polarización, balance de energía) | Cat.1 Redescubrimiento | Mismas ecuaciones esenciales. |
 | **K1** Cinética de Markov con bloqueo de Pauli a través de ≥5 oscilaciones (05b): ω_p=0.1865 e√ε₀, γ/ω_p=0.0052 | Cat.2 Refinamiento | Ecuación de Vlasov cuántica en el límite de Markov con bloqueo de Pauli. |
+| **E1** Cinética cuántica exacta (Bloch/Bogoliubov acoplada a Maxwell, 05c): f_max→1.0000, ω_p=0.1944 e√ε₀, γ/ω_p=0.0048, ⟨w∥⟩_pl=0.988 | Cat.1 Redescubrimiento | QKE no markoviana en forma de Bloch con retroacción de Maxwell. |
 | **P1** Diagrama de fases (N, r₀) | Cat.3 Síntesis | Colocarlas en un solo plano con valores explícitos, tiempos y verificación simbólica de cada umbral (P1–P9). |
 | **T1** Umbrales N*=2.74e+05, N_crit=5.71e+44, N_valid=9/α | Cat.1 Redescubrimiento | N* como cantidad de modelo (Cat.3 menor). |
-| **M1** Metodología: pipeline «LLM propone, CAS ejecuta», gates simbólicos, controles negativos, informe autogenerado | Cat.3 Síntesis | 67 gates (15 controles negativos), trazabilidad número→clave JSON. |
+| **M1** Metodología: pipeline «LLM propone, CAS ejecuta», gates simbólicos, controles negativos, informe autogenerado | Cat.3 Síntesis | 90 gates (21 controles negativos), trazabilidad número→clave JSON. |
 
-Recuento: Cat.1 = 6, Cat.2 = 3, Cat.3 = 3. **Ningún resultado es, hoy, un descubrimiento físico nuevo defendible**; el valor está en la síntesis cuantitativa, la corrección explícita de la truncación y la verificación formal.
+Recuento: Cat.1 = 7, Cat.2 = 3, Cat.3 = 3. **Ningún resultado es, hoy, un descubrimiento físico nuevo defendible**; el valor está en la síntesis cuantitativa, la corrección explícita de la truncación y la verificación formal.
 
 ## 2. Comparación artículo por artículo (nivel de verificación entre paréntesis)
 | Trabajo | Nivel | Qué se sabe (según lo visto) | Gate(s) del repositorio | Relación |
@@ -127,6 +128,14 @@ Recuento: Cat.1 = 6, Cat.2 = 3, Cat.3 = 3. **Ningún resultado es, hoy, un descu
 - **Cómo citar:** «En un modelo de Vlasov de Markov con bloqueo de Pauli (Kluger et al.; Prakapenia–Vereshchagin) obtenemos ω_p≈0.19e√(eE₀) y γ/ω_p≈5·10⁻³ para una fuente gaussiana de ancho 0.25√ε₀.»
 - **Salvedades:** El bloqueo de Markov acota f<½ desde el vacío, mientras que la ocupación exacta de campo constante e^{−πm_⊥²/ε} supera ½ para ε>4.5: el modelo subestima la ocupación a campo fuerte. Sin QKE no markoviana, sin transporte espacial, sin comparar con las curvas publicadas.
 
+### E1 — Cinética cuántica exacta (Bloch/Bogoliubov acoplada a Maxwell, 05c): f_max→1.0000, ω_p=0.1944 e√ε₀, γ/ω_p=0.0048, ⟨w∥⟩_pl=0.988  →  **Cat.1 Redescubrimiento**
+- **Estructura ya publicada:** Las ecuaciones de Bloch/Bogoliubov de la QKE para Dirac en E(t) homogéneo y su acoplo de Maxwell son estándar (Kluger et al. 1991–98; Schmidt et al. 1998; Prakapenia–Vereshchagin 2023 las integran con retroacción y bloqueo de Pauli exacto).
+- **Ecuación equivalente:** QKE no markoviana en forma de Bloch con retroacción de Maxwell.
+- **Aporte del repositorio:** Derivación simbólica Dirac→Bloch (Q0), pureza exacta (Q1), energía exacta con corriente de polarización (Q2), traza (Q4), Landau–Zener numérico vs e^(−πm⊥²/eE) (Q3), núcleo C verificado; barrido ε₀∈[4,10³] con ≥5 oscilaciones (ε₀≥10), convergencia en P, p⊥, Δt, rango y estado inicial; comparación directa con Markov (τ₀·e√ε₀: 13.67 vs 16.86 a ε₀=100). Detectado un factor 2 en el acoplo del encargo (C11).
+- **No presentar como:** «Primera solución no markoviana de las oscilaciones de plasma de Schwinger»; «ley universal ω_p=0.19e√(eE₀)» (el valor exacto es otro y depende de la condición inicial y de la ausencia de colisiones).
+- **Cómo citar:** «Integramos las ecuaciones de Bloch de la QKE con retroacción (como Kluger et al. y Prakapenia–Vereshchagin) y cuantificamos la diferencia con el límite de Markov con bloqueo de Pauli en el mismo sistema.»
+- **Salvedades:** Modelo homogéneo, sin colisiones ni transporte (el plasma NO se isotropiza: w∥→≈1, no 1/3); estado inicial = vacío adiabático de orden cero (ambigüedad cuantificada, K8); no se ha reproducido ninguna curva publicada (texto completo no accesible).
+
 ### P1 — Diagrama de fases (N, r₀)  →  **Cat.3 Síntesis**
 - **Estructura ya publicada:** Cada frontera es estándar: r_s=2GM (Schwarzschild), gas de Fermi degenerado, ε=1 (Schwinger), densidad de Planck, N_crit=M_Pl²/m² (cota tipo Gibbons), Nα≳1 (supercritico, Zel'dovich–Greiner).
 - **Ecuación equivalente:** —
@@ -146,7 +155,7 @@ Recuento: Cat.1 = 6, Cat.2 = 3, Cat.3 = 3. **Ningún resultado es, hoy, un descu
 ### M1 — Metodología: pipeline «LLM propone, CAS ejecuta», gates simbólicos, controles negativos, informe autogenerado  →  **Cat.3 Síntesis**
 - **Estructura ya publicada:** No es un resultado de física; valor de reproducibilidad.
 - **Ecuación equivalente:** —
-- **Aporte del repositorio:** 67 gates (15 controles negativos), trazabilidad número→clave JSON.
+- **Aporte del repositorio:** 90 gates (21 controles negativos), trazabilidad número→clave JSON.
 - **No presentar como:** Presentarlo como evidencia de corrección física.
 - **Cómo citar:** «Software abierto de verificación».
 - **Salvedades:** Un gate PASS verifica coherencia interna, no validez física (p. ej. el error del «−8.33e-4» pasó los gates).
@@ -160,6 +169,7 @@ Recuento: Cat.1 = 6, Cat.2 = 3, Cat.3 = 3. **Ningún resultado es, hoy, un descu
 - ~~«La QED no censura el horizonte» como predicción física en r_Q.~~ → «Mostramos que la extrapolación cuártica del EEH produce un perfil cualitativamente distinto del de la integral de tiempo propio exacta; comparamos ambos en el sistema acoplado.»
 - ~~«Nuevo modelo de retroacción».~~ → «Reimplementamos el modelo de Markov de Kluger–Mottola–Eisenberg con verificación simbólica del balance de energía.»
 - ~~«Hemos calculado el amortiguamiento de las oscilaciones de plasma de Schwinger» como resultado de QED; las constantes ω_p/(e√ε₀) y γ/ω_p como universales.~~ → «En un modelo de Vlasov de Markov con bloqueo de Pauli (Kluger et al.; Prakapenia–Vereshchagin) obtenemos ω_p≈0.19e√(eE₀) y γ/ω_p≈5·10⁻³ para una fuente gaussiana de ancho 0.25√ε₀.»
+- ~~«Primera solución no markoviana de las oscilaciones de plasma de Schwinger»; «ley universal ω_p=0.19e√(eE₀)» (el valor exacto es otro y depende de la condición inicial y de la ausencia de colisiones).~~ → «Integramos las ecuaciones de Bloch de la QKE con retroacción (como Kluger et al. y Prakapenia–Vereshchagin) y cuantificamos la diferencia con el límite de Markov con bloqueo de Pauli en el mismo sistema.»
 - ~~«N* es un umbral físico universal».~~ → «Orden de magnitud dependiente de modelo.»
 
 ## 5. Debilidades que un árbitro señalaría (autocrítica)
@@ -168,7 +178,7 @@ Recuento: Cat.1 = 6, Cat.2 = 3, Cat.3 = 3. **Ningún resultado es, hoy, un descu
 3. **Parte imaginaria y estabilidad.** Para ε>1 la tasa de decaimiento del vacío es O(1) en unidades Compton; la parte real aislada no define una acción efectiva estable. El perfil estático para ε≫1 es un ejercicio de modelo.
 4. **Causalidad (Russo–Townsend).** Causalidad⇒DEC y SEC en clase Plebanski; nuestra DEC se viola para ε>1.88. Hay que calcular las condiciones de causalidad con L₁(S,P) y ver si el efecto es una propiedad real o del recorte P=0.
 5. **Hipótesis de Penrose cargada.** Ahora DERIVADA internamente (P10), pero sólo para datos simétricos en el tiempo, ρ≥0 y sin materia cargada exterior (como KWY). Malec–Ó Murchadha avisan de rupturas en colapso temprano; la dinámica con carga que sale NO está cubierta.
-6. **Cinética con bloqueo de Pauli.** La ecuación de Markov con (1−2f) acota f<½ desde el vacío, mientras que la QKE exacta de campo constante da f=e^{−πm⊥²/ε}>½ a ε>4.5; los resultados de 05b (ω_p, γ) son de modelo.
+6. **Cinética con bloqueo de Pauli.** La ecuación de Markov con (1−2f) acota f<½ desde el vacío, mientras que la QKE exacta de campo constante da f=e^{−πm⊥²/ε}>½ a ε>4.5; los resultados de 05b (ω_p, γ) son de modelo. 05c resuelve esa limitación dentro del modelo homogéneo (QKE de Bloch exacta), cuantifica la diferencia, y NO incluye colisiones, transporte ni comparación con curvas publicadas.
 7. **Modelo de materia de la fase (ii).** El gas de electrones degenerados no está ligado (Coulomb 4.2e+42× gravedad); r_s es una condición de datos iniciales.
 8. **Constante κ.** Dependiente del modelo (n=1, sin (1−2f), LCFA, primer cero). Sin comparación con las curvas de KME/Bloch/Ruffini en texto completo.
 9. **Verificación bibliográfica.** Ningún texto completo leído (arxiv.org y ar5iv no accesibles). Todos los niveles E son extractos; los M no se comprobaron.
@@ -192,7 +202,7 @@ Recuento: Cat.1 = 6, Cat.2 = 3, Cat.3 = 3. **Ningún resultado es, hoy, un descu
 ## 7. Verificaciones pendientes antes de cualquier envío
 - [ ] Leer en texto completo: Kluger et al. (1991, 1992, 1998), Ruffini–Vereshchagin–Xue §8, Gelis–Tanji, Ruffini–Wu–Xue, Yajima–Tamaki, Boulware, Malec–Ó Murchadha, KWY, Russo–Townsend, Fedotov.
 - [ ] Comparar κ reproduciendo una curva publicada (misma definición de tiempo/longitud de oscilación).
-- [ ] HECHO en 05b: factor (1−2f) y oscilaciones multi-cruce. PENDIENTE: ecuación cinética cuántica no markoviana (f hasta 1) y comparación de ω_p, γ con Prakapenia–Vereshchagin (2023).
+- [ ] HECHO en 05b/05c: factor (1−2f), oscilaciones multi-cruce y QKE de Bloch exacta (f hasta 1). PENDIENTE: comparar ω_p, γ y τ₀ con las curvas publicadas de Prakapenia–Vereshchagin (2023) y Kluger et al. (texto completo).
 - [ ] Calcular las condiciones de causalidad de Russo–Townsend con L₁(S,P).
 - [ ] Buscar sistemáticamente RN/EEH con carga corrida (Uehling) y logarítmico; no se hizo.
 - [ ] Verificar contra la edición original los datos bibliográficos marcados VERIFY en references.bib (revista/volumen/páginas recordados de memoria) y añadir la afiliación en paper.tex (el autor ya figura: Álvaro López Almeida).

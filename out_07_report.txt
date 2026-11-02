@@ -1,1 +1,1 @@
-OK: 67 gates PASS (15 controles negativos). Informe: DISCOVERY_REPORT.md (24466 caracteres)
+OK: 90 gates PASS (21 controles negativos). Informe: DISCOVERY_REPORT.md (31554 caracteres)

@@ -3,7 +3,7 @@
  - falla si falta alguna figura, si LaTeX da errores, o si quedan citas/referencias sin resolver."""
 import json, os, re, subprocess, sys, shutil
 D = json.load(open('discovery_results.json'))
-for f in ('fig_metric_profiles.pdf', 'fig_plasma_oscillations.pdf', 'phase_diagram.pdf'):
+for f in ('fig_metric_profiles.pdf', 'fig_plasma_oscillations.pdf', 'fig_markov_vs_exact.pdf', 'phase_diagram.pdf'):
     if not os.path.exists(f): sys.exit(f"FALTA FIGURA: {f}")
 if not shutil.which('pdflatex') or not shutil.which('bibtex'):
     sys.exit("pdflatex/bibtex no instalados (apt-get install texlive-publishers texlive-latex-extra texlive-science texlive-bibtex-extra)")
@@ -38,6 +38,7 @@ rows += "\\end{tabular}"
 SC = {'branch_A': ('04\\_nonperturbative\\_qed', 'Static NLED, one-loop Lagrangian, profiles'),
       'branch_B': ('05\\_dynamical\\_backreaction', 'Cohort model up to the first zero'),
       'branch_B2': ('05b\\_plasma\\_oscillations', 'Pauli-blocked kinetics, $\\ge5$ oscillations'),
+      'branch_B3': ('05c\\_quantum\\_vlasov\\_exact', 'Exact Bloch--Bogoliubov kinetics, Markov comparison'),
       'branch_C': ('06\\_phase\\_diagram', 'Misner--Sharp derivation, scales, phase map')}
 gt = "\\begin{table}[h]\n\\caption{Verification gates by script (symbolic, numerical and negative controls).}\\label{tab:gates}\n\\begin{ruledtabular}\n\\begin{tabular}{p{3.0cm}rr}\nScript & gates & neg.\\ controls\\\\\\hline\n"
 for br, (nm, desc) in SC.items():
@@ -45,8 +46,16 @@ for br, (nm, desc) in SC.items():
     gt += f"\\texttt{{{nm}}} & {len(g)} & {len(negs)}\\\\\n"
 gt += f"01--03 (baseline) & \\multicolumn{{2}}{{r}}{{re-run at each build}}\\\\\n\\end{{tabular}}\n\\end{{ruledtabular}}\n\\end{{table}}\n"
 
+B3 = D['branch_B3']
+def g4(v, f='.4f'): return '--' if v is None else format(v, f)
+te = "\\begin{ruledtabular}\n\\begin{tabular}{rccccccccc}\n$\\eps_0$ & $f_{\\max}^{\\rm ex}$ & $f_{\\max}^{\\rm M}$ & $\\tau_0^{\\rm ex}$ & $\\tau_0^{\\rm M}$ & $\\omega_p^{\\rm ex}$ & $\\omega_p^{\\rm M}$ & $\\gamma/\\omega_p^{\\rm ex}$ & $\\gamma/\\omega_p^{\\rm M}$ & $\\langle w_\\parallel^{\\rm pl}\\rangle$\\\\\\hline\n"
+for k, a in B3['exact_sweep'].items():
+    m = B3['markov_sweep'][k]
+    te += f"{float(k):g} & {a['fmax']:.5f} & {m['fmax']:.5f} & {a['tau0_e_sqrtx0']:.2f} & {g4(m.get('tau0_e_sqrtx0'), '.2f')} & {g4(a['omega_over_esqrtx0'])} & {g4(m.get('omega_over_esqrtx0'))} & {g4(a.get('gamma_over_omega'))} & {g4(m.get('gamma_over_omega'))} & {g4(a.get('w_pl_avg_last_period'), '.3f')}\\\\\n"
+te += "\\end{tabular}\n\\end{ruledtabular}"
+
 T = open('paper_template.tex').read()
-T = T.replace('@@TABLE_SCALES@@', rows).replace('@@GATE_TABLE@@', gt)
+T = T.replace('@@TABLE_SCALES@@', rows).replace('@@GATE_TABLE@@', gt).replace('@@TABLE_EXACT@@', te)
 out = re.sub(r'⟦(#?)([^|⟧]+)(?:\|([^⟧]*))?⟧', render, T)
 if '⟦' in out or '@@' in out: sys.exit("quedan tokens sin resolver")
 open('paper.tex', 'w').write(out)
