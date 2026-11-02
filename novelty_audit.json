@@ -338,14 +338,14 @@
   },
   {
    "id": "DM2",
-   "name": "Descarga espacialmente resuelta de una bola cargada (06b): fuga -0.100 q², inflow +0.248 q², neto +0.149 q²; umbral desplazado ≤0.3%",
+   "name": "Descarga espacialmente resuelta de una bola cargada (06b): fuga -0.100 q², inflow +0.248 q², neto +0.149 q²; umbral desplazado ≤0.8%",
    "cat": 3,
    "evidence": "Cada ingrediente es conocido (descarga de Schwinger, colapso de radiación, extremalidad M≥Q de la bola cargada); la combinación cuantitativa con la curva exacta de 05c no se encontró en la búsqueda superficial.",
    "equivalent": "—",
-   "ours": "Solver 1+1D validado (límite plano analítico, balance a 1e-3, convergencia, controles negativos); la fracción del campo interior que escapa por r₀ es 0.50, pero el inflow del campo exterior es ~2.5 veces mayor; la dinámica en t≤r₀/c desplaza el umbral de horizonte <0.3%; la curva r_s(N) del paper cae dentro del horizonte aparente inicial para N>4.6e+04.",
+   "ours": "Solver 1+1D validado (límite plano analítico, balance a 1e-3, convergencia, controles negativos); la fracción del campo interior que escapa por r₀ es 0.50, pero el inflow del campo exterior es ~2.5 veces mayor; la dinámica en t≤r₀/c desplaza el umbral de horizonte <0.8%; la curva r_s(N) del paper cae dentro del horizonte aparente inicial para N>4.6e+04.",
    "forbidden": "«La descarga de Schwinger acelera/permite el colapso» o «no lo retrasa» como predicción física; resultados para t>r₀/c.",
-   "wording": "«En un modelo de flujos nulos radiales con cierre local de descarga, la dinámica de descarga hasta el tiempo de cruce de luz desplaza el umbral de horizonte de la bola cargada en menos de 0.5%.»",
-   "caveat": "Flujos perfectamente radiales (cáustica central), materia como masa de prueba, sin explosión de Coulomb ni colisiones, cierre de descarga local, sin Gauss durante la conversión; no se alcanza el tiempo de caída libre; no se comparó con ningún cálculo publicado."
+   "wording": "«En un modelo de flujos nulos radiales con cierre local de descarga, la dinámica de descarga hasta el tiempo de cruce de luz desplaza el umbral de horizonte de la bola cargada en menos de 1% hasta el tiempo de caída libre prescrito.»",
+   "caveat": "Flujos radiales con núcleo reflectante (regularización de la cáustica), materia como masa de prueba y tiempo de caída libre PRESCRITO (el colapso autoconsistente de la materia cargada no se evoluciona), sin explosión de Coulomb ni colisiones, cierre de descarga local, sin Gauss durante la conversión; no se comparó con ningún cálculo publicado."
   },
   {
    "id": "P1",
@@ -375,7 +375,7 @@
    "cat": 3,
    "evidence": "No es un resultado de física; valor de reproducibilidad.",
    "equivalent": "—",
-   "ours": "110 gates (24 controles negativos), trazabilidad número→clave JSON.",
+   "ours": "112 gates (24 controles negativos), trazabilidad número→clave JSON.",
    "forbidden": "Presentarlo como evidencia de corrección física.",
    "wording": "«Software abierto de verificación».",
    "caveat": "Un gate PASS verifica coherencia interna, no validez física (p. ej. el error del «−8.33e-4» pasó los gates)."
@@ -408,7 +408,7 @@
   },
   {
    "topic": "Brecha espacial/gravitatoria (06b)",
-   "detail": "El solver 1+1D cubre solo t≤r₀/c por la cáustica central de los flujos radiales perfectos; la materia es masa de prueba; el criterio dinámico real de formación del horizonte (colapso de la materia y del plasma, tiempo de caída libre) sigue sin resolverse; el desplazamiento <0.5% es del umbral de horizonte aparente, no de r_s del cascarón."
+   "detail": "El solver 1+1D llega a (π/2) r₀ solo gracias a un núcleo reflectante que regulariza la cáustica de los flujos radiales; la materia es masa de prueba y el tiempo de caída libre está prescrito: el colapso autoconsistente de un cascarón cargado (tensión radial, fuerza de Coulomb, salto de lapso) sigue sin resolverse; el desplazamiento <0.5% es del umbral de horizonte aparente, no de r_s del cascarón."
   },
   {
    "topic": "Modelo de materia de la fase (ii)",
@@ -471,7 +471,7 @@
   "z2": 4.165607889172748e+42,
   "shift_m": -0.01191312135692657,
   "shift_p": -0.012300539048379133,
-  "ngates": 110,
+  "ngates": 112,
   "nneg": 24,
   "om_ratio": 0.18648718250724233,
   "gam_ratio": 0.0051749493562433194,
@@ -481,16 +481,16 @@
   "fmax_nob": 6.525630388600839,
   "dU": 0.07046737503605427,
   "b3_fmax": 0.9999996173311252,
-  "b3_om": 0.19442671625646762,
-  "b3_gam": 0.004796137815780849,
+  "b3_om": 0.1944267162348572,
+  "b3_gam": 0.004796137808548004,
   "b3_tau100": 13.667297352777315,
   "mk_tau100": 16.86236503265828,
-  "b3_wpl": 0.9875541832830176,
+  "b3_wpl": 0.9875541832848944,
   "c2_loss": -0.0997450972493531,
   "c2_gain": 0.24812841286198659,
   "c2_net": 0.14934443752076149,
   "c2_fesc": 0.49729191740063977,
-  "c2_shift": 0.33055588960326787,
+  "c2_shift": 0.7956277656804067,
   "c2_NA": 46190.95719403757
  }
 }

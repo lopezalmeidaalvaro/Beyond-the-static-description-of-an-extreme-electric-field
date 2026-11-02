@@ -47,7 +47,7 @@ def _minmod(a, b):
 
 
 def run_dyn(q, s_par, curve, kappa, Cn=0.0, Nr=900, Rmax=6.0, Tend=2.5, G_on=True, absorb=False, instant=False,
-            interior=True, exterior=True, cfl=0.4, ah_stop=0.999, record=True, no_balance=0.0, center_reflect=True):
+            interior=True, exterior=True, cfl=0.4, ah_stop=0.999, record=True, no_balance=0.0, center_reflect=True, r_core=0.0, particle=False, mass_profile='ball'):
     """Evoluciona y devuelve diagnosticos. no_balance=delta>0: control negativo (el plasma recibe (1+delta) de lo que pierde el campo)."""
     dr = Rmax/Nr
     r = (np.arange(Nr) + 0.5)*dr
@@ -58,13 +58,18 @@ def run_dyn(q, s_par, curve, kappa, Cn=0.0, Nr=900, Rmax=6.0, Tend=2.5, G_on=Tru
     Er_sqrt = np.sqrt(Er)
     s0 = curve[0][-1]
     Lam = kappa*s_par
-    m_mat_c = Cn*np.minimum(1.0, r**3)
-    mr_mat = np.where(r < 1.0, 3.0*Cn*r**2, 0.0)
+    if mass_profile == 'point':
+        m_mat_c = Cn*np.ones_like(r); mr_mat = np.zeros_like(r)
+    else:
+        m_mat_c = Cn*np.minimum(1.0, r**3)
+        mr_mat = np.where(r < 1.0, 3.0*Cn*r**2, 0.0)
+    jc = int(round(r_core/dr))
     inside = r < 1.0
     sc = np.zeros(Nr)
     conv_mask = np.ones(Nr, bool)
     if not interior: conv_mask &= ~inside
     if not exterior: conv_mask &= inside
+    conv_mask[:jc] = False
     Wp = np.zeros(Nr); Wm = np.zeros(Nr); Wh = np.zeros(Nr)      # Wh: calor depositado (materia opaca)
     if instant:
         sc = np.where(conv_mask, 2*s0, 0.0)
@@ -81,26 +86,24 @@ def run_dyn(q, s_par, curve, kappa, Cn=0.0, Nr=900, Rmax=6.0, Tend=2.5, G_on=Tru
 
     def rhs(Wp_, Wm_, mt):
         (m_c, a2, phi_r, lam_r, v, lam_t, alpha), rho_em = mt
-        # fantasma izquierdo (centro): W_+(-r)=W_-(r), W_-(-r)=W_+(r)
-        gl_p = Wm_[1::-1]; gl_m = Wp_[1::-1]
-        # flujos conservativos con MUSCL
+        n = Nr - jc
+        Wa_p = Wp_[jc:]; Wa_m = Wm_[jc:]; va = v[jc:]
+        gl_p = Wa_m[1::-1]; gl_m = Wa_p[1::-1]            # fantasma izquierdo: reflexion en el centro (jc=0) o en el nucleo r=r_core (jc>0)
         def faces(W, direction, ghost, right):
             Wg = np.concatenate((ghost, W, [right, right]))
-            vg = np.concatenate((v[1::-1], v, [v[-1], v[-1]]))
+            vg = np.concatenate((va[1::-1], va, [va[-1], va[-1]]))
             d = np.diff(Wg)
             sl = np.zeros_like(Wg); sl[1:-1] = _minmod(d[:-1], d[1:])
-            if direction > 0:
-                Wf = Wg[:-1] + 0.5*sl[:-1]
-            else:
-                Wf = Wg[1:] - 0.5*sl[1:]
+            Wf = Wg[:-1] + 0.5*sl[:-1] if direction > 0 else Wg[1:] - 0.5*sl[1:]
             vf = 0.5*(vg[:-1] + vg[1:])
-            F = direction*vf*Wf                      # caras entre Wg[k] y Wg[k+1]; Wg[2] es la celda 0
-            return F[1:Nr+2]                         # caras: izquierda de celda 0 .. derecha de celda Nr-1
-        Fp = faces(Wp_, +1, gl_p, Wp_[-1]); Fm = faces(Wm_, -1, gl_m, 0.0)
-        Fp[0] = -Fm[0] if center_reflect else 0.0       # el flujo entrante que sale por r=0 reaparece como saliente (paso por el centro)
+            return (direction*vf*Wf)[1:n+2]
+        Fpa = faces(Wa_p, +1, gl_p, Wa_p[-1]); Fma = faces(Wa_m, -1, gl_m, 0.0)
+        Fpa[0] = -Fma[0] if center_reflect else 0.0       # el flujo entrante que sale por el centro/nucleo reaparece como saliente
+        Fp = np.zeros(Nr + 1); Fm = np.zeros(Nr + 1); Fp[jc:] = Fpa; Fm[jc:] = Fma
         coef = v*(phi_r + lam_r)
         dWp = -(Fp[1:] - Fp[:-1])/dr - Wp_*(coef + 2.0*lam_t)
         dWm = -(Fm[1:] - Fm[:-1])/dr + Wm_*(coef - 2.0*lam_t)
+        if jc: dWp[:jc] = 0.0; dWm[:jc] = 0.0
         return dWp, dWm, Fp, Fm, v
 
     def convert(dt_c, mt):
@@ -115,6 +118,8 @@ def run_dyn(q, s_par, curve, kappa, Cn=0.0, Nr=900, Rmax=6.0, Tend=2.5, G_on=Tru
             Wh = Wh + np.where(inside, 2*add, 0.0); add = np.where(inside, 0.0, add)
         Wp = Wp + add; Wm = Wm + add
 
+    rp, wp, tau_p = 1.0, 0.0, 0.0; p_active = bool(particle and G_on); t_ptrap = None; tau_ptrap = None
+    rec.update(rp=[], Cp=[], tau=[], wp=[])
     nstep = 0
     while t < Tend:
         mt = state_metric()
@@ -134,7 +139,7 @@ def run_dyn(q, s_par, curve, kappa, Cn=0.0, Nr=900, Rmax=6.0, Tend=2.5, G_on=Tru
             out['t_b'] = t
         # --- Strang: conv(dt/2) transporte(dt) conv(dt/2)
         convert(0.5*dt, mt)
-        mt = state_metric()
+        mt = state_metric(); mt_a = mt
         dWp1, dWm1, Fp1, Fm1, v1 = rhs(Wp, Wm, mt)
         Wp_s = Wp + dt*dWp1; Wm_s = Wm + dt*dWm1
         # etapa 2 (Heun)
@@ -149,6 +154,17 @@ def run_dyn(q, s_par, curve, kappa, Cn=0.0, Nr=900, Rmax=6.0, Tend=2.5, G_on=Tru
         if absorb:                                                    # la materia opaca absorbe el plasma que entra en r<1
             Wh = Wh + np.where(inside, Wp + Wm, 0.0); Wp = np.where(inside, 0.0, Wp); Wm = np.where(inside, 0.0, Wm)
         mt = state_metric()
+        if p_active:                                               # elemento de materia neutro (geodesica radial) en la metrica dinamica; Heun con metrica inicial/final
+            def pdot(rp_, w_, M):
+                (m_c_, a2_, phi_r_, lam_r_, v_, lam_t_, al_) = M[0]
+                aa = np.sqrt(np.interp(rp_, r, a2_)); al = np.interp(rp_, r, al_); fr = np.interp(rp_, r, phi_r_); lt = np.interp(rp_, r, lam_t_)
+                g_ = np.sqrt(1.0 + w_*w_)
+                return al*w_/(aa*g_), -al*fr*g_/aa - lt*w_, al/g_
+            k1 = pdot(rp, wp, mt_a); k2 = pdot(rp + dt*k1[0], wp + dt*k1[1], mt)
+            rp += 0.5*dt*(k1[0] + k2[0]); wp += 0.5*dt*(k1[1] + k2[1]); tau_p += 0.5*dt*(k1[2] + k2[2])
+            Cp_ = float(np.interp(rp, r, mt[0][0]/r))
+            if Cp_ >= 0.999 and t_ptrap is None: t_ptrap = t + dt; tau_ptrap = tau_p
+            if rp < max(r[jc], 2*dr): p_active = False
         convert(0.5*dt, mt)
         t += dt; nstep += 1
         if record:
@@ -157,7 +173,8 @@ def run_dyn(q, s_par, curve, kappa, Cn=0.0, Nr=900, Rmax=6.0, Tend=2.5, G_on=Tru
             rec['t'].append(t); rec['mface1'].append(m1); rec['Cb'].append(m1); rec['Ein'].append(E_in); rec['Eout'].append(E_out)
             rec['Cmax'].append(float(np.max(Cc[r < Rmax - t]))); rec['rmax'].append(float(r[np.argmax(np.where(r < Rmax - t, Cc, -1))]))
             rec['Fin'].append(fi); rec['Fout'].append(fo)
-    out.update(t_end=t, nstep=nstep, E_in=E_in, E_out=E_out, Nr=Nr)
+            rec['rp'].append(rp); rec['wp'].append(wp); rec['tau'].append(tau_p); rec['Cp'].append(float(np.interp(rp, r, mt[0][0]/r)))
+    out.update(t_end=t, nstep=nstep, E_in=E_in, E_out=E_out, Nr=Nr, particle_t_trap=t_ptrap, particle_tau_trap=tau_ptrap, particle_r=rp, particle_tau=tau_p)
     if record:
         for k in rec: rec[k] = np.array(rec[k])
         out['rec'] = rec

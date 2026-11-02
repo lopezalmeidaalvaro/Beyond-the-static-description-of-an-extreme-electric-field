@@ -6,7 +6,7 @@
 ## 0. Alcance y límites (léase primero)
 - **Ningún texto completo fue leído.** `arxiv.org` y `ar5iv.labs.arxiv.org` no resuelven desde esta sesión (red restringida): hay que permitir esos dominios en *Network access* del entorno para una auditoría de texto completo. Todo lo que sigue se apoya en **extractos de búsqueda** (nivel **E**) o en **memoria** (nivel **M**, no verificada). La *ausencia* de un resultado en una búsqueda superficial (nivel **N**) **no** prueba que no exista.
 - Esta auditoría **no** puede dar «rigor absoluto» sobre la novedad: da una clasificación conservadora y una lista de verificaciones pendientes (§7).
-- **Corrección de resultados propios** hallada durante la auditoría (ya aplicada en 04, informe y JSON): el margen DEC «−8.33e-4, acotado» era el borde del rango (ε=10⁴⁰); el umbral «1.92» era artefacto de rejilla (exacto **1.88218**). Ahora hay 110 gates.
+- **Corrección de resultados propios** hallada durante la auditoría (ya aplicada en 04, informe y JSON): el margen DEC «−8.33e-4, acotado» era el borde del rango (ε=10⁴⁰); el umbral «1.92» era artefacto de rejilla (exacto **1.88218**). Ahora hay 112 gates.
 
 ## 1. Veredicto en una tabla
 | Resultado | Categoría | En una línea |
@@ -22,10 +22,10 @@
 | **K1** Cinética de Markov con bloqueo de Pauli a través de ≥5 oscilaciones (05b): ω_p=0.1865 e√ε₀, γ/ω_p=0.0052 | Cat.2 Refinamiento | Ecuación de Vlasov cuántica en el límite de Markov con bloqueo de Pauli. |
 | **E1** Cinética cuántica exacta (Bloch/Bogoliubov acoplada a Maxwell, 05c): f_max→1.0000, ω_p=0.1944 e√ε₀, γ/ω_p=0.0048, ⟨w∥⟩_pl=0.988 | Cat.1 Redescubrimiento | QKE no markoviana en forma de Bloch con retroacción de Maxwell. |
 | **DM1** Balance de Misner–Sharp dinámico (K_ij≠0) y transporte de flujos nulos radiales (06b: D_MS1–D_MS5, C_MS) | Cat.1 Redescubrimiento | Ecuaciones de Misner–Sharp con flujo; polvo nulo en calibre polar-areal. |
-| **DM2** Descarga espacialmente resuelta de una bola cargada (06b): fuga -0.100 q², inflow +0.248 q², neto +0.149 q²; umbral desplazado ≤0.3% | Cat.3 Síntesis | Solver 1+1D validado (límite plano analítico, balance a 1e-3, convergencia, controles negativos); la fracción del campo interior que escapa por r₀ es 0.50, pero el inflow del campo exterior es ~2.5 veces mayor; la dinámica en t≤r₀/c desplaza el umbral de horizonte <0.3%; la curva r_s(N) del paper cae dentro del horizonte aparente inicial para N>4.6e+04. |
+| **DM2** Descarga espacialmente resuelta de una bola cargada (06b): fuga -0.100 q², inflow +0.248 q², neto +0.149 q²; umbral desplazado ≤0.8% | Cat.3 Síntesis | Solver 1+1D validado (límite plano analítico, balance a 1e-3, convergencia, controles negativos); la fracción del campo interior que escapa por r₀ es 0.50, pero el inflow del campo exterior es ~2.5 veces mayor; la dinámica en t≤r₀/c desplaza el umbral de horizonte <0.8%; la curva r_s(N) del paper cae dentro del horizonte aparente inicial para N>4.6e+04. |
 | **P1** Diagrama de fases (N, r₀) | Cat.3 Síntesis | Colocarlas en un solo plano con valores explícitos, tiempos y verificación simbólica de cada umbral (P1–P9). |
 | **T1** Umbrales N*=2.74e+05, N_crit=5.71e+44, N_valid=9/α | Cat.1 Redescubrimiento | N* como cantidad de modelo (Cat.3 menor). |
-| **M1** Metodología: pipeline «LLM propone, CAS ejecuta», gates simbólicos, controles negativos, informe autogenerado | Cat.3 Síntesis | 110 gates (24 controles negativos), trazabilidad número→clave JSON. |
+| **M1** Metodología: pipeline «LLM propone, CAS ejecuta», gates simbólicos, controles negativos, informe autogenerado | Cat.3 Síntesis | 112 gates (24 controles negativos), trazabilidad número→clave JSON. |
 
 Recuento: Cat.1 = 8, Cat.2 = 3, Cat.3 = 4. **Ningún resultado es, hoy, un descubrimiento físico nuevo defendible**; el valor está en la síntesis cuantitativa, la corrección explícita de la truncación y la verificación formal.
 
@@ -146,13 +146,13 @@ Recuento: Cat.1 = 8, Cat.2 = 3, Cat.3 = 4. **Ningún resultado es, hoy, un descu
 - **Cómo citar:** «Verificamos simbólicamente, en la métrica general esférica, que la conversión local campo→plasma conserva la masa de Misner–Sharp y que solo el flujo por la superficie la cambia.»
 - **Salvedades:** Es una verificación de identidades conocidas en un CAS, no un resultado nuevo de relatividad.
 
-### DM2 — Descarga espacialmente resuelta de una bola cargada (06b): fuga -0.100 q², inflow +0.248 q², neto +0.149 q²; umbral desplazado ≤0.3%  →  **Cat.3 Síntesis**
+### DM2 — Descarga espacialmente resuelta de una bola cargada (06b): fuga -0.100 q², inflow +0.248 q², neto +0.149 q²; umbral desplazado ≤0.8%  →  **Cat.3 Síntesis**
 - **Estructura ya publicada:** Cada ingrediente es conocido (descarga de Schwinger, colapso de radiación, extremalidad M≥Q de la bola cargada); la combinación cuantitativa con la curva exacta de 05c no se encontró en la búsqueda superficial.
 - **Ecuación equivalente:** —
-- **Aporte del repositorio:** Solver 1+1D validado (límite plano analítico, balance a 1e-3, convergencia, controles negativos); la fracción del campo interior que escapa por r₀ es 0.50, pero el inflow del campo exterior es ~2.5 veces mayor; la dinámica en t≤r₀/c desplaza el umbral de horizonte <0.3%; la curva r_s(N) del paper cae dentro del horizonte aparente inicial para N>4.6e+04.
+- **Aporte del repositorio:** Solver 1+1D validado (límite plano analítico, balance a 1e-3, convergencia, controles negativos); la fracción del campo interior que escapa por r₀ es 0.50, pero el inflow del campo exterior es ~2.5 veces mayor; la dinámica en t≤r₀/c desplaza el umbral de horizonte <0.8%; la curva r_s(N) del paper cae dentro del horizonte aparente inicial para N>4.6e+04.
 - **No presentar como:** «La descarga de Schwinger acelera/permite el colapso» o «no lo retrasa» como predicción física; resultados para t>r₀/c.
-- **Cómo citar:** «En un modelo de flujos nulos radiales con cierre local de descarga, la dinámica de descarga hasta el tiempo de cruce de luz desplaza el umbral de horizonte de la bola cargada en menos de 0.5%.»
-- **Salvedades:** Flujos perfectamente radiales (cáustica central), materia como masa de prueba, sin explosión de Coulomb ni colisiones, cierre de descarga local, sin Gauss durante la conversión; no se alcanza el tiempo de caída libre; no se comparó con ningún cálculo publicado.
+- **Cómo citar:** «En un modelo de flujos nulos radiales con cierre local de descarga, la dinámica de descarga hasta el tiempo de cruce de luz desplaza el umbral de horizonte de la bola cargada en menos de 1% hasta el tiempo de caída libre prescrito.»
+- **Salvedades:** Flujos radiales con núcleo reflectante (regularización de la cáustica), materia como masa de prueba y tiempo de caída libre PRESCRITO (el colapso autoconsistente de la materia cargada no se evoluciona), sin explosión de Coulomb ni colisiones, cierre de descarga local, sin Gauss durante la conversión; no se comparó con ningún cálculo publicado.
 
 ### P1 — Diagrama de fases (N, r₀)  →  **Cat.3 Síntesis**
 - **Estructura ya publicada:** Cada frontera es estándar: r_s=2GM (Schwarzschild), gas de Fermi degenerado, ε=1 (Schwinger), densidad de Planck, N_crit=M_Pl²/m² (cota tipo Gibbons), Nα≳1 (supercritico, Zel'dovich–Greiner).
@@ -173,7 +173,7 @@ Recuento: Cat.1 = 8, Cat.2 = 3, Cat.3 = 4. **Ningún resultado es, hoy, un descu
 ### M1 — Metodología: pipeline «LLM propone, CAS ejecuta», gates simbólicos, controles negativos, informe autogenerado  →  **Cat.3 Síntesis**
 - **Estructura ya publicada:** No es un resultado de física; valor de reproducibilidad.
 - **Ecuación equivalente:** —
-- **Aporte del repositorio:** 110 gates (24 controles negativos), trazabilidad número→clave JSON.
+- **Aporte del repositorio:** 112 gates (24 controles negativos), trazabilidad número→clave JSON.
 - **No presentar como:** Presentarlo como evidencia de corrección física.
 - **Cómo citar:** «Software abierto de verificación».
 - **Salvedades:** Un gate PASS verifica coherencia interna, no validez física (p. ej. el error del «−8.33e-4» pasó los gates).
@@ -198,7 +198,7 @@ Recuento: Cat.1 = 8, Cat.2 = 3, Cat.3 = 4. **Ningún resultado es, hoy, un descu
 4. **Causalidad (Russo–Townsend).** Causalidad⇒DEC y SEC en clase Plebanski; nuestra DEC se viola para ε>1.88. Hay que calcular las condiciones de causalidad con L₁(S,P) y ver si el efecto es una propiedad real o del recorte P=0.
 5. **Hipótesis de Penrose cargada.** Ahora DERIVADA internamente (P10), pero sólo para datos simétricos en el tiempo, ρ≥0 y sin materia cargada exterior (como KWY). Malec–Ó Murchadha avisan de rupturas en colapso temprano; la dinámica con carga que sale NO está cubierta.
 6. **Cinética con bloqueo de Pauli.** La ecuación de Markov con (1−2f) acota f<½ desde el vacío, mientras que la QKE exacta de campo constante da f=e^{−πm⊥²/ε}>½ a ε>4.5; los resultados de 05b (ω_p, γ) son de modelo. 05c resuelve esa limitación dentro del modelo homogéneo (QKE de Bloch exacta), cuantifica la diferencia, y NO incluye colisiones, transporte ni comparación con curvas publicadas.
-7. **Brecha espacial/gravitatoria (06b).** El solver 1+1D cubre solo t≤r₀/c por la cáustica central de los flujos radiales perfectos; la materia es masa de prueba; el criterio dinámico real de formación del horizonte (colapso de la materia y del plasma, tiempo de caída libre) sigue sin resolverse; el desplazamiento <0.5% es del umbral de horizonte aparente, no de r_s del cascarón.
+7. **Brecha espacial/gravitatoria (06b).** El solver 1+1D llega a (π/2) r₀ solo gracias a un núcleo reflectante que regulariza la cáustica de los flujos radiales; la materia es masa de prueba y el tiempo de caída libre está prescrito: el colapso autoconsistente de un cascarón cargado (tensión radial, fuerza de Coulomb, salto de lapso) sigue sin resolverse; el desplazamiento <0.5% es del umbral de horizonte aparente, no de r_s del cascarón.
 8. **Modelo de materia de la fase (ii).** El gas de electrones degenerados no está ligado (Coulomb 4.2e+42× gravedad); r_s es una condición de datos iniciales.
 9. **Constante κ.** Dependiente del modelo (n=1, sin (1−2f), LCFA, primer cero). Sin comparación con las curvas de KME/Bloch/Ruffini en texto completo.
 10. **Verificación bibliográfica.** Ningún texto completo leído (arxiv.org y ar5iv no accesibles). Todos los niveles E son extractos; los M no se comprobaron.

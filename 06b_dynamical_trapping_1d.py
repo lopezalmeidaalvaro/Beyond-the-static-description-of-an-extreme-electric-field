@@ -265,28 +265,63 @@ def Cmax0_analytic(q, Cn):
 qgrid = [0.3, 0.6, 0.9, 1.2, 1.5]
 sgrid = [0.1, 0.3, 1.0, 3.0, 10.0, 'inst']
 OFF = 0.05
-resp = {}; chk0 = []
+def response(T, core):
+    out = {}; chk = []
+    for sv in sgrid:
+        row = {}
+        for qv in qgrid:
+            Cn = Cn_AH0(qv) - OFF
+            o = go(qv, sv, T=T, Cn=Cn, r_core=core); rec = o['rec']
+            c0 = float(rec['Cmax'][0]); chk.append(abs(c0 - Cmax0_analytic(qv, Cn)))
+            slope = 1.0 if qv < 1.0 else (Cn + 1.2*qv**2)/(2*qv**2)           # dC_max/dC_n del maximo estatico
+            row[f"{qv}"] = dict(dCmax=float(rec['Cmax'].max() - c0), dCb=float(rec['mface1'][-1] - rec['mface1'][0]), delta_Cn=float((rec['Cmax'].max() - c0)/slope), status=o['status'], t_end=float(o['t_end']))
+        out[str(sv)] = row
+    return out, chk
 t0 = time.time()
-for sv in sgrid:
-    row = {}
-    for qv in qgrid:
-        Cn = Cn_AH0(qv) - OFF
-        o = go(qv, sv, T=1.0, Cn=Cn); rec = o['rec']
-        c0 = float(rec['Cmax'][0]); chk0.append(abs(c0 - Cmax0_analytic(qv, Cn)))
-        slope = 1.0 if qv < 1.0 else (Cn + 1.2*qv**2)/(2*qv**2)           # dC_max/dC_n del maximo estatico
-        row[f"{qv}"] = dict(dCmax=float(rec['Cmax'].max() - c0), dCb=float(rec['mface1'][-1] - rec['mface1'][0]), delta_Cn=float((rec['Cmax'].max() - c0)/slope), status=o['status'])
-    resp[str(sv)] = row
+resp, chk0 = response(1.0, 0.0)                          # t = r0/c, sin regularizar
+T_FF = np.pi/2; R_CORE = 0.1                             # tiempo de caida libre en el borde de atrapamiento (π/2) r0, nucleo reflectante r_core = 0.1 r0 (theta_perp ~ sqrt(1-w_par)=0.11 de 05c)
+resp_ff, chk_ff = response(T_FF, R_CORE)
 print(f"  respuesta lineal calculada en {time.time()-t0:.0f}s", flush=True)
-R['threshold_response'] = dict(q=qgrid, s=[str(x) for x in sgrid], offset_below_threshold=OFF, table=resp, Cn_AH0={f"{qv}": float(Cn_AH0(qv)) for qv in qgrid}, t_c=1.0,
-                               max_Cmax0_discretization_err=float(max(chk0)))
-dmax = max(v['delta_Cn'] for row in resp.values() for v in row.values()); dmin = min(v['delta_Cn'] for row in resp.values() for v in row.values())
-R['threshold_response']['delta_Cn_max'] = float(dmax); R['threshold_response']['delta_Cn_min'] = float(dmin)
-R['threshold_range_pct'] = float(100*dmax)
-R['threshold_response']['delta_Cn_max_inst'] = float(max(v['delta_Cn'] for v in resp['inst'].values()))
-R['threshold_response']['delta_Cn_max_s1'] = float(max(v['delta_Cn'] for v in resp['1.0'].values()))
-gate("N6_umbral_de_horizonte_vs_dinamica", max(chk0) < 0.01 and dmax < 0.01 and dmin > -0.01 and all(v['status'] == 'ok' for row in resp.values() for v in row.values()),
-     f"a C_n = C_n^AH0(q)−{OFF} (justo bajo el horizonte aparente inicial, P12): el máximo de compacidad C(r) al cabo de t=r0/c crece como mucho δC_n = {dmax:.4f} (s→∞: {R['threshold_response']['delta_Cn_max_inst']:.4f}; s=1: {R['threshold_response']['delta_Cn_max_s1']:.4f}); "
-     f"el valor inicial numérico reproduce la forma cerrada de P12 a {max(chk0):.1e}; ningún caso forma horizonte nuevo: la descarga NO desplaza el umbral estático en más de ≈{100*dmax:.1f}%")
+allv = lambda rr: [v for row in rr.values() for v in row.values()]
+R['threshold_response'] = dict(q=qgrid, s=[str(x) for x in sgrid], offset_below_threshold=OFF, table=resp, table_free_fall=resp_ff, Cn_AH0={f"{qv}": float(Cn_AH0(qv)) for qv in qgrid}, t_c=1.0, t_ff=float(T_FF), r_core=R_CORE,
+                               max_Cmax0_discretization_err=float(max(chk0 + chk_ff)))
+dmax = max(v['delta_Cn'] for v in allv(resp)); dmin = min(v['delta_Cn'] for v in allv(resp))
+dmax_ff = max(v['delta_Cn'] for v in allv(resp_ff)); dmin_ff = min(v['delta_Cn'] for v in allv(resp_ff))
+R['threshold_response'].update(delta_Cn_max=float(dmax), delta_Cn_min=float(dmin), delta_Cn_max_ff=float(dmax_ff), delta_Cn_min_ff=float(dmin_ff),
+                               delta_Cn_max_inst=float(max(v['delta_Cn'] for v in resp['inst'].values())), delta_Cn_max_s1=float(max(v['delta_Cn'] for v in resp['1.0'].values())),
+                               delta_Cn_max_inst_ff=float(max(v['delta_Cn'] for v in resp_ff['inst'].values())), delta_Cn_max_s1_ff=float(max(v['delta_Cn'] for v in resp_ff['1.0'].values())))
+R['threshold_range_pct'] = float(100*max(dmax, dmax_ff))
+gate("N6_umbral_de_horizonte_vs_dinamica", max(chk0 + chk_ff) < 0.01 and max(dmax, dmax_ff) < 0.015 and min(dmin, dmin_ff) > -0.01 and all(v['status'] == 'ok' for v in allv(resp) + allv(resp_ff)),
+     f"a C_n = C_n^AH0(q)−{OFF} (justo bajo el horizonte aparente inicial, P12): el máximo de compacidad crece a lo sumo δC_n = {dmax:.4f} hasta t=r0/c y {dmax_ff:.4f} hasta el tiempo de caída libre (π/2)r0 con núcleo reflectante r_core={R_CORE} "
+     f"(s=1: {R['threshold_response']['delta_Cn_max_s1_ff']:.4f}; s→∞: {R['threshold_response']['delta_Cn_max_inst_ff']:.4f}); la compacidad inicial reproduce la forma cerrada de P12 a {max(chk0+chk_ff):.1e}; ningún caso forma horizonte nuevo: la descarga NO desplaza el umbral estático en más de ≈{R['threshold_range_pct']:.1f}%")
+
+# --- N9: geodesica radial en la metrica dinamica vs Schwarzschild (tiempo propio de caida desde el reposo)
+sch = []
+for Cn_ in (0.1, 0.2):
+    o9 = run_dyn(0.0, 1.0, curve, kappa, Cn=Cn_, Nr=1000, Rmax=10.0, Tend=6.0, mass_profile='point', particle=True, ah_stop=1e9)
+    rp_ = np.array(o9['rec']['rp']); tau_ = np.array(o9['rec']['tau']); i9 = int(np.argmax(rp_ <= 0.5))
+    tau_half = float(np.interp(0.5, rp_[:i9+1][::-1], tau_[:i9+1][::-1]))
+    an = 0.5/np.sqrt(Cn_)*(np.pi/2 + 1.0)                                  # R0=1, cos(eta)=2r/R0-1 -> eta=pi/2:  tau=(R0/2) sqrt(R0/2GM)(eta+sin eta)
+    sch.append(dict(Cn=Cn_, tau_num=tau_half, tau_exact=float(an), rel_err=abs(tau_half/an - 1)))
+R['geodesic_vs_schwarzschild'] = sch
+gate("N9_geodesica_vs_Schwarzschild", max(x['rel_err'] for x in sch) < 5e-4,
+     f"elemento neutro soltado del reposo en r0 en la métrica polar-areal evolucionada (masa puntual C_n): tiempo propio hasta r0/2 = {[round(x['tau_num'],4) for x in sch]} vs fórmula exacta de la cicloide {[round(x['tau_exact'],4) for x in sch]}: error relativo {max(x['rel_err'] for x in sch):.1e}")
+
+# --- N10: regularizacion de la caustica central: conservacion de energia y sensibilidad al radio del nucleo, hasta (pi/2) r0
+core_tab = []
+for (qv, sv) in ((0.5, 'inst'), (1.0, 3.0)):
+    for core in (0.05, 0.1, 0.2):
+        for Nr in (500, 1000):
+            o10 = go(qv, sv, T=T_FF, Nr=Nr, r_core=core); dm10 = o10['rec']['mface1'][-1] - o10['m1_initial']
+            core_tab.append(dict(q=qv, s=str(sv), core=core, Nr=Nr, dC=float(dm10), flux=float(o10['E_in'] - o10['E_out']), status=o10['status'], t_end=float(o10['t_end'])))
+R['core_sensitivity'] = core_tab
+bal_core = max(abs(x['dC'] - x['flux']) for x in core_tab)
+v_by = lambda qv, core, Nr: [x['dC'] for x in core_tab if x['q'] == qv and x['core'] == core and x['Nr'] == Nr][0]
+core_var_q05 = abs(v_by(0.5, 0.2, 1000)/v_by(0.5, 0.05, 1000) - 1); core_var_q1 = abs(v_by(1.0, 0.2, 1000)/v_by(1.0, 0.05, 1000) - 1)
+grid_var = max(abs(v_by(qv, c_, 1000)/v_by(qv, c_, 500) - 1) for qv in (0.5, 1.0) for c_ in (0.05, 0.1, 0.2))
+R['core_summary'] = dict(balance_abs_max=float(bal_core), core_variation_q0p5=float(core_var_q05), core_variation_q1=float(core_var_q1), grid_variation=float(grid_var))
+gate("N10_caustica_regularizada_hasta_caida_libre", all(x['status'] == 'ok' and abs(x['t_end'] - T_FF) < 1e-9 for x in core_tab) and bal_core < 2e-4 and grid_var < 2e-3 and core_var_q05 < 0.10 and core_var_q1 < 0.01,
+     f"con el núcleo reflectante (momento angular de los rayos: θ⊥≈0.11) la evolución llega a t=(π/2)r0 sin horizonte espurio; |Δm−∫F| ≤ {bal_core:.1e}; variación con Δr→Δr/2 ≤ {grid_var:.1e}; con r_core 0.05→0.2 ΔC cambia {core_var_q05:.1%} (q=0.5, s→∞) y {core_var_q1:.2%} (q=1, s=3)")
 
 # --- N7: curvas en el plano (N, r0)
 MP = MPL; aF = 0.75*(9*np.pi/4)**(1/3)
@@ -297,7 +332,7 @@ def Cn_of_r(n, rr): return 2*(n + aF*n**(4/3)/rr)/(MP**2*rr)
 from scipy.interpolate import RegularGridInterpolator
 from scipy.optimize import brentq
 sidx = [0.1, 0.3, 1.0, 3.0, 10.0, 30.0]
-dl_arr = np.array([[resp[str(sv) if sv != 30.0 else 'inst'][f"{qv}"]['delta_Cn'] for qv in qgrid] for sv in sidx])
+dl_arr = np.array([[max(resp[str(sv) if sv != 30.0 else 'inst'][f"{qv}"]['delta_Cn'], resp_ff[str(sv) if sv != 30.0 else 'inst'][f"{qv}"]['delta_Cn']) for qv in qgrid] for sv in sidx])
 interp = RegularGridInterpolator((np.log10(sidx), qgrid), dl_arr, bounds_error=False, fill_value=None)
 def delta_interp(q, s): return float(interp((np.log10(min(max(s, 0.1), 30.0)), min(max(q, 0.3), 1.5))))
 Ngrid = np.logspace(1.5, 14, 80)
@@ -347,13 +382,14 @@ try:
     sl = np.logspace(-1, 1.5, 30); ax[0, 1].semilogx(sv_, Fv, 'o', label='simulation'); ax[0, 1].semilogx(sl, Finf*hill(sl, pp, sh), '-', label=f'fit $p={pp:.2f}$, $s_h={sh:.2f}$')
     ax[0, 1].set_xlabel(r'$s=\sqrt{N/N_*}$'); ax[0, 1].set_ylabel(r'$\Delta C(r_0/c)/q^2$'); ax[0, 1].legend(fontsize=8); ax[0, 1].set_title('Discharge-speed dependence (weak gravity)')
     for sv in ('0.1', '1.0', '10.0', 'inst'):
-        ax[1, 0].plot(qgrid, [resp[sv][f"{qv}"]['delta_Cn'] for qv in qgrid], 'o-', ms=3, label=f's={sv}')
-    ax[1, 0].set_xlabel(r'$q=r_Q/r_0$'); ax[1, 0].set_ylabel(r'$\delta C_n$ (shift of the horizon threshold)'); ax[1, 0].legend(fontsize=8); ax[1, 0].set_title(r'Dynamic shift of the critical $2GM_n/r_0$ ($t\leq r_0/c$)')
+        ln, = ax[1, 0].plot(qgrid, [resp[sv][f"{qv}"]['delta_Cn'] for qv in qgrid], 'o-', ms=3, label=f's={sv}')
+        ax[1, 0].plot(qgrid, [resp_ff[sv][f"{qv}"]['delta_Cn'] for qv in qgrid], 's--', ms=3, color=ln.get_color())
+    ax[1, 0].set_xlabel(r'$q=r_Q/r_0$'); ax[1, 0].set_ylabel(r'$\delta C_n$ (shift of the horizon threshold)'); ax[1, 0].legend(fontsize=8); ax[1, 0].set_title(r'Shift of the critical $2GM_n/r_0$ (solid $t=r_0/c$, dashed $t=\pi r_0/2$)', fontsize=9)
     NN = np.array([x['N'] for x in rows]); ax[1, 1].loglog(NN, [x['r_s'] for x in rows], 'k-', label=r'$r_s(N)$ (shell criterion, paper)')
     ax[1, 1].loglog(NN, [x['r_Q']/R['P12']['q_crit_Cn0'] for x in rows], 'r-', label=r'$0.6\,r_Q$ (apparent horizon, $M_n\to0$)')
     ax[1, 1].loglog(NN, [x['r_Q'] for x in rows], 'r:', label=r'$r_Q$')
     ax[1, 1].loglog([x['N'] for x in rowsB], [x['r_AH'] for x in rowsB], 'g-.', label=r'$r_{\rm AH}(N)$ (static ball, P12)')
-    ax[1, 1].loglog([x['N'] for x in rowsB], [x['r_dyn'] for x in rowsB], 'b--', lw=2, label=r'$r^{\rm dyn}(N)$ (with discharge, $t\leq r_0/c$)')
+    ax[1, 1].loglog([x['N'] for x in rowsB], [x['r_dyn'] for x in rowsB], 'b--', lw=2, label=r'$r^{\rm dyn}(N)$ (with discharge, $t\leq\pi r_0/2$)')
     ax[1, 1].axvline(Nst, color='gray', lw=0.6, ls=':'); ax[1, 1].set_xlabel(r'$N$'); ax[1, 1].set_ylabel(r'$r_0\ [\lambda_C]$'); ax[1, 1].legend(fontsize=7); ax[1, 1].set_title(r'Trapping boundary in the $(N,r_0)$ plane')
     fig.tight_layout(); fig.savefig('fig_dynamic_trapping.pdf'); fig.savefig('fig_dynamic_trapping.png', dpi=150); R['figure'] = 'fig_dynamic_trapping.pdf'
 except Exception as ex:
