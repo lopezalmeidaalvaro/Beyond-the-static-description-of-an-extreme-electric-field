@@ -1,1 +1,1 @@
-OK: paper.tex, references.bib, paper.pdf (11 paginas); cifras leidas de discovery_results.json
+OK: paper.tex, references.bib, paper.pdf (13 paginas); cifras leidas de discovery_results.json

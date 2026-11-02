@@ -323,6 +323,136 @@ R['core_summary'] = dict(balance_abs_max=float(bal_core), core_variation_q0p5=fl
 gate("N10_caustica_regularizada_hasta_caida_libre", all(x['status'] == 'ok' and abs(x['t_end'] - T_FF) < 1e-9 for x in core_tab) and bal_core < 2e-4 and grid_var < 2e-3 and core_var_q05 < 0.10 and core_var_q1 < 0.01,
      f"con el núcleo reflectante (momento angular de los rayos: θ⊥≈0.11) la evolución llega a t=(π/2)r0 sin horizonte espurio; |Δm−∫F| ≤ {bal_core:.1e}; variación con Δr→Δr/2 ≤ {grid_var:.1e}; con r_core 0.05→0.2 ΔC cambia {core_var_q05:.1%} (q=0.5, s→∞) y {core_var_q1:.2%} (q=1, s=3)")
 
+# ============================================== 3. CARRERA DE COLAPSO AUTOCONSISTENTE: CASCARON CARGADO (union de Israel en forma de Misner-Sharp) ==============================================
+# Cascaron fino de masa en reposo mu (C=2G mu/r0), carga Q (q=r_Q/r0), interior plano (m_-=0).  m_+ = E (energia del cascaron medida con el exterior); union:
+#   Gamma_- - Gamma_+ = C/(2R),  Gamma_-^2 - Gamma_+^2 = (m_+ - m_-)/R  =>  Gamma_- = C/(4R) + E/C,   Rdot_tau^2 = Gamma_-^2 - 1 + m_-/R
+# La energia total m_tot se conserva y el campo exterior de energia q^2 g^2/r^2 (g = apantallamiento por descarga) hace de reservorio de Coulomb:  dE = q^2 g^2 dR/R^2
+Rs_, Cs_, qs_, Es_, mt_ = sp.symbols('R C q E m_tot', positive=True)
+inner_ = Cs_/(4*Rs_) + (Cs_ - Cs_**2/4 + qs_**2*(1 - 1/Rs_))/Cs_                 # Gamma_- con E(R) = E0 + q^2 (1 - 1/R)  (cascaron en reposo en R=1, sin descarga)
+F_ = inner_**2 - 1
+chk_rest = sp.simplify(F_.subs(Rs_, 1))
+dF1 = sp.simplify(sp.diff(F_, Rs_).subs(Rs_, 1))
+crit_static = sp.solve(sp.Eq(dF1, 0), qs_)
+mono = sp.simplify(sp.diff(inner_, Rs_) + (Cs_/4 - qs_**2/Cs_)/Rs_**2)                      # d inner/dR = -(C/4 - q^2/C)/R^2
+E0s = Cs_ - Cs_**2/4
+q_AH = sp.solve(sp.Eq((E0s + qs_**2)**2/(4*qs_**2), 1), qs_)
+unbound_margin = sp.simplify(Cs_ - E0s)                                                    # E>C  <=> la energia en R->inf es positiva: margen de ligadura C^2/4
+gate("P13_cascaron_cargado_Israel", chk_rest == 0 and sp.simplify(dF1 - 2*(-Cs_/4 + qs_**2/Cs_)) == 0 and crit_static == [Cs_/2] and mono == 0 and sp.simplify(unbound_margin - Cs_**2/4) == 0
+     and any(sp.simplify(x - (2 - Cs_/2)) == 0 for x in q_AH),
+     "cascarón fino cargado soltado del reposo en r0 (unión de Israel en variables de Misner–Sharp, SymPy): Ṙ²(R)=Γ_-²−1 con Γ_-=C/4R+E/C, E=C−C²/4+q²(1−1/R); Ṙ²(1)=0 y d(Ṙ²)/dR|₁=2(q²/C−C/4)/1 ⇒ colapsa si y sólo si q<C/2 (Q<√(4πG)M, extremalidad) y se expande hasta el infinito si q>C/2 (Γ_- crece con R); "
+     "ligadura marginal C²/4 (E>C ⇒ no ligado); horizonte aparente inicial ⇔ q ≥ 2−C/2")
+qc_phys = float(np.sqrt(ALPHA)*MPL/2)
+R['shell'] = dict(q_over_C_physical=qc_phys, static_collapse_criterion="q<C/2", q_AH="2-C/2")
+
+from scipy.integrate import solve_ivp
+_sg, _gg = curve; _s0 = _sg[-1]
+def _gfun(s_): return 0.0 if s_ >= _s0 else float(np.interp(s_, _sg, _gg))
+def shell_run(q, C, s_par, static=False, instant=False, no_work=False, eom=0.5, Rmax=20.0, Tmax=5e5, traj=False):
+    E0 = C - C**2/4
+    def rhs(tau, y):
+        R_, u_, E_, s_ = y
+        g_ = 1.0 if static else (0.0 if instant else _gfun(s_))
+        Ep = 0.0 if no_work else q**2*g_**2/R_**2
+        inner = C/(4*R_) + E_/C
+        FR = 2*inner*(-C/(4*R_**2) + Ep/C)
+        return [u_, eom*FR, Ep*u_, 0.0 if static else kappa*s_par/R_]
+    ev_t = lambda tau, y: y[2]/y[0] - 1.0
+    ev_t.terminal = True; ev_t.direction = 1
+    ev_e = lambda tau, y: y[0] - Rmax
+    ev_e.terminal = True; ev_e.direction = 1
+    ev_s = lambda tau, y: y[0] - 1e-4
+    ev_s.terminal = True
+    sol = solve_ivp(rhs, [0, Tmax], [1.0, 0.0, E0, 0.0], method='DOP853', rtol=1e-11, atol=1e-13, events=[ev_t, ev_e, ev_s], max_step=0.01)
+    out = 'trapped' if sol.t_events[0].size else ('escaped' if sol.t_events[1].size else ('collapsed_no_trap' if sol.t_events[2].size else 'bound'))
+    drift = float(np.max(np.abs(sol.y[1]**2 - ((C/(4*sol.y[0]) + sol.y[2]/C)**2 - 1))))
+    dd = dict(tau=float(sol.t[-1]), R=float(sol.y[0, -1]), E=float(sol.y[2, -1]), E0=E0, drift=drift, Rmax_reached=float(sol.y[0].max()))
+    if traj: dd['tau_arr'] = sol.t; dd['R_arr'] = sol.y[0]; dd['E_arr'] = sol.y[2]
+    return out, dd
+# S1/S2: integrador, limite neutro (cuadratura de Israel) y criterio estatico de P13
+Cn_, qn_ = 0.3, 0.0
+o_n, d_n = shell_run(qn_, Cn_, 1.0, instant=True)
+from scipy.integrate import quad
+E0n = Cn_ - Cn_**2/4
+Fq = lambda R_: (Cn_/(4*R_) + E0n/Cn_)**2 - 1
+tau_quad = quad(lambda R_: 1/np.sqrt(Fq(R_)), E0n, 1.0, limit=400)[0]
+stat = [shell_run(qv, Cv, 1.0, static=True)[0] for (qv, Cv) in ((0.1, 0.3), (0.14, 0.3), (0.2, 0.3), (0.6, 1.0), (0.4, 1.0))]
+drifts = [d_n['drift']] + [shell_run(qv, Cv, sv_)[1]['drift'] for (qv, Cv, sv_) in ((1.0, 0.3, 10.0), (0.5, 0.1, 30.0))]
+R['shell'].update(neutral=dict(tau_sim=d_n['tau'], tau_quad=float(tau_quad), R_trap=d_n['R'], E0=E0n, outcome=o_n), static_outcomes=stat, max_u2_minus_F=float(max(drifts)))
+gate("S1_integrador_cascaron", o_n == 'trapped' and abs(d_n['R']/E0n - 1) < 1e-6 and abs(d_n['tau']/tau_quad - 1) < 2e-4 and max(drifts) < 1e-9 and stat == ['trapped', 'trapped', 'escaped', 'escaped', 'trapped'],
+     f"cascarón neutro (C=0.3): atrapado en R={d_n['R']:.6f}=E0={E0n:.6f} y τ={d_n['tau']:.5f} vs cuadratura de Israel {tau_quad:.5f}; |Ṙ²−F| ≤ {max(drifts):.1e} a lo largo de las integraciones (la integral primera de la unión se conserva); "
+     f"sin descarga: q<C/2 colapsa y q>C/2 explota ({stat}), como demuestra P13")
+o_nw, _ = shell_run(1.0, 0.3, 1.0, static=True, no_work=True)
+_, d_bad = shell_run(1.0, 0.3, 10.0, eom=1.0)
+gate("C_S1_control_sin_trabajo_de_Coulomb", o_nw == 'trapped' and shell_run(1.0, 0.3, 1.0, static=True)[0] == 'escaped' and d_bad['drift'] > 1e-3,
+     f"omitiendo el trabajo de Coulomb dE=q²g²dR/R² el cascarón cargado (q=1≫C/2) colapsa ({o_nw}) en lugar de explotar; con la ecuación de movimiento mal normalizada (R̈=F_R en vez de F_R/2) la integral primera se viola en {d_bad['drift']:.1e} (detectado)")
+
+# S3: ley de la carrera contra el empuje de Coulomb  s_c = A q^2 / C^{3/2}, con A = 2 sqrt(I)/kappa, I = int g^2 (int g^2) ds   (derivada abajo)
+from scipy.integrate import cumulative_trapezoid
+G1_ = cumulative_trapezoid(_gg**2, _sg, initial=0.0); I_ = float(np.trapezoid(_gg**2*G1_, _sg)); A_pred = 2*np.sqrt(I_)/kappa
+def s_crit(q, C, lo=0.1, hi=1e7):
+    f_ = lambda s_: shell_run(q, C, s_)[0] == 'trapped'
+    if not f_(hi) or f_(lo): return None
+    for _ in range(60):
+        mid = np.sqrt(lo*hi)
+        if f_(mid): hi = mid
+        else: lo = mid
+        if hi/lo < 1.01: break
+    return float(np.sqrt(lo*hi))
+t0 = time.time()
+pts = [(1.0, 0.3), (1.0, 0.1), (1.0, 0.03), (0.5, 0.1), (1.5, 0.1)]
+race = []
+for (qv, Cv) in pts:
+    sc_ = s_crit(qv, Cv); race.append(dict(q=qv, C=Cv, s_c=sc_, A_sim=(sc_*Cv**1.5/qv**2 if sc_ else None)))
+print(f"  carrera de Coulomb: {len(pts)} umbrales en {time.time()-t0:.0f}s", flush=True)
+As = [x['A_sim'] for x in race]
+Abar = float(np.mean(As)); Aspread = float(max(abs(a/Abar - 1) for a in As))
+# exponentes por minimos cuadrados
+Xl = np.array([[1.0, np.log(x['q']), np.log(x['C'])] for x in race]); yl = np.log([x['s_c'] for x in race]); cf = np.linalg.lstsq(Xl, yl, rcond=None)[0]
+R['shell'].update(race=race, A_sim_mean=Abar, A_sim_spread=Aspread, A_pred=float(A_pred), I_integral=I_, exponent_q=float(cf[1]), exponent_C=float(cf[2]), A_rel_err=float(abs(Abar/A_pred - 1)))
+gate("S3_ley_de_la_carrera_de_Coulomb", all(x['s_c'] for x in race) and Aspread < 0.03 and abs(Abar/A_pred - 1) < 0.06 and abs(cf[1] - 2) < 0.05 and abs(cf[2] + 1.5) < 0.05,
+     f"umbral de apantallamiento s_c(q,C) (mínimo s tal que el cascarón colapsa en vez de explotar; 5 puntos, C∈[0.03,0.3], q∈[0.5,1.5]): s_c = A q²/C^{{3/2}} con exponentes ajustados q^{cf[1]:.3f}, C^{cf[2]:.3f}; A_sim = {Abar:.4f} (dispersión {Aspread:.1%}) frente a la predicción analítica "
+     f"A = 2√I/κ = {A_pred:.4f} (I=∫g²∫g² ds={I_:.3f}; deducción: ΔE_Coulomb = q⁴I/(Cκ²s²) debe ser < C²/4 = margen de ligadura), error {abs(Abar/A_pred-1):.1%}")
+
+# S4: ganancia de energia (masa de Misner-Sharp en la superficie) por el empuje de Coulomb antes del apantallamiento
+gain = []
+for fac in (2.0, 5.0, 20.0):
+    sc_ = [x for x in race if x['q'] == 1.0 and x['C'] == 0.1][0]['s_c']
+    o_g, d_g = shell_run(1.0, 0.1, fac*sc_)
+    gain.append(dict(s_over_sc=fac, outcome=o_g, dE_over_E0=float(d_g['E']/d_g['E0'] - 1), pred=float(0.1/4*(1/fac)**2)))
+R['shell']['energy_gain'] = gain
+gate("S4_ganancia_de_masa_MS_en_la_superficie", all(g_['outcome'] == 'trapped' for g_ in gain) and all(abs(g_['dE_over_E0']/g_['pred'] - 1) < 0.20 for g_ in gain),
+     f"para s>s_c la superficie ATRAPA con una masa de Misner–Sharp mayor que la neutra: ΔE/E0 = {[round(g_['dE_over_E0'],5) for g_ in gain]} para s/s_c=2,5,20 frente a (C/4)(s_c/s)² = {[round(g_['pred'],5) for g_ in gain]} (±20%): el trabajo de Coulomb ES una ganancia; "
+     "el radio de atrapamiento se desplaza por +ΔE/E0 ≤ C/4")
+
+# ----- traslacion a (N, r0): q/C = sqrt(alpha) M_Pl/2 ~ 1e21 es independiente de N y r0 -----
+C_ph = lambda n, rr: 2*(n + aF_*n**(4/3)/rr)/(MPL**2*rr)
+aF_ = 0.75*(9*np.pi/4)**(1/3)
+Nst_ = kappa**2/(4*np.pi*ALPHA**2)
+def s_c_law(q, C): return A_pred*q**2/C**1.5
+race_tab = []
+for n in np.logspace(2, 44.8, 120):                          # N <= ~M_Pl^2: para N mayor r_Q > r_eps y no existe region con eps >= 30
+    rq = n*np.sqrt(ALPHA)/MPL
+    q_lo = max(np.sqrt(30.0)*np.sqrt(n)/MPL, 1e-6)             # validez de la curva g(s) (invariante de escala): eps0 = N alpha/r0^2 >= 30  <=>  q >= sqrt(30) sqrt(N)/M_Pl
+    best = None
+    for qv in np.geomspace(q_lo, 1.9, 200) if q_lo < 1.9 else []:
+        rr = rq/qv; Cv = C_ph(n, rr)
+        if not (Cv/2 < qv < 2 - Cv/2): continue
+        ratio = s_c_law(qv, Cv)/np.sqrt(n/Nst_)               # >1: la descarga pierde la carrera
+        if best is None or ratio < best[0]: best = (float(ratio), float(qv), float(rr), float(Cv))
+    race_tab.append(dict(N=float(n), ratio_sc_over_s=None if best is None else best[0], q=None if best is None else best[1], r0=None if best is None else best[2], C=None if best is None else best[3]))
+valid = [x for x in race_tab if x['ratio_sc_over_s'] is not None]
+best_ratio = min(x['ratio_sc_over_s'] for x in valid)
+N_best = [x for x in valid if x['ratio_sc_over_s'] == best_ratio][0]['N']
+def ratio_at(nv): return float(np.interp(np.log10(nv), [np.log10(x['N']) for x in valid], [np.log10(x['ratio_sc_over_s']) for x in valid]))
+q_ref = 1.0; N_race_analytic = Nst_*(A_pred*q_ref**2/(q_ref/qc_phys)**1.5)**2
+N_cross = {f"{thr:g}": next((x['N'] for x in valid if x['ratio_sc_over_s'] >= thr), None) for thr in (10.0, 1e3, 1e10)}
+R['shell'].update(best_ratio_sc_over_s=float(best_ratio), N_at_best=float(N_best), N_race_analytic_q1=float(N_race_analytic), N_crit_planck=float(MPL**2), N_star=float(Nst_), s_c_phys_q1=float(A_pred*qc_phys**1.5),
+                  log10_ratio_at={f"1e{e}": ratio_at(10.0**e) for e in (4, 6, 10, 20, 30, 40)}, N_ratio_exceeds=N_cross, race_table=valid[::10])
+gate("S5_carrera_en_el_plano_NR", best_ratio > 1.0 and len(valid) > 20 and ratio_at(1e40) > 5.0,
+     f"parámetros físicos: q/C → √α M_Pl/2 = {qc_phys:.2e} cuando la masa es la de reposo (N≫6·10³; a N menor domina la energía de Fermi y q/C~1). Apantallamiento exigido s_c = A q²/C^{{3/2}}; en TODO el plano admisible (C/2<q<2−C/2, ε0≥30, N≤M_Pl²) el cociente s_c/s(N) "
+     f"mínimo es {best_ratio:.2f} (N={N_best:.1e}: régimen de Fermi) y crece como 10^{ratio_at(1e4):.1f}, 10^{ratio_at(1e10):.1f}, 10^{ratio_at(1e20):.1f}, 10^{ratio_at(1e40):.1f} en N=10⁴,10¹⁰,10²⁰,10⁴⁰: la descarga pierde la carrera contra el empuje de Coulomb en todo N; "
+     f"ignorando ε0≥30 y con masa de reposo, N_race ≈ N*·s_c² ≈ {N_race_analytic:.1e} (q=1) frente a N_crit=M_Pl²={MPL**2:.1e}")
+
 # --- N7: curvas en el plano (N, r0)
 MP = MPL; aF = 0.75*(9*np.pi/4)**(1/3)
 Nst = kappa**2/(4*np.pi*ALPHA**2)
@@ -413,6 +543,22 @@ try:
     figp.tight_layout(); figp.savefig('phase_diagram_corrected.pdf'); figp.savefig('phase_diagram_corrected.png', dpi=150); R['figure_phase'] = 'phase_diagram_corrected.pdf'
 except Exception as ex:
     import traceback; traceback.print_exc(); R['figure_phase'] = f'no generada: {ex!r}'; ok_all = False; print('FIGURA FASE FALLÓ:', repr(ex))
+# ---------- figura de la carrera de Coulomb ----------
+try:
+    figs, axs = plt.subplots(1, 3, figsize=(11.5, 3.6))
+    sc_ref = [x for x in race if x['q'] == 1.0 and x['C'] == 0.1][0]['s_c']
+    for fac, st in ((0.5, ':'), (0.95, '--'), (1.05, '-'), (3.0, '-.')):
+        o_, d_ = shell_run(1.0, 0.1, fac*sc_ref, traj=True, Tmax=400.0)
+        axs[0].plot(d_['tau_arr'], d_['R_arr'], st, label=f"$s/s_c={fac}$ ({o_})")
+    axs[0].set_ylim(0, 6); axs[0].set_xlim(0, 25); axs[0].set_xlabel(r'$\tau/r_0$'); axs[0].set_ylabel(r'$R/r_0$'); axs[0].legend(fontsize=6.5); axs[0].set_title(r'Shell radius, $q=1$, $C=0.1$', fontsize=9)
+    xx = np.array([x['q']**2/x['C']**1.5 for x in race]); yy = np.array([x['s_c'] for x in race])
+    axs[1].loglog(xx, yy, 'o', label='simulation'); xl_ = np.geomspace(xx.min()/2, xx.max()*2, 20); axs[1].loglog(xl_, A_pred*xl_, '-', label=f'$A={A_pred:.3f}$ (analytic)')
+    axs[1].set_xlabel(r'$q^2/C^{3/2}$'); axs[1].set_ylabel(r'$s_c$'); axs[1].legend(fontsize=8); axs[1].set_title('Screening needed to beat the Coulomb push', fontsize=9)
+    axs[2].loglog([x['N'] for x in valid], [x['ratio_sc_over_s'] for x in valid], 'k-'); axs[2].axhline(1.0, color='r', lw=0.8)
+    axs[2].set_xlabel(r'$N$'); axs[2].set_ylabel(r'$\min\,s_c/s(N)$'); axs[2].set_title(r'Race lost if $>1$ (best allowed $r_0$)', fontsize=9)
+    figs.tight_layout(); figs.savefig('fig_shell_race.pdf'); figs.savefig('fig_shell_race.png', dpi=150); R['figure_shell'] = 'fig_shell_race.pdf'
+except Exception as ex:
+    import traceback; traceback.print_exc(); R['figure_shell'] = f'no generada: {ex!r}'; ok_all = False; print('FIGURA SHELL FALLÓ:', repr(ex))
 R['model'] = ("calibre polar-areal exacto (vínculos de Einstein) + campo radial de bola uniforme + dos flujos nulos radiales (plasma colineal, w∥≈1 de 05c) + descarga local con reloj s_c'=α κ s √(E/E_surf) "
               "y curva universal exacta g(s) de 05c; conversión 1/2+1/2 saliente/entrante (momento neto nulo); materia M_n mantenida como masa de prueba estática; "
               "SIN colisiones, SIN dispersión transversal (caústica central → resultados limitados a t≤r0/c), SIN transporte de carga (Gauss no impuesto en la conversión), SIN explosión de Coulomb de la materia")

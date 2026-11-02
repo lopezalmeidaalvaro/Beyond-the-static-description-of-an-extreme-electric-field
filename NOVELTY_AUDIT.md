@@ -6,7 +6,7 @@
 ## 0. Alcance y límites (léase primero)
 - **Ningún texto completo fue leído.** `arxiv.org` y `ar5iv.labs.arxiv.org` no resuelven desde esta sesión (red restringida): hay que permitir esos dominios en *Network access* del entorno para una auditoría de texto completo. Todo lo que sigue se apoya en **extractos de búsqueda** (nivel **E**) o en **memoria** (nivel **M**, no verificada). La *ausencia* de un resultado en una búsqueda superficial (nivel **N**) **no** prueba que no exista.
 - Esta auditoría **no** puede dar «rigor absoluto» sobre la novedad: da una clasificación conservadora y una lista de verificaciones pendientes (§7).
-- **Corrección de resultados propios** hallada durante la auditoría (ya aplicada en 04, informe y JSON): el margen DEC «−8.33e-4, acotado» era el borde del rango (ε=10⁴⁰); el umbral «1.92» era artefacto de rejilla (exacto **1.88218**). Ahora hay 112 gates.
+- **Corrección de resultados propios** hallada durante la auditoría (ya aplicada en 04, informe y JSON): el margen DEC «−8.33e-4, acotado» era el borde del rango (ε=10⁴⁰); el umbral «1.92» era artefacto de rejilla (exacto **1.88218**). Ahora hay 118 gates.
 
 ## 1. Veredicto en una tabla
 | Resultado | Categoría | En una línea |
@@ -23,11 +23,12 @@
 | **E1** Cinética cuántica exacta (Bloch/Bogoliubov acoplada a Maxwell, 05c): f_max→1.0000, ω_p=0.1944 e√ε₀, γ/ω_p=0.0048, ⟨w∥⟩_pl=0.988 | Cat.1 Redescubrimiento | QKE no markoviana en forma de Bloch con retroacción de Maxwell. |
 | **DM1** Balance de Misner–Sharp dinámico (K_ij≠0) y transporte de flujos nulos radiales (06b: D_MS1–D_MS5, C_MS) | Cat.1 Redescubrimiento | Ecuaciones de Misner–Sharp con flujo; polvo nulo en calibre polar-areal. |
 | **DM2** Descarga espacialmente resuelta de una bola cargada (06b): fuga -0.100 q², inflow +0.248 q², neto +0.149 q²; umbral desplazado ≤0.8% | Cat.3 Síntesis | Solver 1+1D validado (límite plano analítico, balance a 1e-3, convergencia, controles negativos); la fracción del campo interior que escapa por r₀ es 0.50, pero el inflow del campo exterior es ~2.5 veces mayor; la dinámica en t≤r₀/c desplaza el umbral de horizonte <0.8%; la curva r_s(N) del paper cae dentro del horizonte aparente inicial para N>4.6e+04. |
+| **DM3** Colapso de un cascarón cargado con descarga: ley s_c = A q²/C^{3/2} y carrera contra el empuje de Coulomb (06b: P13, S1–S5) | Cat.1 Redescubrimiento | Cascarón de Israel con carga: colapsa si Q<√(4πG)M. |
 | **P1** Diagrama de fases (N, r₀) | Cat.3 Síntesis | Colocarlas en un solo plano con valores explícitos, tiempos y verificación simbólica de cada umbral (P1–P9). |
 | **T1** Umbrales N*=2.74e+05, N_crit=5.71e+44, N_valid=9/α | Cat.1 Redescubrimiento | N* como cantidad de modelo (Cat.3 menor). |
-| **M1** Metodología: pipeline «LLM propone, CAS ejecuta», gates simbólicos, controles negativos, informe autogenerado | Cat.3 Síntesis | 112 gates (24 controles negativos), trazabilidad número→clave JSON. |
+| **M1** Metodología: pipeline «LLM propone, CAS ejecuta», gates simbólicos, controles negativos, informe autogenerado | Cat.3 Síntesis | 118 gates (25 controles negativos), trazabilidad número→clave JSON. |
 
-Recuento: Cat.1 = 8, Cat.2 = 3, Cat.3 = 4. **Ningún resultado es, hoy, un descubrimiento físico nuevo defendible**; el valor está en la síntesis cuantitativa, la corrección explícita de la truncación y la verificación formal.
+Recuento: Cat.1 = 9, Cat.2 = 3, Cat.3 = 4. **Ningún resultado es, hoy, un descubrimiento físico nuevo defendible**; el valor está en la síntesis cuantitativa, la corrección explícita de la truncación y la verificación formal.
 
 ## 2. Comparación artículo por artículo (nivel de verificación entre paréntesis)
 | Trabajo | Nivel | Qué se sabe (según lo visto) | Gate(s) del repositorio | Relación |
@@ -154,6 +155,14 @@ Recuento: Cat.1 = 8, Cat.2 = 3, Cat.3 = 4. **Ningún resultado es, hoy, un descu
 - **Cómo citar:** «En un modelo de flujos nulos radiales con cierre local de descarga, la dinámica de descarga hasta el tiempo de cruce de luz desplaza el umbral de horizonte de la bola cargada en menos de 1% hasta el tiempo de caída libre prescrito.»
 - **Salvedades:** Flujos radiales con núcleo reflectante (regularización de la cáustica), materia como masa de prueba y tiempo de caída libre PRESCRITO (el colapso autoconsistente de la materia cargada no se evoluciona), sin explosión de Coulomb ni colisiones, cierre de descarga local, sin Gauss durante la conversión; no se comparó con ningún cálculo publicado.
 
+### DM3 — Colapso de un cascarón cargado con descarga: ley s_c = A q²/C^{3/2} y carrera contra el empuje de Coulomb (06b: P13, S1–S5)  →  **Cat.1 Redescubrimiento**
+- **Estructura ya publicada:** La unión de Israel y el colapso de cascarones cargados (Israel 1966; Boulware 1973; Bekenstein 1971) y la condición Q<M para el colapso son clásicos; la explosión coulombiana de materia cargada es bien conocida.
+- **Ecuación equivalente:** Cascarón de Israel con carga: colapsa si Q<√(4πG)M.
+- **Aporte del repositorio:** Ley analítica de la carrera s_c=2√I q²/(κC^{3/2}) con la curva exacta de descarga de 05c, verificada por simulación de la dinámica completa (error ~2%); evaluación en el q/C físico (≈1e21); la ganancia de masa de MS ΔE/E₀=(C/4)(s_c/s)²; controles negativos; integral primera conservada a 1e-12.
+- **No presentar como:** «La QED/descarga de Schwinger impide (o permite) el colapso gravitatorio» como predicción física; N_race≈1e68 como resultado cuantitativo fiable (depende de un cierre local de la descarga y de la neutralización permanente).
+- **Cómo citar:** «En un modelo de cascarón fino con apantallamiento local de la descarga, el empuje de Coulomb desliga al cascarón salvo que el apantallamiento supere s_c=0.66 q²/C^{3/2}; con la relación carga-masa del electrón ese umbral excede con creces el disponible.»
+- **Salvedades:** Cierre local de la descarga y neutralización permanente tras el primer cero (ansatz); plasma y cascarón no acoplados; interior plano; una sola capa; sin explosión coulombiana de muchos cuerpos ni estructura radial; sin comparación con literatura (texto completo no accesible).
+
 ### P1 — Diagrama de fases (N, r₀)  →  **Cat.3 Síntesis**
 - **Estructura ya publicada:** Cada frontera es estándar: r_s=2GM (Schwarzschild), gas de Fermi degenerado, ε=1 (Schwinger), densidad de Planck, N_crit=M_Pl²/m² (cota tipo Gibbons), Nα≳1 (supercritico, Zel'dovich–Greiner).
 - **Ecuación equivalente:** —
@@ -173,7 +182,7 @@ Recuento: Cat.1 = 8, Cat.2 = 3, Cat.3 = 4. **Ningún resultado es, hoy, un descu
 ### M1 — Metodología: pipeline «LLM propone, CAS ejecuta», gates simbólicos, controles negativos, informe autogenerado  →  **Cat.3 Síntesis**
 - **Estructura ya publicada:** No es un resultado de física; valor de reproducibilidad.
 - **Ecuación equivalente:** —
-- **Aporte del repositorio:** 112 gates (24 controles negativos), trazabilidad número→clave JSON.
+- **Aporte del repositorio:** 118 gates (25 controles negativos), trazabilidad número→clave JSON.
 - **No presentar como:** Presentarlo como evidencia de corrección física.
 - **Cómo citar:** «Software abierto de verificación».
 - **Salvedades:** Un gate PASS verifica coherencia interna, no validez física (p. ej. el error del «−8.33e-4» pasó los gates).
@@ -189,6 +198,7 @@ Recuento: Cat.1 = 8, Cat.2 = 3, Cat.3 = 4. **Ningún resultado es, hoy, un descu
 - ~~«Hemos calculado el amortiguamiento de las oscilaciones de plasma de Schwinger» como resultado de QED; las constantes ω_p/(e√ε₀) y γ/ω_p como universales.~~ → «En un modelo de Vlasov de Markov con bloqueo de Pauli (Kluger et al.; Prakapenia–Vereshchagin) obtenemos ω_p≈0.19e√(eE₀) y γ/ω_p≈5·10⁻³ para una fuente gaussiana de ancho 0.25√ε₀.»
 - ~~«Primera solución no markoviana de las oscilaciones de plasma de Schwinger»; «ley universal ω_p=0.19e√(eE₀)» (el valor exacto es otro y depende de la condición inicial y de la ausencia de colisiones).~~ → «Integramos las ecuaciones de Bloch de la QKE con retroacción (como Kluger et al. y Prakapenia–Vereshchagin) y cuantificamos la diferencia con el límite de Markov con bloqueo de Pauli en el mismo sistema.»
 - ~~«Primera demostración del balance de Misner–Sharp con descarga»; «resolvimos el colapso cargado dinámico completo».~~ → «Verificamos simbólicamente, en la métrica general esférica, que la conversión local campo→plasma conserva la masa de Misner–Sharp y que solo el flujo por la superficie la cambia.»
+- ~~«La QED/descarga de Schwinger impide (o permite) el colapso gravitatorio» como predicción física; N_race≈1e68 como resultado cuantitativo fiable (depende de un cierre local de la descarga y de la neutralización permanente).~~ → «En un modelo de cascarón fino con apantallamiento local de la descarga, el empuje de Coulomb desliga al cascarón salvo que el apantallamiento supere s_c=0.66 q²/C^{3/2}; con la relación carga-masa del electrón ese umbral excede con creces el disponible.»
 - ~~«N* es un umbral físico universal».~~ → «Orden de magnitud dependiente de modelo.»
 
 ## 5. Debilidades que un árbitro señalaría (autocrítica)
