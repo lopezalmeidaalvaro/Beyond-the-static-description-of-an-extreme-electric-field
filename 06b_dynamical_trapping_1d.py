@@ -498,7 +498,7 @@ def coupled_sc(q, C, lo=0.3, hi=None):
         else: lo = mid
     return float(np.sqrt(lo*hi))
 t0 = time.time()
-cpts = [(1.0, 0.1), (0.5, 0.1), (1.5, 0.1), (1.0, 0.3)]
+cpts = [(1.0, 0.1), (0.5, 0.1), (1.5, 0.1), (1.0, 0.3), (1.0, 0.03), (1.0, 0.01), (1.0, 0.003)]
 ctab = []
 for (qv, Cv) in cpts:
     scc = coupled_sc(qv, Cv); sdec = A_pred*qv**2/Cv**1.5
@@ -516,6 +516,13 @@ gate("K3_umbral_acoplado_vs_desacoplado", okc and all(x['ratio'] < 1.05 for x in
      "umbral s_c de escape (R≥7r0) del sistema acoplado (cascarón dinámico + plasma gravitante + campo + descarga) frente a la ley desacoplada: "
      + "; ".join(f"q={x['q']}, C={x['C']}: {x['s_c_coupled']:.2f} vs {x['s_c_decoupled_law']:.2f} (×{x['ratio']:.2f})" for x in ctab if x['s_c_coupled'])
      + ". La gravedad del plasma que el propio campo genera liga al cascarón: el umbral baja")
+# K5: barrido en C de 2 decadas (q=1): el producto s_c*C es casi constante -> la extrapolacion a q/C fisico es una ley de escala contrastada, no ciega
+_q1 = [x for x in ctab if x['q'] == 1.0 and x['s_c_coupled']]
+_pr = [x['s_c_coupled']*x['C'] for x in _q1]; _Cs = [x['C'] for x in _q1]
+_cf = np.polyfit(np.log(_Cs), np.log([x['s_c_coupled'] for x in _q1]), 1)
+R['coupled']['C_sweep'] = dict(C=_Cs, sC=[float(v) for v in _pr], decades=float(np.log10(max(_Cs)/min(_Cs))), spread=float(max(_pr)/min(_pr)), exponent_C=float(_cf[0]))
+gate("K5_barrido_C_colapso_sC", len(_q1) >= 5 and max(_Cs)/min(_Cs) >= 90 and max(_pr)/min(_pr) < 1.15 and abs(_cf[0] + 1.0) < 0.06,
+     f"barrido en C (q=1, {len(_q1)} puntos, {np.log10(max(_Cs)/min(_Cs)):.1f} décadas, C={min(_Cs)}…{max(_Cs)}): s_c·C = {min(_pr):.3f}…{max(_pr):.3f} (dispersión ×{max(_pr)/min(_pr):.2f}), exponente medido de C: {_cf[0]:+.3f} (el acoplado colapsa a s_c ≃ {np.mean(_pr):.2f}/C, no a la ley desacoplada C^-3/2): la extrapolación al q/C físico pasa de ciega a ley de escala contrastada en 2 décadas")
 # trayectoria representativa: perdida/ganancia de masa de Misner-Sharp en la superficie y fuga por la frontera
 o_rep = run_c(1.0, 0.1, 21.0, Tend=45.0)
 rr_ = o_rep['rec']; Cp = rr_['Cplus']; iPk = int(np.argmax(Cp))
