@@ -246,6 +246,12 @@ try:
 except Exception as ex:
     R['figure'] = f'no generada: {ex}'; ok_all = False; print('FIGURA FALLÓ:', ex)
 
+# curva universal de la primera oscilacion (campo normalizado vs t e√ε0 a ε0=10³; invariante de escala para ε0≳30): cierre local de 06b
+_s = series[1000.0]['t']; _g = series[1000.0]['x']; _i0 = int(np.argmax(_g <= 0)); _s0 = float(_s[_i0-1] + (_s[_i0]-_s[_i0-1])*_g[_i0-1]/(_g[_i0-1]-_g[_i0]))
+_sg = np.linspace(0.0, _s0, 241); _gg = np.interp(_sg, _s[:_i0+1], np.clip(_g[:_i0+1], 0, None)); _gg[-1] = 0.0
+R['first_swing'] = dict(s=[float(v) for v in _sg], g=[float(v) for v in _gg], s_zero=_s0, eps0=1000.0)
+gate("Q7_curva_universal_primera_oscilacion", abs(_gg[0] - 1) < 1e-12 and _gg[-1] == 0.0 and bool(np.all(np.diff(_gg) <= 1e-9)) and abs(_s0 - exact['1000']['tau0_e_sqrtx0']) < 1e-6,
+     f"campo normalizado g(s)=ε(t)/ε0 con s=t·e√ε0 (ε0=10³): monótona 1→0 en s0={_s0:.4f}={exact['1000']['tau0_e_sqrtx0']:.4f} (primer cero); se usa como cierre local de la descarga en 06b")
 R['pct_tau0_shift_1000'] = (1 - cmp_['1000']['tau0_ratio_exact_over_markov'])*100
 R['pct_omega_shift_1000'] = (cmp_['1000']['omega_ratio'] - 1)*100
 R['min_fmax_ge10'] = min(f_sup.values())

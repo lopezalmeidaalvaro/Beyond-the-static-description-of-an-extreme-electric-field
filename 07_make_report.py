@@ -4,12 +4,12 @@
 import json, re, sys
 D = json.load(open('discovery_results.json')); BASE = json.load(open('results.json'))
 allg = {}
-for br in ('branch_A', 'branch_B', 'branch_B2', 'branch_B3', 'branch_C'):
+for br in ('branch_A', 'branch_B', 'branch_B2', 'branch_B3', 'branch_C', 'branch_C2'):
     for k, v in D[br]['gates'].items(): allg[f"{br}:{k}"] = v
 bad = [k for k, v in allg.items() if not v]
-neg = [k for k in allg if re.match(r'branch_(A|B|B2|B3|C):C\d', k)]
+neg = [k for k in allg if re.match(r'branch_(A|B|B2|B3|C|C2):C', k)]
 if bad: print("GATES FALLIDOS:", bad); sys.exit(1)
-if len(neg) < 20: print("faltan controles negativos"); sys.exit(1)
+if len(neg) < 24: print("faltan controles negativos"); sys.exit(1)
 D['meta'] = dict(n_gates=len(allg), n_negative_controls=len(neg), all_pass=True)
 json.dump(D, open('discovery_results.json', 'w'), indent=1)
 
@@ -17,8 +17,13 @@ def get(path):
     if path.startswith('base.'):
         cur = BASE[4]; path = path[5:]
     else: cur = D
-    for p in path.split('.'):
-        cur = cur[int(p)] if isinstance(cur, list) else cur[p]
+    parts = path.split('.'); i = 0
+    while i < len(parts):
+        if isinstance(cur, list): cur = cur[int(parts[i])]; i += 1; continue
+        for j in range(len(parts), i, -1):                         # coincidencia mas larga (claves con puntos, p.ej. "1.0")
+            key = '.'.join(parts[i:j])
+            if key in cur: cur = cur[key]; i = j; break
+        else: raise KeyError(f"{'.'.join(parts[:i])} -> {'.'.join(parts[i:])}")
     return cur
 def sub(m):
     path, fmt = (m.group(1).split('|') + [''])[:2]
@@ -32,7 +37,7 @@ json.dump(D, open('discovery_results.json', 'w'), indent=1)
 tab = "| N | r_ε=√(Nα) | r_Q (RN) | r_s (atrapamiento) | ε(r_s) | τ_dis/r0 |\n|---|---|---|---|---|---|\n"
 for k, v in C['table'].items():
     tab += f"| {k} | {v['r_eps']:.3g} | {v['r_Q']:.3g} | {v['r_s']:.3g} | {v['eps_at_rs']:.2g} | {v['tau_dis_over_r0']:.3g} |\n"
-SC = {'branch_A': '04_nonperturbative_qed.py', 'branch_B': '05_dynamical_backreaction.py', 'branch_B2': '05b_plasma_oscillations.py', 'branch_B3': '05c_quantum_vlasov_exact.py', 'branch_C': '06_phase_diagram.py'}
+SC = {'branch_A': '04_nonperturbative_qed.py', 'branch_B': '05_dynamical_backreaction.py', 'branch_B2': '05b_plasma_oscillations.py', 'branch_B3': '05c_quantum_vlasov_exact.py', 'branch_C': '06_phase_diagram.py', 'branch_C2': '06b_dynamical_trapping_1d.py'}
 trace = "| Gate | Script | Estado |\n|---|---|---|\n" + "".join(f"| {k.split(':')[1]} | {SC[k.split(':')[0]]} | PASS |\n" for k in allg)
 
 B3 = D['branch_B3']

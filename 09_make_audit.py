@@ -22,7 +22,9 @@ V = dict(
   dU=D['branch_C']['U_QED']['table']['1e+00']['delta_U'],
   b3_fmax=max(v['fmax'] for k, v in D['branch_B3']['exact_sweep'].items() if float(k) >= 10), b3_om=D['branch_B3']['scaling']['omega_over_esqrtx0'][-1],
   b3_gam=D['branch_B3']['scaling']['gamma_over_omega'][-1], b3_tau100=D['branch_B3']['exact_sweep']['100']['tau0_e_sqrtx0'], mk_tau100=D['branch_B3']['markov_sweep']['100']['tau0_e_sqrtx0'],
-  b3_wpl=D['branch_B3']['exact_sweep']['100']['w_pl_avg_last_period'])
+  b3_wpl=D['branch_B3']['exact_sweep']['100']['w_pl_avg_last_period'],
+  c2_loss=D['branch_C2']['weak_gravity_F']['inst']['interior_only'], c2_gain=D['branch_C2']['weak_gravity_F']['inst']['exterior_only'], c2_net=D['branch_C2']['weak_gravity_F']['inst']['both'],
+  c2_fesc=D['branch_C2']['weak_gravity_F']['inst']['f_esc_interior'], c2_shift=D['branch_C2']['threshold_range_pct'], c2_NA=D['branch_C2']['N_A_staticcurve_enters_initial_horizon'])
 
 # ----------------------------------------------------------------------------------------------------------------
 PAPERS = [
@@ -143,6 +145,20 @@ RESULTS = [
       forbidden='«Primera solución no markoviana de las oscilaciones de plasma de Schwinger»; «ley universal ω_p=0.19e√(eE₀)» (el valor exacto es otro y depende de la condición inicial y de la ausencia de colisiones).',
       wording='«Integramos las ecuaciones de Bloch de la QKE con retroacción (como Kluger et al. y Prakapenia–Vereshchagin) y cuantificamos la diferencia con el límite de Markov con bloqueo de Pauli en el mismo sistema.»',
       caveat='Modelo homogéneo, sin colisiones ni transporte (el plasma NO se isotropiza: w∥→≈1, no 1/3); estado inicial = vacío adiabático de orden cero (ambigüedad cuantificada, K8); no se ha reproducido ninguna curva publicada (texto completo no accesible).'),
+ dict(id='DM1', name="Balance de Misner–Sharp dinámico (K_ij≠0) y transporte de flujos nulos radiales (06b: D_MS1–D_MS5, C_MS)", cat=1,
+      evidence='Las ecuaciones ∂_rM=4πr²ρ, ∂_tM=4πr²T^r_t y el balance de flujo cuasilocal son estándar (Misner–Sharp 1964; Hayward 1994); el transporte de polvo nulo radial y su colapso (Vaidya, Wheeler) son clásicos.',
+      equivalent='Ecuaciones de Misner–Sharp con flujo; polvo nulo en calibre polar-areal.',
+      ours='Derivación completa en SymPy con φ(t,r), λ(t,r), campo de Maxwell y término de intercambio F_νλJ^λ; la conversión interna cancela y solo el flujo en r=R cambia M; control con ley de transferencia alterada; vínculo de momento preservado por el esquema; residuo exacto de la materia mantenida.',
+      forbidden='«Primera demostración del balance de Misner–Sharp con descarga»; «resolvimos el colapso cargado dinámico completo».',
+      wording='«Verificamos simbólicamente, en la métrica general esférica, que la conversión local campo→plasma conserva la masa de Misner–Sharp y que solo el flujo por la superficie la cambia.»',
+      caveat='Es una verificación de identidades conocidas en un CAS, no un resultado nuevo de relatividad.'),
+ dict(id='DM2', name=f"Descarga espacialmente resuelta de una bola cargada (06b): fuga {V['c2_loss']:+.3f} q², inflow {V['c2_gain']:+.3f} q², neto {V['c2_net']:+.3f} q²; umbral desplazado ≤{V['c2_shift']:.1f}%", cat=3,
+      evidence='Cada ingrediente es conocido (descarga de Schwinger, colapso de radiación, extremalidad M≥Q de la bola cargada); la combinación cuantitativa con la curva exacta de 05c no se encontró en la búsqueda superficial.',
+      equivalent='—',
+      ours=f"Solver 1+1D validado (límite plano analítico, balance a 1e-3, convergencia, controles negativos); la fracción del campo interior que escapa por r₀ es {V['c2_fesc']:.2f}, pero el inflow del campo exterior es ~2.5 veces mayor; la dinámica en t≤r₀/c desplaza el umbral de horizonte <{V['c2_shift']:.1f}%; la curva r_s(N) del paper cae dentro del horizonte aparente inicial para N>{V['c2_NA']:.1e}.",
+      forbidden='«La descarga de Schwinger acelera/permite el colapso» o «no lo retrasa» como predicción física; resultados para t>r₀/c.',
+      wording='«En un modelo de flujos nulos radiales con cierre local de descarga, la dinámica de descarga hasta el tiempo de cruce de luz desplaza el umbral de horizonte de la bola cargada en menos de 0.5%.»',
+      caveat='Flujos perfectamente radiales (cáustica central), materia como masa de prueba, sin explosión de Coulomb ni colisiones, cierre de descarga local, sin Gauss durante la conversión; no se alcanza el tiempo de caída libre; no se comparó con ningún cálculo publicado.'),
  dict(id='P1', name='Diagrama de fases (N, r₀)', cat=3,
       evidence='Cada frontera es estándar: r_s=2GM (Schwarzschild), gas de Fermi degenerado, ε=1 (Schwinger), densidad de Planck, N_crit=M_Pl²/m² (cota tipo Gibbons), Nα≳1 (supercritico, Zel\'dovich–Greiner).',
       equivalent='—', ours='Colocarlas en un solo plano con valores explícitos, tiempos y verificación simbólica de cada umbral (P1–P9).',
@@ -161,6 +177,7 @@ WEAK = [
  ('Causalidad (Russo–Townsend)', 'Causalidad⇒DEC y SEC en clase Plebanski; nuestra DEC se viola para ε>1.88. Hay que calcular las condiciones de causalidad con L₁(S,P) y ver si el efecto es una propiedad real o del recorte P=0.'),
  ('Hipótesis de Penrose cargada', 'Ahora DERIVADA internamente (P10), pero sólo para datos simétricos en el tiempo, ρ≥0 y sin materia cargada exterior (como KWY). Malec–Ó Murchadha avisan de rupturas en colapso temprano; la dinámica con carga que sale NO está cubierta.'),
  ('Cinética con bloqueo de Pauli', 'La ecuación de Markov con (1−2f) acota f<½ desde el vacío, mientras que la QKE exacta de campo constante da f=e^{−πm⊥²/ε}>½ a ε>4.5; los resultados de 05b (ω_p, γ) son de modelo. 05c resuelve esa limitación dentro del modelo homogéneo (QKE de Bloch exacta), cuantifica la diferencia, y NO incluye colisiones, transporte ni comparación con curvas publicadas.'),
+ ('Brecha espacial/gravitatoria (06b)', 'El solver 1+1D cubre solo t≤r₀/c por la cáustica central de los flujos radiales perfectos; la materia es masa de prueba; el criterio dinámico real de formación del horizonte (colapso de la materia y del plasma, tiempo de caída libre) sigue sin resolverse; el desplazamiento <0.5% es del umbral de horizonte aparente, no de r_s del cascarón.'),
  ('Modelo de materia de la fase (ii)', f"El gas de electrones degenerados no está ligado (Coulomb {V['z2']:.1e}× gravedad); r_s es una condición de datos iniciales."),
  ('Constante κ', 'Dependiente del modelo (n=1, sin (1−2f), LCFA, primer cero). Sin comparación con las curvas de KME/Bloch/Ruffini en texto completo.'),
  ('Verificación bibliográfica', 'Ningún texto completo leído (arxiv.org y ar5iv no accesibles). Todos los niveles E son extractos; los M no se comprobaron.'),

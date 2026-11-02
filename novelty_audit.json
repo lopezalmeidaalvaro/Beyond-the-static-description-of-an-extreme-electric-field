@@ -9,9 +9,9 @@
    "T": "texto completo (ninguno)"
   },
   "counts_by_category": {
-   "1": 7,
+   "1": 8,
    "2": 3,
-   "3": 3
+   "3": 4
   }
  },
  "corrections_to_own_results": [
@@ -326,6 +326,28 @@
    "caveat": "Modelo homogéneo, sin colisiones ni transporte (el plasma NO se isotropiza: w∥→≈1, no 1/3); estado inicial = vacío adiabático de orden cero (ambigüedad cuantificada, K8); no se ha reproducido ninguna curva publicada (texto completo no accesible)."
   },
   {
+   "id": "DM1",
+   "name": "Balance de Misner–Sharp dinámico (K_ij≠0) y transporte de flujos nulos radiales (06b: D_MS1–D_MS5, C_MS)",
+   "cat": 1,
+   "evidence": "Las ecuaciones ∂_rM=4πr²ρ, ∂_tM=4πr²T^r_t y el balance de flujo cuasilocal son estándar (Misner–Sharp 1964; Hayward 1994); el transporte de polvo nulo radial y su colapso (Vaidya, Wheeler) son clásicos.",
+   "equivalent": "Ecuaciones de Misner–Sharp con flujo; polvo nulo en calibre polar-areal.",
+   "ours": "Derivación completa en SymPy con φ(t,r), λ(t,r), campo de Maxwell y término de intercambio F_νλJ^λ; la conversión interna cancela y solo el flujo en r=R cambia M; control con ley de transferencia alterada; vínculo de momento preservado por el esquema; residuo exacto de la materia mantenida.",
+   "forbidden": "«Primera demostración del balance de Misner–Sharp con descarga»; «resolvimos el colapso cargado dinámico completo».",
+   "wording": "«Verificamos simbólicamente, en la métrica general esférica, que la conversión local campo→plasma conserva la masa de Misner–Sharp y que solo el flujo por la superficie la cambia.»",
+   "caveat": "Es una verificación de identidades conocidas en un CAS, no un resultado nuevo de relatividad."
+  },
+  {
+   "id": "DM2",
+   "name": "Descarga espacialmente resuelta de una bola cargada (06b): fuga -0.100 q², inflow +0.248 q², neto +0.149 q²; umbral desplazado ≤0.3%",
+   "cat": 3,
+   "evidence": "Cada ingrediente es conocido (descarga de Schwinger, colapso de radiación, extremalidad M≥Q de la bola cargada); la combinación cuantitativa con la curva exacta de 05c no se encontró en la búsqueda superficial.",
+   "equivalent": "—",
+   "ours": "Solver 1+1D validado (límite plano analítico, balance a 1e-3, convergencia, controles negativos); la fracción del campo interior que escapa por r₀ es 0.50, pero el inflow del campo exterior es ~2.5 veces mayor; la dinámica en t≤r₀/c desplaza el umbral de horizonte <0.3%; la curva r_s(N) del paper cae dentro del horizonte aparente inicial para N>4.6e+04.",
+   "forbidden": "«La descarga de Schwinger acelera/permite el colapso» o «no lo retrasa» como predicción física; resultados para t>r₀/c.",
+   "wording": "«En un modelo de flujos nulos radiales con cierre local de descarga, la dinámica de descarga hasta el tiempo de cruce de luz desplaza el umbral de horizonte de la bola cargada en menos de 0.5%.»",
+   "caveat": "Flujos perfectamente radiales (cáustica central), materia como masa de prueba, sin explosión de Coulomb ni colisiones, cierre de descarga local, sin Gauss durante la conversión; no se alcanza el tiempo de caída libre; no se comparó con ningún cálculo publicado."
+  },
+  {
    "id": "P1",
    "name": "Diagrama de fases (N, r₀)",
    "cat": 3,
@@ -353,7 +375,7 @@
    "cat": 3,
    "evidence": "No es un resultado de física; valor de reproducibilidad.",
    "equivalent": "—",
-   "ours": "90 gates (21 controles negativos), trazabilidad número→clave JSON.",
+   "ours": "110 gates (24 controles negativos), trazabilidad número→clave JSON.",
    "forbidden": "Presentarlo como evidencia de corrección física.",
    "wording": "«Software abierto de verificación».",
    "caveat": "Un gate PASS verifica coherencia interna, no validez física (p. ej. el error del «−8.33e-4» pasó los gates)."
@@ -383,6 +405,10 @@
   {
    "topic": "Cinética con bloqueo de Pauli",
    "detail": "La ecuación de Markov con (1−2f) acota f<½ desde el vacío, mientras que la QKE exacta de campo constante da f=e^{−πm⊥²/ε}>½ a ε>4.5; los resultados de 05b (ω_p, γ) son de modelo. 05c resuelve esa limitación dentro del modelo homogéneo (QKE de Bloch exacta), cuantifica la diferencia, y NO incluye colisiones, transporte ni comparación con curvas publicadas."
+  },
+  {
+   "topic": "Brecha espacial/gravitatoria (06b)",
+   "detail": "El solver 1+1D cubre solo t≤r₀/c por la cáustica central de los flujos radiales perfectos; la materia es masa de prueba; el criterio dinámico real de formación del horizonte (colapso de la materia y del plasma, tiempo de caída libre) sigue sin resolverse; el desplazamiento <0.5% es del umbral de horizonte aparente, no de r_s del cascarón."
   },
   {
    "topic": "Modelo de materia de la fase (ii)",
@@ -445,8 +471,8 @@
   "z2": 4.165607889172748e+42,
   "shift_m": -0.01191312135692657,
   "shift_p": -0.012300539048379133,
-  "ngates": 90,
-  "nneg": 21,
+  "ngates": 110,
+  "nneg": 24,
   "om_ratio": 0.18648718250724233,
   "gam_ratio": 0.0051749493562433194,
   "emax": 2.8636698621434124e-06,
@@ -455,10 +481,16 @@
   "fmax_nob": 6.525630388600839,
   "dU": 0.07046737503605427,
   "b3_fmax": 0.9999996173311252,
-  "b3_om": 0.19442671625498953,
-  "b3_gam": 0.00479613781528609,
+  "b3_om": 0.19442671625646762,
+  "b3_gam": 0.004796137815780849,
   "b3_tau100": 13.667297352777315,
   "mk_tau100": 16.86236503265828,
-  "b3_wpl": 0.9875541832849053
+  "b3_wpl": 0.9875541832830176,
+  "c2_loss": -0.0997450972493531,
+  "c2_gain": 0.24812841286198659,
+  "c2_net": 0.14934443752076149,
+  "c2_fesc": 0.49729191740063977,
+  "c2_shift": 0.33055588960326787,
+  "c2_NA": 46190.95719403757
  }
 }

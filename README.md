@@ -21,6 +21,7 @@ apt-get install -y texlive-latex-base texlive-latex-recommended texlive-latex-ex
 | `05b_plasma_oscillations.py` | Cinética de Markov con bloqueo de Pauli a través de ≥5 oscilaciones de plasma (extiende 05) |
 | `05c_quantum_vlasov_exact.py` | Cinética cuántica exacta (Bloch/Bogoliubov + Maxwell): gates Q0–Q6, Landau–Zener, barrido ε₀∈[4,10³], comparación con Markov, ecuación de estado (motor: `qvlasov_engine.py` + `qvlasov_kernel.c`, compilado con gcc/OpenMP; `markov_engine.py` = copia de 05b) |
 | `10_build_paper.py` | Genera `paper.tex`/`references.bib` (REVTeX 4-2, PRD) con cifras leídas de `discovery_results.json` y compila `paper.pdf` |
+| `06b_dynamical_trapping_1d.py` | Misner–Sharp dinámico con K_ij≠0 (SymPy: D_MS1–D_MS5, P12, controles) + solver 1+1D polar-areal (`dyn1d.py`) de la descarga de una bola cargada: balance, convergencia, canales fuga/inflow, desplazamiento del umbral y mapa de fases corregido |
 | `07_make_report.py` | Compuerta global (67 gates, 15 controles negativos) y genera `DISCOVERY_REPORT.md` |
 
 Ver `DISCOVERY_REPORT.md` (resultados y límites), `SYSTEM_PROMPT.md` (reglas del agente) y `discovery_results.json` (todas las métricas).

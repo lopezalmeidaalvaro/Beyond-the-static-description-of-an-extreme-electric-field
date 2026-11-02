@@ -3,7 +3,7 @@
  - falla si falta alguna figura, si LaTeX da errores, o si quedan citas/referencias sin resolver."""
 import json, os, re, subprocess, sys, shutil
 D = json.load(open('discovery_results.json'))
-for f in ('fig_metric_profiles.pdf', 'fig_plasma_oscillations.pdf', 'fig_markov_vs_exact.pdf', 'phase_diagram.pdf'):
+for f in ('fig_metric_profiles.pdf', 'fig_plasma_oscillations.pdf', 'fig_markov_vs_exact.pdf', 'fig_dynamic_trapping.pdf', 'phase_diagram_corrected.pdf', 'phase_diagram.pdf'):
     if not os.path.exists(f): sys.exit(f"FALTA FIGURA: {f}")
 if not shutil.which('pdflatex') or not shutil.which('bibtex'):
     sys.exit("pdflatex/bibtex no instalados (apt-get install texlive-publishers texlive-latex-extra texlive-science texlive-bibtex-extra)")
@@ -39,10 +39,11 @@ SC = {'branch_A': ('04\\_nonperturbative\\_qed', 'Static NLED, one-loop Lagrangi
       'branch_B': ('05\\_dynamical\\_backreaction', 'Cohort model up to the first zero'),
       'branch_B2': ('05b\\_plasma\\_oscillations', 'Pauli-blocked kinetics, $\\ge5$ oscillations'),
       'branch_B3': ('05c\\_quantum\\_vlasov\\_exact', 'Exact Bloch--Bogoliubov kinetics, Markov comparison'),
-      'branch_C': ('06\\_phase\\_diagram', 'Misner--Sharp derivation, scales, phase map')}
+      'branch_C': ('06\\_phase\\_diagram', 'Misner--Sharp derivation, scales, phase map'),
+      'branch_C2': ('06b\\_dynamical\\_trapping\\_1d', 'Dynamical Misner--Sharp balance, 1+1D transport')}
 gt = "\\begin{table}[h]\n\\caption{Verification gates by script (symbolic, numerical and negative controls).}\\label{tab:gates}\n\\begin{ruledtabular}\n\\begin{tabular}{p{3.0cm}rr}\nScript & gates & neg.\\ controls\\\\\\hline\n"
 for br, (nm, desc) in SC.items():
-    g = D[br]['gates']; negs = [k for k in g if re.match(r'C\d', k)]
+    g = D[br]['gates']; negs = [k for k in g if re.match(r'C', k)]
     gt += f"\\texttt{{{nm}}} & {len(g)} & {len(negs)}\\\\\n"
 gt += f"01--03 (baseline) & \\multicolumn{{2}}{{r}}{{re-run at each build}}\\\\\n\\end{{tabular}}\n\\end{{ruledtabular}}\n\\end{{table}}\n"
 

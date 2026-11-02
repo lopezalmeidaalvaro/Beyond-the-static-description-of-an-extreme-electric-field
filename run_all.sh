@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -eo pipefail
 cd "$(dirname "$0")"
 rm -f discovery_results.json
 python3 01_derive.py > out_01_derive.txt
@@ -10,6 +10,7 @@ python3 05_dynamical_backreaction.py > out_05_dynamical_backreaction.txt
 python3 05b_plasma_oscillations.py > out_05b_plasma_oscillations.txt
 python3 05c_quantum_vlasov_exact.py > out_05c_quantum_vlasov_exact.txt
 python3 06_phase_diagram.py > out_06_phase_diagram.txt
+python3 06b_dynamical_trapping_1d.py > out_06b_dynamical_trapping_1d.txt
 python3 07_make_report.py | tee out_07_report.txt
 python3 08_novelty_checks.py > out_08_novelty_checks.txt
 python3 09_make_audit.py | tee out_09_audit.txt

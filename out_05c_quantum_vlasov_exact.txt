@@ -9,12 +9,12 @@
 [PASS] C11_control_acoplamiento_literal_x2: con f'=(eEm/ω²)u, u'=(2eEm/ω²)(1−2f)−2ωv (literal del enunciado) f_∞ = {'x10_eps2_1': 0.2941638182984173, 'x30_eps2_1': 0.1511626231410943} frente a [0.7304026910486456, 0.9005768692821484]: error relativo ≥ 0.60 (detectado)
 [PASS] Q3b_nucleo_C_vs_Schwinger: núcleo C (RK4, E=const) vs e^(−πε⊥²/eE) en ε⊥²∈{1,2,4,9}, eE=10: error relativo máx 2.1e-06
 [PASS] M0_regresion_Markov_05b: markov_engine reproduce 05b a ε0=100: τ0 5.56840596 vs 5.56840596
-  ε0=     4: exacto n_cross=4 τ0·e√ε0=21.293 ω_late/(e√ε0)=0.12364296671214095 γ/ω=0.014028272234128964 fmax=0.99902 |ΔE|/E0=4.4e-13 ⟨w_∥⟩_pl=0.9913763623636589 (68s) | Markov τ0·e√ε0=23.687060140944062 ω_late/(e√ε0)=0.1168767111444877 fmax=0.4710882076414901
-  ε0=    10: exacto n_cross=10 τ0·e√ε0=16.172 ω_late/(e√ε0)=0.1790062112695302 γ/ω=0.0047143827827584375 fmax=1.00000 |ΔE|/E0=1.7e-12 ⟨w_∥⟩_pl=0.9877224829400308 (65s) | Markov τ0·e√ε0=19.010081552093716 ω_late/(e√ε0)=0.1739527789805317 fmax=0.49999818186951406
-  ε0=    30: exacto n_cross=11 τ0·e√ε0=14.281 ω_late/(e√ε0)=0.1907162657338413 γ/ω=0.0043824701394769875 fmax=1.00000 |ΔE|/E0=2.1e-12 ⟨w_∥⟩_pl=0.9875124487360621 (63s) | Markov τ0·e√ε0=17.376310531797884 ω_late/(e√ε0)=0.1824227175001027 fmax=0.49999998020689296
-  ε0=   100: exacto n_cross=11 τ0·e√ε0=13.667 ω_late/(e√ε0)=0.1947302820307693 γ/ω=0.004689879361951887 fmax=1.00000 |ΔE|/E0=3.2e-12 ⟨w_∥⟩_pl=0.9875541832849053 (62s) | Markov τ0·e√ε0=16.86236503265828 ω_late/(e√ε0)=0.18528837175982635 fmax=0.49999999954858065
-  ε0=   300: exacto n_cross=11 τ0·e√ε0=13.496 ω_late/(e√ε0)=0.19448913291453107 γ/ω=0.0045128742851265925 fmax=0.99999 |ΔE|/E0=4.8e-12 ⟨w_∥⟩_pl=0.9877510530669462 (59s) | Markov τ0·e√ε0=16.72080300744199 ω_late/(e√ε0)=0.1860968323428109 fmax=0.4999999997835102
-  ε0=  1000: exacto n_cross=11 τ0·e√ε0=13.437 ω_late/(e√ε0)=0.19442671625498953 γ/ω=0.00479613781528609 fmax=0.99997 |ΔE|/E0=6.2e-12 ⟨w_∥⟩_pl=0.9877539969831213 (57s) | Markov τ0·e√ε0=16.671800036757183 ω_late/(e√ε0)=0.1863786404569273 fmax=0.4999999998305405
+  ε0=     4: exacto n_cross=4 τ0·e√ε0=21.293 ω_late/(e√ε0)=0.12364296671214094 γ/ω=0.014028272234128935 fmax=0.99902 |ΔE|/E0=4.4e-13 ⟨w_∥⟩_pl=0.9913763623636589 (70s) | Markov τ0·e√ε0=23.687060140944062 ω_late/(e√ε0)=0.1168767111444877 fmax=0.4710882076414901
+  ε0=    10: exacto n_cross=10 τ0·e√ε0=16.172 ω_late/(e√ε0)=0.17900621126935004 γ/ω=0.004714382782735848 fmax=1.00000 |ΔE|/E0=1.7e-12 ⟨w_∥⟩_pl=0.9877224829400326 (66s) | Markov τ0·e√ε0=19.010081552093716 ω_late/(e√ε0)=0.1739527789805317 fmax=0.49999818186951406
+  ε0=    30: exacto n_cross=11 τ0·e√ε0=14.281 ω_late/(e√ε0)=0.190716265736052 γ/ω=0.004382470139293644 fmax=1.00000 |ΔE|/E0=2.1e-12 ⟨w_∥⟩_pl=0.9875124487358174 (62s) | Markov τ0·e√ε0=17.376310531797884 ω_late/(e√ε0)=0.1824227175001027 fmax=0.49999998020689296
+  ε0=   100: exacto n_cross=11 τ0·e√ε0=13.667 ω_late/(e√ε0)=0.19473028198529452 γ/ω=0.004689879360285671 fmax=1.00000 |ΔE|/E0=3.2e-12 ⟨w_∥⟩_pl=0.9875541832830176 (62s) | Markov τ0·e√ε0=16.86236503265828 ω_late/(e√ε0)=0.18528837175982635 fmax=0.49999999954858065
+  ε0=   300: exacto n_cross=11 τ0·e√ε0=13.496 ω_late/(e√ε0)=0.19448913291511802 γ/ω=0.0045128742849469715 fmax=0.99999 |ΔE|/E0=4.8e-12 ⟨w_∥⟩_pl=0.9877510530668987 (62s) | Markov τ0·e√ε0=16.72080300744199 ω_late/(e√ε0)=0.1860968323428109 fmax=0.4999999997835102
+  ε0=  1000: exacto n_cross=11 τ0·e√ε0=13.437 ω_late/(e√ε0)=0.19442671625646762 γ/ω=0.004796137815780849 fmax=0.99997 |ΔE|/E0=6.2e-12 ⟨w_∥⟩_pl=0.9877539969829415 (59s) | Markov τ0·e√ε0=16.671800036757183 ω_late/(e√ε0)=0.1863786404569273 fmax=0.4999999998305405
 [PASS] Q2b_energia_numerica_multioscilacion: ≥10 cruces por cero (≥5 oscilaciones) en ε0≥10 y ≥4 (2 oscilaciones) en el punto subumbral; máx |ΔE|/E0 = 6.2e-12 < 1e-6 (el sistema discreto conserva la energía idénticamente; RK4 la preserva a ese nivel)
 [PASS] Q1c_0<=f<=1_cruza_1/2: exacto: 0.0e+00 ≤ f ≤ 1.000000; en ε0≥10 f_max = 1.0000…1.000000 (supera ½); Markov: f_max = 0.500000000 ≤ ½ (truncado)
 [PASS] Q5_cobertura_de_malla: |Φ|max/P_a ≤ 0.80, −Φmin/P_b ≤ 0.53; f en los bordes ≤ 3.5e-07
@@ -27,5 +27,6 @@
 [PASS] D1_Markov_subestima_en_supercritico: ε0≥10: f_max exacto > 0.9 frente a ≤ ½ de Markov; déficit de un cruce con f0=0.9 (ε≈29.8) = 53.6% (el «54 %» del enunciado), límite f0→1: 56.8%
 [PASS] K7_escala_omega_p_exacta: ω_p ∝ ε0^0.505; ω_p/(e√ε0) = [np.float64(0.1907), np.float64(0.1947), np.float64(0.1945), np.float64(0.1944)] (ε0∈[30, 100, 300, 1000]); γ/ω_p = [0.0044, 0.0047, 0.0045, 0.0048]
 [PASS] Q6_ecuacion_de_estado: w_tot=(P_∥−E²/2)/(ρ+E²/2) = −1 exacto en t=0 (campo puro, vacío-like); w_∥^pl=P_∥/ρ_pl promediado en el último periodo: [0.991, 0.988, 0.988, 0.988, 0.988, 0.988] (ε0=['4', '10', '30', '100', '300', '1000'])
+[PASS] Q7_curva_universal_primera_oscilacion: campo normalizado g(s)=ε(t)/ε0 con s=t·e√ε0 (ε0=10³): monótona 1→0 en s0=13.4366=13.4366 (primer cero); se usa como cierre local de la descarga en 06b
 
 RESUMEN 05c: TODAS PASAN
